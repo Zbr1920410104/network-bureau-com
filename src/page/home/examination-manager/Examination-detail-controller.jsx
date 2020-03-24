@@ -1,5 +1,5 @@
 import React from 'react';
 
 export default props => {
-  return <div>主首页内容</div>
+  return <div>评审详情页面</div>
 }

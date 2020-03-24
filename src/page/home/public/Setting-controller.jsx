@@ -1,5 +1,5 @@
 import React from 'react';
 
 export default props => {
-  return <div>主首页内容</div>
+  return <div>个人设置页面</div>
 }

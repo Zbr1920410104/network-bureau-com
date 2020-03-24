@@ -4,42 +4,58 @@ import React from 'react';
 import { Icon, Input, Form, Button } from 'antd';
 import '@/style/login.styl';
 
-// 路由
-import { Link } from 'react-router-dom';
+import {
+  HOME_WRITE_WELCOME,
+  HOME_EXAMINATION_LIST,
+  HOME_MODIFY_LIST
+} from '@/constants/route-constants';
+import { useHistory } from 'react-router-dom';
 
-// redux
-import { useSelector, useDispatch } from 'react-redux';
-import enterpriseAction from '@/redux/action/enterprise';
+export default Form.create({ name: 'login' })(({ form }) => {
+  const { getFieldDecorator } = form,
+    history = useHistory();
 
-// 加密
-import md5 from 'md5';
-
-export default Form.create({ name: 'login' })(props => {
-  const { getFieldDecorator } = props.form,
-    { loginLoading } = useSelector(state => state.enterpriseStore),
-    dispatch = useDispatch();
-
-  const handleSubmitLogin = e => {
+  /**
+   * 提交事件
+   */
+  const handleSumbitSave = e => {
     e.preventDefault();
-    props.form.validateFields((err, values) => {
-      if (!err) {
-        // 处理加密密码
-        values.password = md5(values.password);
-        // 使用redux-saga
-        dispatch(enterpriseAction.asyncSetEnterprise(values));
+
+    // 表单判断
+    form.validateFields(async (err, value) => {
+      console.log(value);
+      if (value.phone === '15998133472') {
+        history.push(`${HOME_EXAMINATION_LIST.path}`);
+      } else if (value.phone === '18351923820') {
+        history.push(`${HOME_MODIFY_LIST.path}`);
+      } else {
+        history.push(`${HOME_WRITE_WELCOME.path}`);
       }
     });
   };
 
   return (
-    <Form onSubmit={handleSubmitLogin}>
+    <Form onSubmit={handleSumbitSave}>
       <Form.Item>
-        {getFieldDecorator('code', {
-          rules: [{ required: true, message: '请输入企业统一信用代码!' }]
+        {getFieldDecorator('phone', {
+          rules: [
+            {
+              required: true,
+              message: '请输入联系电话！'
+            },
+            {
+              message: '联系电话过长！',
+              max: 32
+            },
+            {
+              pattern: /^(\d)(\d|-){4,20}$/,
+              message: '请输入正确的联系电话(手机号)'
+            }
+          ]
         })(
           <Input
-            prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
-            placeholder='企业统一信用代码'
+            prefix={<Icon type='phone' style={{ color: 'rgba(0,0,0,.25)' }} />}
+            placeholder='联系电话'
             size='large'
           />
         )}
@@ -58,10 +74,15 @@ export default Form.create({ name: 'login' })(props => {
       </Form.Item>
       <Form.Item>
         <div className='login-button-box'>
-          <Button type='primary' loading={loginLoading} htmlType='submit'>
+          <Button
+            size='large'
+            type='primary'
+            className='button'
+            htmlType='submit'
+            onSubmit={handleSumbitSave}
+          >
             登录
           </Button>
-          <Link to='/index/register'>没有账号?</Link>
         </div>
       </Form.Item>
     </Form>

@@ -1,73 +1,111 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
 
 // 路由
-import { useRouteMatch, Link, useHistory } from 'react-router-dom';
+import { useRouteMatch, Link } from 'react-router-dom';
 import * as ROUTES from '@/constants/route-constants';
 
 // controller
 import HomeIndexController from '@/page/home/Home-index-controller.jsx';
-import RegistrationWelcomeController from '@/page/home/registration/Registration-welcome-controller.jsx';
-import RegistrationProcessController from '@/page/home/registration/Registration-process-controller.jsx';
-import RegistrationListController from '@/page/home/registration/Registration-list-controller.jsx';
+import SettingController from '@/page/home/public/Setting-controller.jsx';
 
-// localStorage
-import { LOCAL_STORAGE } from '@/constants/app-constants';
+// 员工
+import WriteWelcomeController from '@/page/home/staff/Write-welcome-controller.jsx';
+import WriteDetailController from '@/page/home/staff/Write-detail-controller.jsx';
+import WriteCurrentController from '@/page/home/staff/Write-current-controller.jsx';
+
+// 业务员
+import ModifyListController from '@/page/home/business-manager/Modify-list-controller.jsx';
+import ModifyDetailController from '@/page/home/business-manager/Modify-detail-controller.jsx';
+
+// 评审员
+import ExaminationListController from '@/page/home/examination-manager/Examination-list-controller.jsx';
+import ExaminationDetailList from '@/page/home/examination-manager/Examination-detail-controller.jsx';
 
 // 样式
 import '@/style/home/home.styl';
 import { Layout, Menu, Icon } from 'antd';
-const { Header, Content, Footer, Sider } = Layout,
-  { SubMenu } = Menu;
+const { Header, Content, Footer, Sider } = Layout;
 
 export default props => {
-  const token = window.localStorage.getItem(`${LOCAL_STORAGE}-token`),
-    { uuid } = useSelector(state => state.enterpriseStore),
-    history = useHistory(),
-    dispatch = useDispatch();
-
-  // 如果没有token就跳到首页
-  useEffect(() => {
-    if (!token) {
-      history.push(ROUTES.INDEX.path);
-    }
-  }, [token, history]);
-
-  // 刷新页面会导致uuid消失,需要用token再请求一遍
-  useEffect(() => {
-    if (!uuid && token) {
-      // 由token获取enterprise信息
-      // dispatch(enterpriseAction.());
-    }
-  }, [uuid, token, dispatch]);
-
+  // 各个路由控制
   const homeIndex = useRouteMatch({
-      path: ROUTES.HOME_INDEX.path,
-      exact: true
-    }),
-    registrationWelcome = useRouteMatch({
-      path: ROUTES.HOME_REGISTRATION_WELCOME.path,
-      exact: true
-    }),
-    registrationProcess = useRouteMatch({
-      path: ROUTES.HOME_REGISTRATION_PROCESS.path
-    }),
-    registrationList = useRouteMatch({
-      path: ROUTES.HOME_REGISTRATION_LIST.path,
-      exact: true
-    });
+    path: ROUTES.HOME_INDEX.path,
+    exact: true
+  });
+  const homeSetting = useRouteMatch({
+    path: ROUTES.HOME_SETTING.path,
+    exact: true
+  });
+
+  // 员工
+  const homeWriteWelcome = useRouteMatch({
+    path: ROUTES.HOME_WRITE_WELCOME.path,
+    exact: true
+  });
+  const homeWriteDetail = useRouteMatch({
+    path: ROUTES.HOME_WRITE_DETAIL.path,
+    exact: true
+  });
+  const homeWriteCurrent = useRouteMatch({
+    path: ROUTES.HOME_WRITE_CURRENT.path,
+    exact: true
+  });
+
+  // 业务员页面
+  const homeModifyList = useRouteMatch({
+    path: ROUTES.HOME_MODIFY_LIST.path,
+    exact: true
+  });
+  const homeModifyDetail = useRouteMatch({
+    path: ROUTES.HOME_MODIFY_DETAIL.path,
+    exact: true
+  });
+
+  // 评审员页面
+  const homeExaminationList = useRouteMatch({
+    path: ROUTES.HOME_EXAMINATION_LIST.path,
+    exact: true
+  });
+  const homeExaminationDetail = useRouteMatch({
+    path: ROUTES.HOME_EXAMINATION_DETAIL.path,
+    exact: true
+  });
 
   let content = null;
 
   if (homeIndex) {
     // 主首页
     content = <HomeIndexController />;
-  } else if (registrationWelcome) {
-    content = <RegistrationWelcomeController />;
-  } else if (registrationProcess) {
-    content = <RegistrationProcessController />;
-  } else if (registrationList) {
-    content = <RegistrationListController />;
+  } else if (homeSetting) {
+    content = <SettingController />;
+  } else if (homeWriteWelcome) {
+    content = <WriteWelcomeController />;
+  } else if (homeWriteDetail) {
+    content = <WriteDetailController />;
+  } else if (homeModifyList) {
+    content = <ModifyListController />;
+  } else if (homeModifyDetail) {
+    content = <ModifyDetailController />;
+  } else if (homeExaminationList) {
+    content = <ExaminationListController />;
+  } else if (homeExaminationDetail) {
+    content = <ExaminationDetailList />;
+  } else if (homeWriteCurrent) {
+    content = <WriteCurrentController />;
+  }
+
+  const role = 1;
+  let text;
+  let route = [];
+  if (role === 1) {
+    route = [ROUTES.HOME_WRITE_WELCOME.path, ROUTES.HOME_WRITE_CURRENT.path];
+    text = ['填写信息', '最新信息'];
+  } else if (role === 2) {
+    route[0] = ROUTES.HOME_MODIFY_LIST.path;
+    text = ['查看人员信息'];
+  } else {
+    route[0] = ROUTES.HOME_EXAMINATION_LIST.path;
+    text = ['评审列表'];
   }
 
   return (
@@ -78,51 +116,31 @@ export default props => {
           <span>业务管理系统</span>
         </div>
         <Menu theme='dark' mode='inline'>
-          <SubMenu
-            key='register'
-            title={
-              <span>
-                <Icon type='audit' />
-                <span>登记测试</span>
-              </span>
-            }
-          >
-            <Menu.Item key='registrationDeal'>
-              <Link to={ROUTES.HOME_REGISTRATION_WELCOME.path}>办理新测试</Link>
-            </Menu.Item>
-            <Menu.Item key='registrationList'>
-              <Link to={ROUTES.HOME_REGISTRATION_LIST.path}>
-                查看进行的测试
+          <Menu.Item key='home'>
+            <Link to={ROUTES.HOME_INDEX.path}>
+              <Icon type='bank' />
+              <span>首页</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key='1'>
+            <Link to={route[0]}>
+              <Icon type='profile' />
+              <span>{text[0]}</span>
+            </Link>
+          </Menu.Item>
+          {route[1] ? (
+            <Menu.Item key='2'>
+              <Link to={route[1]}>
+                <Icon type='profile' />
+                <span>{text[1]}</span>
               </Link>
             </Menu.Item>
-          </SubMenu>
-          <SubMenu
-            key='entrust'
-            title={
-              <span>
-                <Icon type='file-search' />
-                <span>委托测试</span>
-              </span>
-            }
-          >
-            <Menu.Item key='entrustDeal'>办理新测试</Menu.Item>
-            <Menu.Item key='entrustList'>查看进行的测试</Menu.Item>
-          </SubMenu>
-          <SubMenu
-            key='entrustContract'
-            title={
-              <span>
-                <Icon type='profile' />
-                <span>委托合同</span>
-              </span>
-            }
-          >
-            <Menu.Item key='entrustContractDeal'>办理新委托合同</Menu.Item>
-            <Menu.Item key='entrustContractList'>查看进行的委托合同</Menu.Item>
-          </SubMenu>
-          <Menu.Item key='4'>
-            <Icon type='setting' />
-            <span className='nav-text'>企业情况设置</span>
+          ) : null}
+          <Menu.Item key='3'>
+            <Link to={ROUTES.HOME_SETTING.path}>
+              <Icon type='setting' />
+              <span>个人设置</span>
+            </Link>
           </Menu.Item>
         </Menu>
       </Sider>
