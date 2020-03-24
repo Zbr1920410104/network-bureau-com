@@ -4,11 +4,10 @@ import React from 'react';
 import { Icon, Input, Form, Button } from 'antd';
 import '@/style/login.styl';
 
-import {
-  HOME_WRITE_WELCOME,
-  HOME_EXAMINATION_LIST,
-  HOME_MODIFY_LIST
-} from '@/constants/route-constants';
+// localStorage
+import { LOCAL_STORAGE } from '@/constants/app-constants';
+
+import { HOME_INDEX } from '@/constants/route-constants';
 import { useHistory } from 'react-router-dom';
 
 export default Form.create({ name: 'login' })(({ form }) => {
@@ -24,12 +23,15 @@ export default Form.create({ name: 'login' })(({ form }) => {
     // 表单判断
     form.validateFields(async (err, value) => {
       console.log(value);
-      if (value.phone === '15998133472') {
-        history.push(`${HOME_EXAMINATION_LIST.path}`);
-      } else if (value.phone === '18351923820') {
-        history.push(`${HOME_MODIFY_LIST.path}`);
+      if (value.phone === '12345678901') {
+        history.push(`${HOME_INDEX.path}`);
+        localStorage.setItem(`${LOCAL_STORAGE}-token`, 'staff');
+      } else if (value.phone === '12345678') {
+        history.push(`${HOME_INDEX.path}`);
+        localStorage.setItem(`${LOCAL_STORAGE}-token`, 'businessManager');
       } else {
-        history.push(`${HOME_WRITE_WELCOME.path}`);
+        history.push(`${HOME_INDEX.path}`);
+        localStorage.setItem(`${LOCAL_STORAGE}-token`, 'examinationManager');
       }
     });
   };

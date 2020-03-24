@@ -21,12 +21,16 @@ import ModifyDetailController from '@/page/home/business-manager/Modify-detail-c
 import ExaminationListController from '@/page/home/examination-manager/Examination-list-controller.jsx';
 import ExaminationDetailList from '@/page/home/examination-manager/Examination-detail-controller.jsx';
 
+// localStorage
+import { LOCAL_STORAGE } from '@/constants/app-constants';
+
 // 样式
 import '@/style/home/home.styl';
 import { Layout, Menu, Icon } from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 
 export default props => {
+  const localStorageToken = localStorage.getItem(`${LOCAL_STORAGE}-token`);
   // 各个路由控制
   const homeIndex = useRouteMatch({
     path: ROUTES.HOME_INDEX.path,
@@ -94,16 +98,16 @@ export default props => {
     content = <WriteCurrentController />;
   }
 
-  const role = 1;
+  console.log('localStorageToken=', localStorageToken);
   let text;
   let route = [];
-  if (role === 1) {
+  if (localStorageToken === 'staff') {
     route = [ROUTES.HOME_WRITE_WELCOME.path, ROUTES.HOME_WRITE_CURRENT.path];
     text = ['填写信息', '最新信息'];
-  } else if (role === 2) {
+  } else if (localStorageToken === 'businessManager') {
     route[0] = ROUTES.HOME_MODIFY_LIST.path;
     text = ['查看人员信息'];
-  } else {
+  } else if (localStorageToken === 'examinationManager') {
     route[0] = ROUTES.HOME_EXAMINATION_LIST.path;
     text = ['评审列表'];
   }

@@ -12,7 +12,20 @@ const { Column } = Table;
 
 export default props => {
   const history = useHistory();
-  const enterpriseRegistrationList = [];
+  const enterpriseRegistrationList = [
+    {
+      uuid: '1',
+      name: '李锐',
+      office: '战略研究科',
+      date: '2020-03-22'
+    },
+    {
+      uuid: '2',
+      name: '李锐',
+      office: '战略研究科',
+      date: '2020-03-12'
+    }
+  ];
   return (
     <div className='write-welcome-box'>
       <p className='title-box'>
@@ -37,8 +50,10 @@ export default props => {
           className='table'
           rowKey={record => record.uuid}
         >
-          <Column title='修改时间' dataIndex='' key='' />
-          <Column title='查看修改详情' dataIndex='' key='' />
+          <Column align='center' title='序号' dataIndex='uuid' key='' />
+          <Column align='center' title='姓名' dataIndex='name' key='' />
+          <Column align='center' title='科室' dataIndex='office' key='' />
+          <Column align='center' title='最后修改时间' dataIndex='date' key='' />
         </Table>
       </div>
     </div>
