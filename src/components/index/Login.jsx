@@ -30,10 +30,10 @@ export default Form.create({ name: 'login' })(({ form }) => {
         history.push(`${HOME_PASSWORD.path}`);
         localStorage.setItem(`${LOCAL_STORAGE}-token`, 'staff');
       } else if (value.phone === '12345678') {
-        history.push(`${HOME_PASSWORD.path}`);
+        history.push(`${HOME_INDEX.path}`);
         localStorage.setItem(`${LOCAL_STORAGE}-token`, 'businessManager');
       } else {
-        history.push(`${HOME_PASSWORD.path}`);
+        history.push(`${HOME_INDEX.path}`);
         localStorage.setItem(`${LOCAL_STORAGE}-token`, 'examinationManager');
       }
     });

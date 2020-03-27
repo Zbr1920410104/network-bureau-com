@@ -1,492 +1,194 @@
 import React, { useState } from 'react';
 
+import ModifyProjectContent from '@/components/home/staff/project/Modify-project-content-controller.jsx';
+
 // 样式
 import '@/style/home/staff/write-detail.styl';
-import {
-  Icon,
-  Form,
-  Row,
-  Input,
-  Col,
-  Select,
-  Button,
-  Tabs,
-  Descriptions,
-  Modal
-} from 'antd';
-const { Option } = Select,
-  { TextArea } = Input,
-  { TabPane } = Tabs,
+import { Button, Table, Modal } from 'antd';
+const { Column } = Table,
   { confirm } = Modal;
 
 export default props => {
-  const [hostingProjectformList, setHostingProjectFormList] = useState([]),
-    [participationProjectformList, setParticipationProjectFormList] = useState(
-      []
-    );
+  const leadProjectList = [
+      {
+        id: 1,
+        type: 1,
+        name: '软件测试1',
+        time: '2020-03-04~202003-20',
+        code: '101010101',
+        resource: '网信办',
+        funds: 23,
+        participant: '钱程、张博荣',
+        content: 'js开发'
+      },
+      {
+        id: 2,
+        type: 2,
+        name: '软件测试2',
+        time: '2020-03-05~202003-25',
+        code: '101010106',
+        resource: '网信办',
+        funds: 32,
+        participant: '钱程、张博荣',
+        content: '系统开发'
+      }
+    ],
+    [newProjectVisible, setNewProjectVisible] = useState(false),
+    [modifyProjectVisible, setModifyProjectVisible] = useState(false);
 
-  const createHostingProject = () => {
-    let hostingProjectField = [];
-    hostingProjectField.push(
-      <div className='inner-form-box'>
-        <Row gutter={24}>
-          <Col span={8} key='01'>
-            <Form.Item
-              label='项目名称'
-              labelCol={{ span: 9 }}
-              wrapperCol={{ span: 15 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入项目名称!'
-                }
-              ]}
-            >
-              <Input placeholder='项目名称' />
-            </Form.Item>
-          </Col>
-          <Col span={8} key='02'>
-            <Form.Item
-              label='项目编号'
-              labelCol={{ span: 6 }}
-              wrapperCol={{ span: 17 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入项目编号!'
-                }
-              ]}
-            >
-              <Input placeholder='项目编号' />
-            </Form.Item>
-          </Col>
-          <Col span={8} key='03'>
-            <Form.Item
-              label='项目来源'
-              labelCol={{ span: 6 }}
-              wrapperCol={{ span: 17 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入项目来源!'
-                }
-              ]}
-            >
-              <Input placeholder='项目来源' />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={24}>
-          <Col span={8} key='04'>
-            <Form.Item
-              label='项目经费(万元)'
-              labelCol={{ span: 9 }}
-              wrapperCol={{ span: 15 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入项目经费(万元)!'
-                }
-              ]}
-            >
-              <Input placeholder='项目经费(万元)' />
-            </Form.Item>
-          </Col>
-          <Col span={8} key='05'>
-            <Form.Item
-              label='起止时间'
-              labelCol={{ span: 6 }}
-              wrapperCol={{ span: 17 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入起止时间!'
-                }
-              ]}
-            >
-              <Input placeholder='起止时间' />
-            </Form.Item>
-          </Col>
-          <Col span={8} key='06'>
-            <Form.Item
-              label='在研/结题'
-              labelCol={{ span: 6 }}
-              wrapperCol={{ span: 17 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入在研/结题!'
-                }
-              ]}
-            >
-              <Select>
-                <Option value='在研'>在研</Option>
-                <Option value='结题'>结题</Option>
-              </Select>
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={24}>
-          <Form.Item
-            label='主要研究内容'
-            labelCol={{ span: 3 }}
-            wrapperCol={{ span: 18 }}
-            rules={[
-              {
-                required: true,
-                message: '请输入主要研究内容!'
-              }
-            ]}
-          >
-            <TextArea
-              autoSize={{ minRows: 4, maxRows: 8 }}
-              maxLength='200'
-              placeholder='主要研究内容'
-            />
-          </Form.Item>
-        </Row>
-
-        <Row gutter={24}>
-          <Col span={8} key='07'>
-            <Form.Item
-              label='负责人'
-              labelCol={{ span: 9 }}
-              wrapperCol={{ span: 15 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入负责人!'
-                }
-              ]}
-            >
-              <Input placeholder='负责人' />
-            </Form.Item>
-          </Col>
-          <Col span={8} key='08'>
-            <Form.Item
-              label='参与人名单'
-              labelCol={{ span: 6 }}
-              wrapperCol={{ span: 17 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入参与人名单!'
-                }
-              ]}
-            >
-              <Input placeholder='参与人名单' />
-            </Form.Item>
-          </Col>
-          <Col span={8} key='09'>
-            <Form.Item>
-              <Button type='primary' className='delete-button'>
-                保存
-              </Button>
-            </Form.Item>
-          </Col>
-        </Row>
-      </div>
-    );
-    setHostingProjectFormList(hostingProjectField);
+  const showNewProjectModal = () => {
+    setNewProjectVisible(true);
   };
 
-  const createParticipationProject = () => {
-    const participationProjectField = [];
-    participationProjectField.push(
-      <div className='inner-form-box'>
-        <Row gutter={24}>
-          <Col span={8} key='#1'>
-            <Form.Item
-              label='项目名称'
-              labelCol={{ span: 9 }}
-              wrapperCol={{ span: 15 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入项目名称!'
-                }
-              ]}
-            >
-              <Input placeholder='项目名称' />
-            </Form.Item>
-          </Col>
-          <Col span={8} key='#2'>
-            <Form.Item
-              label='项目编号'
-              labelCol={{ span: 6 }}
-              wrapperCol={{ span: 17 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入项目编号!'
-                }
-              ]}
-            >
-              <Input placeholder='项目编号' />
-            </Form.Item>
-          </Col>
-          <Col span={8} key='#3'>
-            <Form.Item
-              label='项目来源'
-              labelCol={{ span: 6 }}
-              wrapperCol={{ span: 17 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入项目来源!'
-                }
-              ]}
-            >
-              <Input placeholder='项目来源' />
-            </Form.Item>
-          </Col>
-        </Row>
+  const hideNewProjectModal = () => {
+    setNewProjectVisible(false);
+  };
 
-        <Row gutter={24}>
-          <Col span={8} key='#4'>
-            <Form.Item
-              label='项目经费(万元)'
-              labelCol={{ span: 9 }}
-              wrapperCol={{ span: 15 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入项目经费(万元)!'
-                }
-              ]}
-            >
-              <Input placeholder='项目经费(万元)' />
-            </Form.Item>
-          </Col>
-          <Col span={8} key='#5'>
-            <Form.Item
-              label='起止时间'
-              labelCol={{ span: 6 }}
-              wrapperCol={{ span: 17 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入起止时间!'
-                }
-              ]}
-            >
-              <Input placeholder='起止时间' />
-            </Form.Item>
-          </Col>
-          <Col span={8} key='#6'>
-            <Form.Item
-              label='在研/结题'
-              labelCol={{ span: 6 }}
-              wrapperCol={{ span: 17 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入在研/结题!'
-                }
-              ]}
-            >
-              <Select>
-                <Option value='在研'>在研</Option>
-                <Option value='结题'>结题</Option>
-              </Select>
-            </Form.Item>
-          </Col>
-        </Row>
+  const showModifyProjectModal = () => {
+    setModifyProjectVisible(true);
+  };
 
-        <Row gutter={24}>
-          <Form.Item
-            label='主要研究内容'
-            labelCol={{ span: 3 }}
-            wrapperCol={{ span: 18 }}
-            rules={[
-              {
-                required: true,
-                message: '请输入主要研究内容!'
-              }
-            ]}
-          >
-            <TextArea
-              autoSize={{ minRows: 4, maxRows: 8 }}
-              maxLength='200'
-              placeholder='主要研究内容'
-            />
-          </Form.Item>
-        </Row>
-
-        <Row gutter={24}>
-          <Col span={8} key='#7'>
-            <Form.Item
-              label='负责人'
-              labelCol={{ span: 9 }}
-              wrapperCol={{ span: 15 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入负责人!'
-                }
-              ]}
-            >
-              <Input placeholder='负责人' />
-            </Form.Item>
-          </Col>
-          <Col span={8} key='#8'>
-            <Form.Item
-              label='参与人名单'
-              labelCol={{ span: 6 }}
-              wrapperCol={{ span: 17 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入参与人名单!'
-                }
-              ]}
-            >
-              <Input placeholder='参与人名单' />
-            </Form.Item>
-          </Col>
-          <Col span={8} key='#9'>
-            <Form.Item>
-              <Button type='primary' className='delete-button'>
-                保存
-              </Button>
-            </Form.Item>
-          </Col>
-        </Row>
-      </div>
-    );
-    setParticipationProjectFormList(participationProjectField);
+  const hideModifyProjectModal = () => {
+    setModifyProjectVisible(false);
   };
 
   return (
-    <Tabs defaultActiveKey='1'>
-      <TabPane tab='主持项目' key='1'>
-        <Descriptions
-          className='description-box'
-          title={
-            <div className='description-title-box'>
-              <span>主持项目清单</span>
-              <Button
-                type='link'
-                className='plus-icon'
-                onClick={() => {
-                  confirm({
-                    title: '新增主持项目?',
-                    content: '请确定是否要新增主持项目!',
-                    okText: '确认',
-                    cancelText: '取消',
-                    onOk() {
-                      createHostingProject();
-                    },
-                    onCancel() {}
-                  });
-                }}
-              >
-                <Icon type='plus-circle' />
-              </Button>
-            </div>
+    <div>
+      <Button
+        type='primary'
+        style={{ marginBottom: 16 }}
+        onClick={showNewProjectModal}
+      >
+        新增项目
+      </Button>
+      <Modal
+        title='新增项目'
+        visible={newProjectVisible}
+        onOk={hideNewProjectModal}
+        onCancel={hideNewProjectModal}
+        okText='保存'
+        cancelText='取消'
+      >
+        <ModifyProjectContent />
+      </Modal>
+      <Modal
+        title='修改项目内容'
+        visible={modifyProjectVisible}
+        onOk={hideModifyProjectModal}
+        onCancel={hideModifyProjectModal}
+        okText='保存'
+        cancelText='取消'
+      >
+        <ModifyProjectContent />
+      </Modal>
+      <Table
+        dataSource={leadProjectList}
+        className='table'
+        rowKey={record => record.id}
+        scroll={{ x: 1300 }}
+      >
+        <Column
+          align='center'
+          title='项目类型'
+          dataIndex='type'
+          key=''
+          fixed='left'
+          width='100px'
+          render={(text, record) =>
+            record.type === 1 ? '主持项目' : '参与项目'
           }
-        >
-          <Descriptions.Item
-            label='项目名称'
-          >
-            软件测试
-          </Descriptions.Item>
-          <Descriptions.Item
-            label='项目编号'
-          >
-            100010001000
-          </Descriptions.Item>
-          <Descriptions.Item label='项目来源'>
-            哈尔滨理工大学1819
-          </Descriptions.Item>
-          <Descriptions.Item label='主要研究内容' span={3}>
-            JS开发
-          </Descriptions.Item>
-          <Descriptions.Item label='项目经费(万元)'>100</Descriptions.Item>
-          <Descriptions.Item label='起止时间'>
-            2020-03-01~2020-04-30
-          </Descriptions.Item>
-          <Descriptions.Item label='在研/结题'>在研</Descriptions.Item>
-          <Descriptions.Item label='负责人'>马超</Descriptions.Item>
-          <Descriptions.Item label='参与人名单'>钱程、张博荣</Descriptions.Item>
-          <Descriptions.Item>
-            <Button type='primary' className='modify-button'>
-              修改
+        />
+        <Column
+          align='center'
+          title='项目名称'
+          dataIndex='name'
+          key=''
+          fixed='left'
+          width='200px'
+        />
+        <Column
+          align='center'
+          title='项目起止时间'
+          dataIndex='time'
+          key=''
+          width='150px'
+        />
+        <Column
+          align='center'
+          title='项目编号'
+          dataIndex='code'
+          key=''
+          width='150px'
+        />
+        <Column
+          align='center'
+          title='项目来源'
+          dataIndex='resource'
+          key=''
+          width='150px'
+        />
+        <Column
+          align='center'
+          title='项目经费(万元)'
+          dataIndex='funds'
+          key=''
+          width='100px'
+        />
+        <Column
+          align='center'
+          title='主要研究内容'
+          dataIndex='content'
+          key='content'
+          width='300px'
+        />
+        <Column
+          align='center'
+          title='参与者名单'
+          dataIndex='participant'
+          key=''
+          width='300px'
+        />
+        <Column
+          align='center'
+          title='修改'
+          dataIndex=''
+          fixed='right'
+          width='100px'
+          key=''
+          render={() => (
+            <Button type='link' onClick={showModifyProjectModal}>
+              修改项目内容
             </Button>
-            <Button type='primary' className='delete-button'>
-              删除
+          )}
+        />
+        <Column
+          align='center'
+          title='删除'
+          fixed='right'
+          width='80px'
+          dataIndex=''
+          key=''
+          render={() => (
+            <Button
+              type='link'
+              onClick={() => {
+                confirm({
+                  title: '删除项目?',
+                  okType: 'primary',
+                  content: '确认要删除项目?',
+                  okText: '确认',
+                  cancelText: '取消',
+                  onOk() {},
+                  onCancel() {}
+                });
+              }}
+            >
+              删除项目
             </Button>
-          </Descriptions.Item>
-        </Descriptions>
-        {hostingProjectformList}
-      </TabPane>
-      <TabPane tab='参与项目' key='2'>
-        <Descriptions
-          className='description-box'
-          title={
-            <div className='description-title-box'>
-              <span>参与项目清单</span>
-              <Button
-                type='link'
-                className='plus-icon'
-                onClick={() => {
-                  confirm({
-                    title: '新增参与项目?',
-                    content: '请确定是否要新增参与项目!',
-                    okText: '确认',
-                    cancelText: '取消',
-                    onOk() {
-                      createParticipationProject();
-                    },
-                    onCancel() {}
-                  });
-                }}
-              >
-                <Icon type='plus-circle' />
-              </Button>
-            </div>
-          }
-        >
-          <Descriptions.Item
-            label='项目名称'
-            labelCol={{ span: 6 }}
-            wrapperCol={{ span: 18 }}
-          >
-            软件测试
-          </Descriptions.Item>
-          <Descriptions.Item
-            label='项目编号'
-            labelCol={{ span: 6 }}
-            wrapperCol={{ span: 18 }}
-          >
-            100010001000
-          </Descriptions.Item>
-          <Descriptions.Item label='项目来源'>
-            哈尔滨理工大学1819
-          </Descriptions.Item>
-          <Descriptions.Item label='主要研究内容' span={3}>
-            JS开发
-          </Descriptions.Item>
-          <Descriptions.Item label='项目经费(万元)'>100</Descriptions.Item>
-          <Descriptions.Item label='起止时间'>
-            2020-03-01~2020-04-30
-          </Descriptions.Item>
-          <Descriptions.Item label='在研/结题'>在研</Descriptions.Item>
-          <Descriptions.Item label='负责人'>马超</Descriptions.Item>
-          <Descriptions.Item label='参与人名单'>钱程、张博荣</Descriptions.Item>
-          <Descriptions.Item>
-            <Button type='primary' className='modify-button'>
-              修改
-            </Button>
-            <Button type='primary' className='delete-button'>
-              删除
-            </Button>
-          </Descriptions.Item>
-        </Descriptions>
-        {participationProjectformList}
-      </TabPane>
-    </Tabs>
+          )}
+        />
+      </Table>
+      <Button type='primary'>暂存</Button>
+    </div>
   );
 };

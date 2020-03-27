@@ -14,8 +14,8 @@ import WriteDetailController from '@/page/home/staff/Write-detail-controller.jsx
 import WriteCurrentController from '@/page/home/staff/Write-current-controller.jsx';
 
 // 业务员
-import ModifyListController from '@/page/home/business-manager/Modify-list-controller.jsx';
-import ModifyDetailController from '@/page/home/business-manager/Modify-detail-controller.jsx';
+import VerifyListController from '@/page/home/business-manager/Verify-list-controller.jsx';
+import VerifyDetailController from '@/page/home/business-manager/Verify-detail-controller.jsx';
 
 // 评审员
 import ExaminationListController from '@/page/home/examination-manager/Examination-list-controller.jsx';
@@ -41,11 +41,6 @@ export default props => {
     exact: true
   });
 
-  const homePassword = useRouteMatch({
-    path: ROUTES.HOME_PASSWORD.path,
-    exact: true
-  });
-
   // 员工
   const homeWriteWelcome = useRouteMatch({
     path: ROUTES.HOME_WRITE_WELCOME.path,
@@ -59,14 +54,18 @@ export default props => {
     path: ROUTES.HOME_WRITE_CURRENT.path,
     exact: true
   });
-
-  // 业务员页面
-  const homeModifyList = useRouteMatch({
-    path: ROUTES.HOME_MODIFY_LIST.path,
+  const homePassword = useRouteMatch({
+    path: ROUTES.HOME_PASSWORD.path,
     exact: true
   });
-  const homeModifyDetail = useRouteMatch({
-    path: ROUTES.HOME_MODIFY_DETAIL.path,
+
+  // 业务员页面
+  const homeVerifyList = useRouteMatch({
+    path: ROUTES.HOME_VERIFY_LIST.path,
+    exact: true
+  });
+  const homeVerifyDetail = useRouteMatch({
+    path: ROUTES.HOME_VERIFY_DETAIL.path,
     exact: true
   });
 
@@ -101,10 +100,10 @@ export default props => {
     content = <WriteWelcomeController />;
   } else if (homeWriteDetail) {
     content = <WriteDetailController />;
-  } else if (homeModifyList) {
-    content = <ModifyListController />;
-  } else if (homeModifyDetail) {
-    content = <ModifyDetailController />;
+  } else if (homeVerifyList) {
+    content = <VerifyListController />;
+  } else if (homeVerifyDetail) {
+    content = <VerifyDetailController />;
   } else if (homeExaminationList) {
     content = <ExaminationListController />;
   } else if (homeExaminationDetail) {
@@ -123,16 +122,15 @@ export default props => {
   if (localStorageToken === 'staff') {
     route = [
       ROUTES.HOME_PASSWORD.path,
-      ROUTES.HOME_WRITE_WELCOME.path,
-      ROUTES.HOME_WRITE_CURRENT.path
+      ROUTES.HOME_WRITE_WELCOME.path
     ];
-    text = ['修改密码', '填写信息', '最新信息'];
+    text = ['修改密码', '填写信息'];
   } else if (localStorageToken === 'businessManager') {
-    route = [ROUTES.HOME_PASSWORD.path, ROUTES.HOME_MODIFY_LIST.path];
-    text = ['修改密码', '查看人员信息'];
+    route = [ROUTES.HOME_VERIFY_LIST.path];
+    text = ['核实信息'];
   } else if (localStorageToken === 'examinationManager') {
-    route = [ROUTES.HOME_PASSWORD.path, ROUTES.HOME_EXAMINATION_LIST.path];
-    text = ['修改密码', '评审列表'];
+    route = [ROUTES.HOME_EXAMINATION_LIST.path];
+    text = ['信息打分'];
   } else if (localStorageToken === 'admin') {
     route = [ROUTES.HOME_ACCOUNT_LIST.path, ROUTES.HOME_ACCOUNT_TIME.path];
     text = ['账号管理列表', '开放填写时间设置'];
@@ -163,6 +161,14 @@ export default props => {
               <Link to={route[1]}>
                 <Icon type='profile' />
                 <span>{text[1]}</span>
+              </Link>
+            </Menu.Item>
+          ) : null}
+          {route[2] ? (
+            <Menu.Item key='3'>
+              <Link to={route[2]}>
+                <Icon type='profile' />
+                <span>{text[2]}</span>
               </Link>
             </Menu.Item>
           ) : null}

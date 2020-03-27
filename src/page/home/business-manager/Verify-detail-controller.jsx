@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 // 路由
-import { HOME_MODIFY_LIST } from '@/constants/route-constants';
+import { HOME_VERIFY_LIST } from '@/constants/route-constants';
 import { Link, useHistory } from 'react-router-dom';
 
 // 样式
@@ -18,11 +18,11 @@ export default props => {
         <span>查看详情</span>
       </p>
       <div className='subtitle-box'>
-        <Link to={HOME_MODIFY_LIST.path}>
+        <Link to={HOME_VERIFY_LIST.path}>
           <Icon type='left' className='exit-icon' />
         </Link>
         <p className='subtitle-title'>
-          <span>查看人员信息填写/修改</span>
+          <span>信息核实</span>
         </p>
       </div>
       <div className='detail-content-box'>
@@ -1238,7 +1238,7 @@ export default props => {
           htmlType='submit'
           className='grade-button'
           onClick={() => {
-            history.push(HOME_MODIFY_LIST.path);
+            history.push(HOME_VERIFY_LIST.path);
           }}
         >
           打分

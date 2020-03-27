@@ -25,12 +25,12 @@ export const HOME_WRITE_CURRENT = {
 };
 
 // 业务员页面
-export const HOME_MODIFY_LIST = {
-  path: '/home/medify/list',
+export const HOME_VERIFY_LIST = {
+  path: '/home/verify/list',
   name: '业务员列表页面'
 };
-export const HOME_MODIFY_DETAIL = {
-  path: '/home/modify/detail',
+export const HOME_VERIFY_DETAIL = {
+  path: '/home/verify/detail',
   name: '业务员修改详情面'
 };
 

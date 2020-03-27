@@ -3,6 +3,16 @@
   box-shadow: 0 0 5px #ddd;
   margin-bottom: 10px;
 
+  .title-box {
+    font-size: 16px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    background: rgb(51, 68, 84);
+    border-bottom: 1px solid #ddd;
+    color: #fff;
+  }
+
   .subtitle-box {
     display: flex;
     align-items: center;
@@ -15,5 +25,25 @@
     font-weight: 900;
     color: rgb(51, 68, 84);
     margin-bottom: 0;
+  }
+
+  .write-list-box {
+    .list-title-box {
+      padding-bottom: 10px;
+      display: flex;
+      flex-direction: row;
+      width: 30%;
+
+      .list-select {
+        min-width: 120px;
+      }
+
+      .button {
+        background: #52c41a;
+        border: 1px solid #52c41a;
+        margin-left: 20px;
+        max-width: 80px;
+      }
+    }
   }
 }
