@@ -7,7 +7,7 @@ import '@/style/login.styl';
 // localStorage
 import { LOCAL_STORAGE } from '@/constants/app-constants';
 
-import { HOME_INDEX } from '@/constants/route-constants';
+import { HOME_INDEX, HOME_PASSWORD } from '@/constants/route-constants';
 import { useHistory } from 'react-router-dom';
 
 export default Form.create({ name: 'login' })(({ form }) => {
@@ -23,14 +23,17 @@ export default Form.create({ name: 'login' })(({ form }) => {
     // 表单判断
     form.validateFields(async (err, value) => {
       console.log(value);
-      if (value.phone === '12345678901') {
+      if (value.phone === '100000') {
         history.push(`${HOME_INDEX.path}`);
+        localStorage.setItem(`${LOCAL_STORAGE}-token`, 'admin');
+      } else if (value.phone === '12345678901') {
+        history.push(`${HOME_PASSWORD.path}`);
         localStorage.setItem(`${LOCAL_STORAGE}-token`, 'staff');
       } else if (value.phone === '12345678') {
-        history.push(`${HOME_INDEX.path}`);
+        history.push(`${HOME_PASSWORD.path}`);
         localStorage.setItem(`${LOCAL_STORAGE}-token`, 'businessManager');
       } else {
-        history.push(`${HOME_INDEX.path}`);
+        history.push(`${HOME_PASSWORD.path}`);
         localStorage.setItem(`${LOCAL_STORAGE}-token`, 'examinationManager');
       }
     });

@@ -14,7 +14,7 @@ export default props => {
         <div className='left-box'>
           <img
             className='image-background'
-            src='/image/login/left.jpg'
+            src='/image/left.jpg'
             alt='Paris'
           />
           <div className='text-box'>

@@ -8,7 +8,7 @@ export const HOME = { path: '/home', name: '主页' };
 
 // 二级路由
 export const HOME_INDEX = { path: '/home/index', name: '主首页' };
-export const HOME_SETTING = { path: '/home/setting', name: '个人设置页' };
+export const HOME_PASSWORD = { path: '/home/password', name: '密码修改页面' };
 
 // 员工填写页面
 export const HOME_WRITE_WELCOME = {
@@ -42,4 +42,14 @@ export const HOME_EXAMINATION_LIST = {
 export const HOME_EXAMINATION_DETAIL = {
   path: '/home/examination/detail',
   name: '评审员审核详情页'
+};
+
+// 管理员页面
+export const HOME_ACCOUNT_LIST = {
+  path: '/home/account/list',
+  name: '管理员账号管理列表页面'
+};
+export const HOME_ACCOUNT_TIME = {
+  path: '/home/account/time',
+  name: '管理员账号时间填写设置页面'
 };
