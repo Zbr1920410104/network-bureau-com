@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 
+import ExamineAwardContent from '@/components/home/examination-manager/award/Examine-award-content-controller.jsx';
+
 // 样式
-import '@/style/home/business-manager/verify-detail.styl';
+import '@/style/home/examination-manager/examination-detail.styl';
 import { Button, Table, Modal } from 'antd';
 const { Column } = Table;
 
@@ -25,7 +27,8 @@ export default props => {
         awardNameList: '钱程、张博荣'
       }
     ],
-    [uploadAwardVisible, setUploadAwardVisible] = useState(false);
+    [uploadAwardVisible, setUploadAwardVisible] = useState(false),
+    [examineAwardVisible, setExamineAwardVisible] = useState(false);
 
   const showUploadAwardModal = () => {
     setUploadAwardVisible(true);
@@ -35,6 +38,14 @@ export default props => {
     setUploadAwardVisible(false);
   };
 
+  const showExamineAwardModal = () => {
+    setExamineAwardVisible(true);
+  };
+
+  const hideExamineAwardModal = () => {
+    setExamineAwardVisible(false);
+  };
+
   return (
     <div>
       <Modal
@@ -42,7 +53,7 @@ export default props => {
         visible={uploadAwardVisible}
         onOk={hideUploadAwardModal}
         onCancel={hideUploadAwardModal}
-        okText='已下载'
+        okText='保存'
         cancelText='取消'
       >
         <div className='download-button-box'>
@@ -55,6 +66,16 @@ export default props => {
             获奖证明附件下载
           </Button>
         </div>
+      </Modal>
+      <Modal
+        title='打分'
+        visible={examineAwardVisible}
+        onOk={hideExamineAwardModal}
+        onCancel={hideExamineAwardModal}
+        okText='确定'
+        cancelText='取消'
+      >
+        <ExamineAwardContent />
       </Modal>
       <Table
         dataSource={leadAwardList}
@@ -119,6 +140,19 @@ export default props => {
           render={() => (
             <Button type='link' onClick={showUploadAwardModal}>
               查看附件
+            </Button>
+          )}
+        />
+        <Column
+          align='center'
+          title='打分'
+          dataIndex=''
+          fixed='right'
+          width='100px'
+          key=''
+          render={() => (
+            <Button type='link' onClick={showExamineAwardModal}>
+              打分
             </Button>
           )}
         />

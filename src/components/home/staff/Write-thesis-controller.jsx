@@ -99,7 +99,7 @@ export default props => {
         <ModifyThesisContent />
       </Modal>
       <Modal
-        title='上传文件'
+        title='上传附件'
         visible={uploadThesisVisible}
         onOk={hideUploadThesisModal}
         onCancel={hideUploadThesisModal}
@@ -173,14 +173,14 @@ export default props => {
         />
         <Column
           align='center'
-          title='上传/查看文件'
+          title='上传/查看附件'
           dataIndex=''
           fixed='right'
           width='100px'
           key=''
           render={() => (
             <Button type='link' onClick={showUploadThesisModal}>
-              上传/查看文件
+              上传/查看附件
             </Button>
           )}
         />

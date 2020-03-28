@@ -9,16 +9,16 @@ export default Form.create({ name: 'awardFile' })(({ form }) => {
     <div className='inner-form-box'>
       <Form>
         <Form.Item
-          label='获奖证明文件'
+          label='获奖证明附件'
           labelCol={{ span: 7 }}
           wrapperCol={{ span: 16 }}
         >
           {getFieldDecorator('awardFile', {
-            rules: [{ required: true, message: '请上传获奖证明文件' }]
+            rules: [{ required: true, message: '请上传获奖证明附件' }]
           })(
             <Upload htmlType='button'>
               <Button htmlType='button' size='large' className='button'>
-                点击文件上传JPG
+                点击附件上传JPG
                 <Icon type='inbox' />
               </Button>
             </Upload>

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 
-import VerifyProjectController from '@/components/home/business-manager/detail/Verify-project-controller.jsx';
-import VerifyBasicController from '@/components/home/business-manager/detail/Verify-basic-controller.jsx';
-import VerifyPatentController from '@/components/home/business-manager/detail/Verify-patent-controller.jsx';
-import VerifyCopyrightController from '@/components/home/business-manager/detail/Verify-copyright-controller.jsx';
-import VerifyAwardController from '@/components/home/business-manager/detail/Verify-award-controller.jsx';
-import VerifyThesisController from '@/components/home/business-manager/detail/Verify-thesis-controller.jsx';
+import ExaminationProjectController from '@/components/home/examination-manager/detail/Examination-project-controller.jsx';
+import ExaminationBasicController from '@/components/home/examination-manager/detail/Examination-basic-controller.jsx';
+import ExaminationPatentController from '@/components/home/examination-manager/detail/Examination-patent-controller.jsx';
+import ExaminationCopyrightController from '@/components/home/examination-manager/detail/Examination-copyright-controller.jsx';
+import ExaminationAwardController from '@/components/home/examination-manager/detail/Examination-award-controller.jsx';
+import ExaminationThesisController from '@/components/home/examination-manager/detail/Examination-thesis-controller.jsx';
 
 // 路由
 import { HOME_EXAMINATION_LIST } from '@/constants/route-constants';
@@ -15,7 +15,7 @@ import ExportOneContent from '@/components/home/public/Export-one-content-contro
 
 // 样式
 import { Icon, Button, Modal, Tabs } from 'antd';
-import '@/style/home/business-manager/verify-detail.styl';
+import '@/style/home/examination-manager/examination-detail.styl';
 const { TabPane } = Tabs,
   { confirm } = Modal;
 
@@ -31,7 +31,7 @@ export default props => {
   };
 
   return (
-    <div className='verify-detail-box'>
+    <div className='examination-detail-box'>
       <p className='title-box'>
         <span>查看详情</span>
       </p>
@@ -77,6 +77,12 @@ export default props => {
           >
             导出当前员工信息
           </Button>
+          <Button
+            type='primary'
+            className='export-button'
+          >
+            导出当前员工得分表
+          </Button>
           <Modal
             title='导出当前员工信息'
             visible={exportOneVisible}
@@ -88,25 +94,25 @@ export default props => {
             <ExportOneContent />
           </Modal>
         </div>
-        <div className='verify-form-box'>
+        <div className='examination-form-box'>
           <Tabs defaultActiveKey='1'>
             <TabPane tab='基本信息' key='1'>
-              <VerifyBasicController />
+              <ExaminationBasicController />
             </TabPane>
             <TabPane tab='项目' key='2'>
-              <VerifyProjectController />
+              <ExaminationProjectController />
             </TabPane>
             <TabPane tab='授权专利' key='3'>
-              <VerifyPatentController />
+              <ExaminationPatentController />
             </TabPane>
             <TabPane tab='软件著作权' key='4'>
-              <VerifyCopyrightController />
+              <ExaminationCopyrightController />
             </TabPane>
             <TabPane tab='获奖情况' key='5'>
-              <VerifyAwardController />
+              <ExaminationAwardController />
             </TabPane>
             <TabPane tab='论文/专著' key='6'>
-              <VerifyThesisController />
+              <ExaminationThesisController />
             </TabPane>
           </Tabs>
         </div>

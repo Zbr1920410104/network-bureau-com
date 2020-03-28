@@ -61,6 +61,9 @@ export default props => {
           >
             导出所有人信息
           </Button>
+          <Button type='primary' className='export-all-button'>
+            导出所有人得分表
+          </Button>
           <Modal
             title='导出所有人信息'
             visible={exportAllVisible}

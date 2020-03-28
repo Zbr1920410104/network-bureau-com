@@ -1,11 +1,23 @@
 import React, { useState } from 'react';
 
+import ExamineThesisContent from '@/components/home/examination-manager/thesis/Examine-thesis-content-controller.jsx';
+
 // 样式
-import '@/style/home/business-manager/verify-detail.styl';
+import '@/style/home/examination-manager/examination-detail.styl';
 import { Button, Table, Modal } from 'antd';
 const { Column } = Table;
 
 export default props => {
+  const [examineThesisVisible, setExamineThesisVisible] = useState(false);
+
+  const showExamineThesisModal = () => {
+    setExamineThesisVisible(true);
+  };
+
+  const hideExamineThesisModal = () => {
+    setExamineThesisVisible(false);
+  };
+
   const leadThesisList = [
       {
         id: 1,
@@ -50,11 +62,21 @@ export default props => {
   return (
     <div>
       <Modal
+        title='打分'
+        visible={examineThesisVisible}
+        onOk={hideExamineThesisModal}
+        onCancel={hideExamineThesisModal}
+        okText='确定'
+        cancelText='取消'
+      >
+        <ExamineThesisContent />
+      </Modal>
+      <Modal
         title='查看附件'
         visible={uploadThesisVisible}
         onOk={hideUploadThesisModal}
         onCancel={hideUploadThesisModal}
-        okText='已下载'
+        okText='确定'
         cancelText='取消'
       >
         <div className='download-button-box'>
@@ -146,6 +168,19 @@ export default props => {
           render={() => (
             <Button type='link' onClick={showUploadThesisModal}>
               查看附件
+            </Button>
+          )}
+        />
+        <Column
+          align='center'
+          title='打分'
+          dataIndex=''
+          fixed='right'
+          width='100px'
+          key=''
+          render={() => (
+            <Button type='link' onClick={showExamineThesisModal}>
+              打分
             </Button>
           )}
         />

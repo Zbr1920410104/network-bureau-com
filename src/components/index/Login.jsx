@@ -23,16 +23,16 @@ export default Form.create({ name: 'login' })(({ form }) => {
     // 表单判断
     form.validateFields(async (err, value) => {
       console.log(value);
-      if (value.phone === '100000') {
+      if (value.userName === 'admin' && value.password === '123456') {
         history.push(`${HOME_INDEX.path}`);
         localStorage.setItem(`${LOCAL_STORAGE}-token`, 'admin');
-      } else if (value.phone === '12345678901') {
+      } else if (value.userName === 'yuangong' && value.password === '123456') {
         history.push(`${HOME_PASSWORD.path}`);
         localStorage.setItem(`${LOCAL_STORAGE}-token`, 'staff');
-      } else if (value.phone === '12345678') {
+      } else if (value.userName === 'tongji' && value.password === '123456') {
         history.push(`${HOME_INDEX.path}`);
         localStorage.setItem(`${LOCAL_STORAGE}-token`, 'businessManager');
-      } else {
+      } else if (value.userName === 'pingshen' && value.password === '123456') {
         history.push(`${HOME_INDEX.path}`);
         localStorage.setItem(`${LOCAL_STORAGE}-token`, 'examinationManager');
       }
@@ -42,25 +42,21 @@ export default Form.create({ name: 'login' })(({ form }) => {
   return (
     <Form onSubmit={handleSumbitSave}>
       <Form.Item>
-        {getFieldDecorator('phone', {
+        {getFieldDecorator('userName', {
           rules: [
             {
               required: true,
-              message: '请输入联系电话！'
+              message: '请输入账号！'
             },
             {
-              message: '联系电话过长！',
+              message: '账号过长！',
               max: 32
-            },
-            {
-              pattern: /^(\d)(\d|-){4,20}$/,
-              message: '请输入正确的联系电话(手机号)'
             }
           ]
         })(
           <Input
-            prefix={<Icon type='phone' style={{ color: 'rgba(0,0,0,.25)' }} />}
-            placeholder='联系电话'
+            prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
+            placeholder='账号'
             size='large'
           />
         )}
