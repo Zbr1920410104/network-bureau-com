@@ -1,6 +1,6 @@
 import React from 'react';
 
-import WriteProjectController from '@/components/home/staff/Write-project-controller.jsx';
+import WriteProjectController from '@/components/home/staff/write-project-controller1.jsx';
 import WriteBasicController from '@/components/home/staff/Write-basic-controller.jsx';
 import WritePatentController from '@/components/home/staff/Write-patent-controller.jsx';
 import WriteCopyrightController from '@/components/home/staff/Write-copyright-controller.jsx';
