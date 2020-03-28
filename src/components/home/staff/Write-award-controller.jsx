@@ -17,7 +17,7 @@ export default props => {
         awardName: '陈德杯',
         awardTime: '2020-03-06',
         awardGrade: '一等奖',
-        awardDepartment: '人力部'
+        awardDepartment: '黑龙江省人民政府'
       },
       {
         id: 2,
@@ -25,7 +25,7 @@ export default props => {
         awardName: '陈德杯',
         awardTime: '2020-03-06',
         awardGrade: '一等奖',
-        awardDepartment: '人力部',
+        awardDepartment: '黑龙江省人民政府',
         awardNameList: '钱程、张博荣'
       }
     ],

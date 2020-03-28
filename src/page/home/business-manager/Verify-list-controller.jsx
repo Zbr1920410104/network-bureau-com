@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import ExportAllContent from '@/components/home/business-manager/Export-all-content-controller.jsx';
+import ExportAllContent from '@/components/home/public/Export-all-content-controller.jsx';
 
 // 路由
 import { HOME_VERIFY_DETAIL } from '@/constants/route-constants';
@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 
 // 样式
 import { Table, Button, Select, Modal } from 'antd';
-import '@/style/home/business-manager/modify-list.styl';
+import '@/style/home/business-manager/verify-list.styl';
 const { Option } = Select,
   { Column } = Table;
 
@@ -41,14 +41,14 @@ export default props => {
   };
 
   return (
-    <div className='modify-list-box'>
+    <div className='verify-list-box'>
       <p className='title-box'>
         <span>查看信息列表</span>
       </p>
       <div className='subtitle-box'>
         <p className='subtitle-title'>查看人员填写信息</p>
       </div>
-      <div className='write-list-box'>
+      <div className='list-content-box'>
         <div className='list-title-box'>
           <Select placeholder='分类查看' className='list-select'>
             <Option value='未核实'>未核实</Option>
@@ -57,7 +57,7 @@ export default props => {
           </Select>
           <Button
             type='primary'
-            className='button'
+            className='export-all-button'
             onClick={showExportAllModal}
           >
             导出所有人信息
