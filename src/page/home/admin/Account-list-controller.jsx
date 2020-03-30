@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
 
 import AccountFormController from '@/components/home/admin/Account-form-controller.jsx';
+import ModifyAccountContent from '@/components/home/admin/Modify-account-content-controller.jsx';
 
 // 样式
 import '@/style/home/admin/account-list.styl';
-import { Button, Table, Modal, Skeleton } from 'antd';
-const { Column } = Table;
-const { confirm } = Modal;
+import { Button, Table, Modal, Skeleton, Select, Input } from 'antd';
+const { Column } = Table,
+  { confirm } = Modal,
+  { Option } = Select,
+  { Search } = Input;
 
 export default porps => {
   const [accountLoading, setAccountLoading] = useState(false),
     [accountVisible, setAccountVisible] = useState(false),
-    [accountList, setAccountList] = useState([]);
+    [accountList, setAccountList] = useState([]),
+    [modifyAccountVisible, setModifyAccountVisible] = useState(false);
 
   const showAccountModal = () => {
     setAccountVisible(true);
@@ -21,6 +25,14 @@ export default porps => {
     setAccountVisible(false);
   };
 
+  const showModifyAccountModal = () => {
+    setModifyAccountVisible(true);
+  };
+
+  const hideModifyAccountModal = () => {
+    setModifyAccountVisible(false);
+  };
+
   useEffect(() => {
     (async () => {
       setAccountLoading(true);
@@ -28,10 +40,29 @@ export default porps => {
       let accountList = [
         {
           id: 1,
-          name: '张博荣',
+          name: '张三',
+          userName: 'yuangong',
           phone: 18351923820,
           office: '战略研究科',
+          authority: 'staff',
+          cancellation: 1
+        },
+        {
+          id: 2,
+          name: '李四',
+          userName: 'tongji',
+          phone: 18351923820,
+          office: '信息安全科',
           authority: 'businessManager',
+          cancellation: 1
+        },
+        {
+          id: 3,
+          name: '王五',
+          userName: 'pingshen',
+          phone: 18351923820,
+          office: '通信研究科',
+          authority: 'examinationManager',
           cancellation: 1
         }
       ];
@@ -75,29 +106,70 @@ export default porps => {
     Modal.destroyAll();
   };
 
+  const handleExport = key => {
+    Modal.destroyAll();
+  };
+
   return (
     <div className='account-list-box'>
       <p className='title-box'>
         <span>账号管理</span>
       </p>
       <div className='account-list-content-box'>
-        <Button
-          type='primary'
-          style={{ marginBottom: 16 }}
-          onClick={showAccountModal}
-        >
-          新增账号
-        </Button>
-        <Modal
-          title='新增账号'
-          visible={accountVisible}
-          onOk={hideAccountModal}
-          onCancel={hideAccountModal}
-          okText='确认'
-          cancelText='取消'
-        >
-          <AccountFormController />
-        </Modal>
+        <div className='list-title-box'>
+          <Select placeholder='请选择权限' className='select'>
+            <Option value='staff'>科研人员</Option>
+            <Option value='businessManager'>统计管理员</Option>
+            <Option value='examinationManager'>评审管理员</Option>
+          </Select>
+          <Search className='search' placeholder='请输入账号' enterButton />
+          <Button
+            type='primary'
+            style={{ marginBottom: 16 }}
+            onClick={showAccountModal}
+          >
+            新增账号
+          </Button>
+          <Button
+            className='export-button'
+            type='primary'
+            onClick={() => {
+              confirm({
+                title: '导出所有账号信息',
+                okType: 'primary',
+                content: '确认要导出所有账号信息?',
+                okText: '确认',
+                cancelText: '取消',
+                onOk(record) {
+                  handleExport(record.key);
+                },
+                onCancel() {}
+              });
+            }}
+          >
+            导出所有账号信息
+          </Button>
+          <Modal
+            title='修改账号信息'
+            visible={modifyAccountVisible}
+            onOk={hideModifyAccountModal}
+            onCancel={hideModifyAccountModal}
+            okText='保存'
+            cancelText='取消'
+          >
+            <ModifyAccountContent />
+          </Modal>
+          <Modal
+            title='新增账号'
+            visible={accountVisible}
+            onOk={hideAccountModal}
+            onCancel={hideAccountModal}
+            okText='确认'
+            cancelText='取消'
+          >
+            <AccountFormController />
+          </Modal>
+        </div>
         <Skeleton loading={accountLoading}>
           <Table
             dataSource={accountList}
@@ -105,19 +177,15 @@ export default porps => {
             rowKey={record => record.id}
           >
             <Column align='center' title='姓名' dataIndex='name' key='' />
-            <Column
-              align='center'
-              title='账号(电话号码)'
-              dataIndex='phone'
-              key=''
-            />
+            <Column align='center' title='账号' dataIndex='userName' key='' />
+            <Column align='center' title='电话号码' dataIndex='phone' key='' />
             <Column
               align='center'
               title='权限'
               dataIndex='authority'
               key=''
               render={(text, record) => {
-                if (record.authority === 'staff') return '科研人员';
+                if (record.authority === 'staff') return '普通员工';
                 else if (record.authority === 'businessManager')
                   return '统计管理员';
                 else if (record.authority === 'examinationManager')
@@ -172,7 +240,7 @@ export default porps => {
                     confirm({
                       title: '注销账号?',
                       okType: 'primary',
-                      content: '确认要注销账号?',
+                      content: '确认要注销账号(注销后账号将无法登录)?',
                       okText: '确认',
                       cancelText: '取消',
                       onOk(record) {
@@ -183,6 +251,19 @@ export default porps => {
                   }}
                 >
                   注销
+                </Button>
+              )}
+            />
+            <Column
+              align='center'
+              title='修改'
+              dataIndex=''
+              fixed='right'
+              width='100px'
+              key=''
+              render={() => (
+                <Button type='link' onClick={showModifyAccountModal}>
+                  修改账号信息
                 </Button>
               )}
             />

@@ -24,6 +24,7 @@ import ExaminationDetailListController from '@/page/home/examination-manager/Exa
 // 管理员
 import AccountListController from '@/page/home/admin/Account-list-controller.jsx';
 import AccountTimeController from '@/page/home/admin/Account-time-controller.jsx';
+import DepartmentListController from '@/page/home/admin/Department-list-controller.jsx';
 
 // localStorage
 import { LOCAL_STORAGE } from '@/constants/app-constants';
@@ -88,6 +89,10 @@ export default props => {
     path: ROUTES.HOME_ACCOUNT_TIME.path,
     exact: true
   });
+  const homeDepartmentList = useRouteMatch({
+    path: ROUTES.HOME_DEPARTMENT_LIST.path,
+    exact: true
+  });
 
   let content = null;
 
@@ -114,16 +119,15 @@ export default props => {
     content = <AccountListController />;
   } else if (homeAccountTime) {
     content = <AccountTimeController />;
+  } else if (homeDepartmentList) {
+    content = <DepartmentListController />;
   }
 
   console.log('localStorageToken=', localStorageToken);
   let text;
   let route = [];
   if (localStorageToken === 'staff') {
-    route = [
-      ROUTES.HOME_PASSWORD.path,
-      ROUTES.HOME_WRITE_WELCOME.path
-    ];
+    route = [ROUTES.HOME_PASSWORD.path, ROUTES.HOME_WRITE_WELCOME.path];
     text = ['修改密码', '填写信息'];
   } else if (localStorageToken === 'businessManager') {
     route = [ROUTES.HOME_VERIFY_LIST.path];
@@ -132,8 +136,12 @@ export default props => {
     route = [ROUTES.HOME_EXAMINATION_LIST.path];
     text = ['信息打分'];
   } else if (localStorageToken === 'admin') {
-    route = [ROUTES.HOME_ACCOUNT_LIST.path, ROUTES.HOME_ACCOUNT_TIME.path];
-    text = ['账号管理列表', '开放填写时间设置'];
+    route = [
+      ROUTES.HOME_DEPARTMENT_LIST.path,
+      ROUTES.HOME_ACCOUNT_LIST.path,
+      ROUTES.HOME_ACCOUNT_TIME.path
+    ];
+    text = ['添加科室', '账号管理列表', '开放填写时间设置'];
   }
 
   return (

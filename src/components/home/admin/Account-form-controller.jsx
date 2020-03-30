@@ -66,11 +66,17 @@ export default Form.create({ name: 'account' })(({ form }) => {
         {getFieldDecorator('office', {
           rules: [
             {
-              message: '科室过长！',
-              max: 32
+              required: true,
+              message: '请选择科室！'
             }
           ]
-        })(<Input placeholder='请输入科室' />)}
+        })(
+          <Select placeholder='请选择科室'>
+            <Option value='战略研究科'>战略研究科</Option>
+            <Option value='信息安全科'>信息安全科</Option>
+            <Option value='通信研究科'>通信研究科</Option>
+          </Select>
+        )}
       </Form.Item>
     </Form>
   );

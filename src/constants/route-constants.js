@@ -53,3 +53,7 @@ export const HOME_ACCOUNT_TIME = {
   path: '/home/account/time',
   name: '管理员账号时间填写设置页面'
 };
+export const HOME_DEPARTMENT_LIST = {
+  path: '/home/department/add',
+  name: '管理员科室管理页面'
+}
