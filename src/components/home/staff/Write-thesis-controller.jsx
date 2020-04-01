@@ -5,7 +5,7 @@ import UploadThesisContent from '@/components/home/staff/thesis/Upload-thesis-co
 
 // 样式
 import '@/style/home/staff/write-detail.styl';
-import { Button, Table, Modal } from 'antd';
+import { Button, Table, Modal, Icon } from 'antd';
 const { Column } = Table,
   { confirm } = Modal;
 
@@ -70,14 +70,21 @@ export default props => {
   };
 
   return (
-    <div>
-      <Button
-        type='primary'
-        style={{ marginBottom: 16 }}
-        onClick={showNewThesisModal}
-      >
-        新增论文/专著
-      </Button>
+    <div className='write-item-box'>
+      <div className='item-title-box'>
+        <div className='title-left-box'>
+          <Icon type='book' className='icon' />
+          <span>论文/专著</span>
+        </div>
+        <Button
+          type='link'
+          icon='plus'
+          style={{ marginBottom: 16 }}
+          onClick={showNewThesisModal}
+        >
+          新增论文/专著
+        </Button>
+      </div>
       <Modal
         title='新增论文/专著'
         visible={newThesisVisible}
@@ -224,7 +231,11 @@ export default props => {
           )}
         />
       </Table>
-      <Button type='primary'>暂存</Button>
+      <div className='item-bottom-box'>
+        <Button type='primary' className='save-button'>
+          暂存
+        </Button>
+      </div>
     </div>
   );
 };

@@ -30,11 +30,11 @@ export default Form.create({ name: 'login' })(({ form }) => {
         history.push(`${HOME_PASSWORD.path}`);
         localStorage.setItem(`${LOCAL_STORAGE}-token`, 'staff');
       } else if (value.userName === 'tongji' && value.password === '123456') {
-        history.push(`${HOME_INDEX.path}`);
+        history.push(`${HOME_PASSWORD.path}`);
         localStorage.setItem(`${LOCAL_STORAGE}-token`, 'businessManager');
       } else if (value.userName === 'pingshen' && value.password === '123456') {
-        history.push(`${HOME_INDEX.path}`);
-        localStorage.setItem(`${LOCAL_STORAGE}-token`, 'examinationManager');
+        history.push(`${HOME_PASSWORD.path}`);
+        localStorage.setItem(`${LOCAL_STORAGE}-token`, 'reviewManager');
       }
     });
   };

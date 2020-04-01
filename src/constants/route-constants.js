@@ -35,13 +35,13 @@ export const HOME_VERIFY_DETAIL = {
 };
 
 // 评审员页面
-export const HOME_EXAMINATION_LIST = {
-  path: '/home/examination/list',
+export const HOME_REVIEW_LIST = {
+  path: '/home/review/list',
   name: '评审员列表页面'
 };
-export const HOME_EXAMINATION_DETAIL = {
-  path: '/home/examination/detail',
-  name: '评审员审核详情页'
+export const HOME_REVIEW_DETAIL = {
+  path: '/home/review/detail',
+  name: '评审员核实详情页'
 };
 
 // 管理员页面

@@ -4,7 +4,7 @@ import ModifyCopyrightContent from '@/components/home/staff/copyright/Modify-cop
 
 // 样式
 import '@/style/home/staff/write-detail.styl';
-import { Button, Table, Modal } from 'antd';
+import { Button, Table, Modal, Icon } from 'antd';
 const { Column } = Table,
   { confirm } = Modal;
 
@@ -45,14 +45,21 @@ export default props => {
   };
 
   return (
-    <div>
-      <Button
-        type='primary'
-        style={{ marginBottom: 16 }}
-        onClick={showNewCopyrightModal}
-      >
-        新增软件著作权
-      </Button>
+    <div className='write-item-box'>
+      <div className='item-title-box'>
+        <div className='title-left-box'>
+          <Icon type='audit' className='icon' />
+          <span>软件著作权</span>
+        </div>
+        <Button
+          type='link'
+          icon='plus'
+          style={{ marginBottom: 16 }}
+          onClick={showNewCopyrightModal}
+        >
+          新增软件著作权
+        </Button>
+      </div>
       <Modal
         title='新增软件著作权'
         visible={newCopyrightVisible}
@@ -148,7 +155,11 @@ export default props => {
           )}
         />
       </Table>
-      <Button type='primary'>暂存</Button>
+      <div className='item-bottom-box'>
+        <Button type='primary' className='save-button'>
+          暂存
+        </Button>
+      </div>
     </div>
   );
 };

@@ -1,14 +1,14 @@
 import React from 'react';
 
 // 样式
-import '@/style/home/examination-manager/examination-detail.styl';
+import '@/style/home/review-manager/review-detail.styl';
 import { Descriptions, Input, Form, Button } from 'antd';
 
-export default Form.create({ name: 'awardExamination' })(({ form }) => {
+export default Form.create({ name: 'awardReview' })(({ form }) => {
   const { getFieldDecorator } = form,
     { TextArea } = Input;
   return (
-    <div className='examine-modal-box'>
+    <div className='review-modal-box'>
       <Descriptions className='description-box' layout='vertical'>
         <Descriptions.Item label='奖项名称'>陈德杯</Descriptions.Item>
         <Descriptions.Item label='奖项类型'>团体</Descriptions.Item>

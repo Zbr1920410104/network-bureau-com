@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 
-import ExamineCopyrightContent from '@/components/home/examination-manager/copyright/Examine-copyright-content-controller.jsx';
+import ReviewCopyrightContent from '@/components/home/review-manager/copyright/Review-copyright-content-controller.jsx';
 
 // 样式
-import '@/style/home/examination-manager/examination-detail.styl';
-import { Table, Modal, Button } from 'antd';
+import '@/style/home/review-manager/review-item-detail.styl';
+import { Table, Modal, Button, Icon } from 'antd';
 const { Column } = Table;
 
 export default props => {
-  const [examineCopyrightVisible, setExamineCopyrightVisible] = useState(false);
+  const [reviewCopyrightVisible, setReviewCopyrightVisible] = useState(false);
 
-  const showExamineCopyrightModal = () => {
-    setExamineCopyrightVisible(true);
+  const showReviewCopyrightModal = () => {
+    setReviewCopyrightVisible(true);
   };
 
-  const hideExamineCopyrightModal = () => {
-    setExamineCopyrightVisible(false);
+  const hideReviewCopyrightModal = () => {
+    setReviewCopyrightVisible(false);
   };
   const leadCopyrightList = [
     {
@@ -35,16 +35,20 @@ export default props => {
   ];
 
   return (
-    <div>
+    <div className='review-item-detail-box'>
+      <div className='detail-title-box'>
+        <Icon type='audit' className='icon' />
+        <span>软件著作权</span>
+      </div>
       <Modal
         title='打分'
-        visible={examineCopyrightVisible}
-        onOk={hideExamineCopyrightModal}
-        onCancel={hideExamineCopyrightModal}
+        visible={reviewCopyrightVisible}
+        onOk={hideReviewCopyrightModal}
+        onCancel={hideReviewCopyrightModal}
         okText='确定'
         cancelText='取消'
       >
-        <ExamineCopyrightContent />
+        <ReviewCopyrightContent />
       </Modal>
       <Table
         dataSource={leadCopyrightList}
@@ -93,7 +97,7 @@ export default props => {
           width='100px'
           key=''
           render={() => (
-            <Button type='link' onClick={showExamineCopyrightModal}>
+            <Button type='link' onClick={showReviewCopyrightModal}>
               打分
             </Button>
           )}

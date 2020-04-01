@@ -12,9 +12,8 @@ import { HOME_WRITE_WELCOME } from '@/constants/route-constants';
 import { Link, useHistory } from 'react-router-dom';
 
 // 样式
-import { Icon, Button, Tabs, Modal } from 'antd';
-const { TabPane } = Tabs,
-  { confirm } = Modal;
+import { Icon, Button, Modal } from 'antd';
+const { confirm } = Modal;
 
 export default props => {
   const history = useHistory();
@@ -33,26 +32,12 @@ export default props => {
         </p>
       </div>
       <div className='write-form-box'>
-        <Tabs defaultActiveKey='1'>
-          <TabPane tab='基本信息' key='1'>
-            <WriteBasicController />
-          </TabPane>
-          <TabPane tab='项目经验' key='2'>
-            <WriteProjectController />
-          </TabPane>
-          <TabPane tab='专利' key='3'>
-            <WritePatentController />
-          </TabPane>
-          <TabPane tab='软件著作权' key='4'>
-            <WriteCopyrightController />
-          </TabPane>
-          <TabPane tab='获奖情况' key='5'>
-            <WriteAwardController />
-          </TabPane>
-          <TabPane tab='论文/专著' key='6'>
-            <WriteThesisController />
-          </TabPane>
-        </Tabs>
+        <WriteBasicController />
+        <WriteProjectController />
+        <WritePatentController />
+        <WriteCopyrightController />
+        <WriteAwardController />
+        <WriteThesisController />
       </div>
       <div className='write-bottom-box'>
         <Button

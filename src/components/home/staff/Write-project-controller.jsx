@@ -3,12 +3,13 @@ import React, { useState } from 'react';
 import ModifyProjectContent from '@/components/home/staff/project/Modify-project-content-controller.jsx';
 
 // 样式
-import '@/style/home/staff/write-detail.styl';
-import { Button, Table, Modal } from 'antd';
+import '@/style/home/staff/write-item.styl';
+import { Button, Table, Modal, Icon } from 'antd';
 const { Column } = Table,
   { confirm } = Modal;
 
 export default props => {
+
   const leadProjectList = [
       {
         id: 1,
@@ -17,7 +18,7 @@ export default props => {
         time: '2020-03-04~202003-20',
         code: '101010101',
         resource: '网信办',
-        funds: 23,
+        funds: '23',
         participant: '钱程、张博荣',
         content: 'js开发'
       },
@@ -28,7 +29,7 @@ export default props => {
         time: '2020-03-05~202003-25',
         code: '101010106',
         resource: '网信办',
-        funds: 32,
+        funds: '32',
         participant: '钱程、张博荣',
         content: '系统开发'
       }
@@ -53,14 +54,22 @@ export default props => {
   };
 
   return (
-    <div>
-      <Button
-        type='primary'
-        style={{ marginBottom: 16 }}
-        onClick={showNewProjectModal}
-      >
-        新增项目
-      </Button>
+    <div className='write-item-box'>
+      <div className='item-title-box'>
+        <div className='title-left-box'>
+          <Icon type='file-done' className='icon' />
+          <span>项目</span>
+        </div>
+        <Button
+          type='link'
+          icon='plus'
+          style={{ marginBottom: 16 }}
+          onClick={showNewProjectModal}
+          className='new-button'
+        >
+          新增项目
+        </Button>
+      </div>
       <Modal
         title='新增项目'
         visible={newProjectVisible}
@@ -188,7 +197,11 @@ export default props => {
           )}
         />
       </Table>
-      <Button type='primary'>暂存</Button>
+      <div className='item-bottom-box'>
+        <Button type='primary' className='save-button' >
+          暂存
+        </Button>
+      </div>
     </div>
   );
 };

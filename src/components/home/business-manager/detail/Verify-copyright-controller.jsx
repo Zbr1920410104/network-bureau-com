@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-// 样式
-import '@/style/home/business-manager/verify-detail.styl';
-import { Table } from 'antd';
-const { Column } = Table;
+import { Table, Icon, Button, Modal, Input } from 'antd';
+const { TextArea } = Input,
+  { confirm } = Modal,
+  { Column } = Table;
 
 export default props => {
+  const [verifyVisible, setVerifyVisible] = useState(false);
+
+  const showVerifyModal = () => {
+    setVerifyVisible(true);
+  };
+
+  const hideVerifyModal = () => {
+    setVerifyVisible(false);
+  };
   const leadCopyrightList = [
     {
       id: 1,
@@ -24,7 +33,70 @@ export default props => {
   ];
 
   return (
-    <div>
+    <div className='verify-item-detail-box'>
+      <div className='detail-title-box'>
+        <div className='title-left-box'>
+          <Icon type='audit' className='icon' />
+          <span>软件著作权</span>
+        </div>
+        <div className='title-right-box'>
+          <Button
+            type='link'
+            icon='edit'
+            className='opinion-button'
+            onClick={showVerifyModal}
+          >
+            核实
+          </Button>
+        </div>
+        <Modal
+          title='请核实'
+          visible={verifyVisible}
+          onOk={hideVerifyModal}
+          onCancel={hideVerifyModal}
+          okText='确定'
+          cancelText='取消'
+        >
+          <div className='button-box'>
+            <Button
+              type='primary'
+              className='fail-button'
+              onOk={hideVerifyModal}
+            >
+              核实未通过
+            </Button>
+            <Button
+              type='primary'
+              className='success-button'
+              onClick={() => {
+                confirm({
+                  title: '确认核实通过?',
+                  okType: 'primary',
+                  content: (
+                    <div className='text-box'>
+                      <span>我已核实完</span>
+                      <span className='important-text'>软件著作权</span>
+                      <span>的所有信息,确认通过?</span>
+                    </div>
+                  ),
+                  okText: '确认',
+                  cancelText: '取消',
+                  onOk() {},
+                  onCancel() {}
+                });
+              }}
+            >
+              核实通过
+            </Button>
+          </div>
+          <TextArea
+            autoSize={{ minRows: 3, maxRows: 6 }}
+            maxLength='100'
+            placeholder='请输入核实意见及不通过理由'
+            className='modal-textArea-box'
+          />
+        </Modal>
+      </div>
       <Table
         dataSource={leadCopyrightList}
         className='table'

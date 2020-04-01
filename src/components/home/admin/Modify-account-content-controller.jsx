@@ -46,7 +46,7 @@ export default Form.create({ name: 'accountModify' })(({ form }) => {
             <Select placeholder='请选择权限' disabled>
               <Option value='staff'>科研人员</Option>
               <Option value='businessManager'>统计管理员</Option>
-              <Option value='examinationManager'>评审管理员</Option>
+              <Option value='reviewManager'>评审管理员</Option>
             </Select>
           )}
         </Form.Item>

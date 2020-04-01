@@ -1,23 +1,22 @@
 import React, { useState } from 'react';
 
-import ExaminationProjectController from '@/components/home/examination-manager/detail/Examination-project-controller.jsx';
-import ExaminationBasicController from '@/components/home/examination-manager/detail/Examination-basic-controller.jsx';
-import ExaminationPatentController from '@/components/home/examination-manager/detail/Examination-patent-controller.jsx';
-import ExaminationCopyrightController from '@/components/home/examination-manager/detail/Examination-copyright-controller.jsx';
-import ExaminationAwardController from '@/components/home/examination-manager/detail/Examination-award-controller.jsx';
-import ExaminationThesisController from '@/components/home/examination-manager/detail/Examination-thesis-controller.jsx';
+import ReviewProjectController from '@/components/home/review-manager/detail/Review-project-controller.jsx';
+import ReviewBasicController from '@/components/home/review-manager/detail/Review-basic-controller.jsx';
+import ReviewPatentController from '@/components/home/review-manager/detail/Review-patent-controller.jsx';
+import ReviewCopyrightController from '@/components/home/review-manager/detail/Review-copyright-controller.jsx';
+import ReviewAwardController from '@/components/home/review-manager/detail/Review-award-controller.jsx';
+import ReviewThesisController from '@/components/home/review-manager/detail/Review-thesis-controller.jsx';
 
 // 路由
-import { HOME_EXAMINATION_LIST } from '@/constants/route-constants';
+import { HOME_REVIEW_LIST } from '@/constants/route-constants';
 import { Link } from 'react-router-dom';
 
 import ExportOneContent from '@/components/home/public/Export-one-content-controller.jsx';
 
 // 样式
-import { Icon, Button, Modal, Tabs } from 'antd';
-import '@/style/home/examination-manager/examination-detail.styl';
-const { TabPane } = Tabs,
-  { confirm } = Modal;
+import { Icon, Button, Modal } from 'antd';
+import '@/style/home/review-manager/review-detail.styl';
+const { confirm } = Modal;
 
 export default props => {
   const [exportOneVisible, setExportOneVisible] = useState(false);
@@ -31,12 +30,12 @@ export default props => {
   };
 
   return (
-    <div className='examination-detail-box'>
+    <div className='review-detail-box'>
       <p className='title-box'>
         <span>查看详情</span>
       </p>
       <div className='subtitle-box'>
-        <Link to={HOME_EXAMINATION_LIST.path}>
+        <Link to={HOME_REVIEW_LIST.path}>
           <Icon type='left' className='exit-icon' />
         </Link>
         <p className='subtitle-title'>
@@ -77,10 +76,7 @@ export default props => {
           >
             导出当前员工信息
           </Button>
-          <Button
-            type='primary'
-            className='export-button'
-          >
+          <Button type='primary' className='export-button'>
             导出当前员工得分表
           </Button>
           <Modal
@@ -94,27 +90,13 @@ export default props => {
             <ExportOneContent />
           </Modal>
         </div>
-        <div className='examination-form-box'>
-          <Tabs defaultActiveKey='1'>
-            <TabPane tab='基本信息' key='1'>
-              <ExaminationBasicController />
-            </TabPane>
-            <TabPane tab='项目' key='2'>
-              <ExaminationProjectController />
-            </TabPane>
-            <TabPane tab='授权专利' key='3'>
-              <ExaminationPatentController />
-            </TabPane>
-            <TabPane tab='软件著作权' key='4'>
-              <ExaminationCopyrightController />
-            </TabPane>
-            <TabPane tab='获奖情况' key='5'>
-              <ExaminationAwardController />
-            </TabPane>
-            <TabPane tab='论文/专著' key='6'>
-              <ExaminationThesisController />
-            </TabPane>
-          </Tabs>
+        <div className='review-form-box'>
+          <ReviewBasicController />
+          <ReviewProjectController />
+          <ReviewPatentController />
+          <ReviewCopyrightController />
+          <ReviewAwardController />
+          <ReviewThesisController />
         </div>
       </div>
     </div>

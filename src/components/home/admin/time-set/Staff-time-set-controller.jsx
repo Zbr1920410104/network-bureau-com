@@ -14,14 +14,14 @@ export default Form.create({ name: 'staffTimeSet' })(({ form }) => {
 
       {/* 开始 */}
       <Form.Item label='开始日期'>
-        {getFieldDecorator('startDate', {
+        {getFieldDecorator('staffStart', {
           rules: [{ required: true, message: '请选择开始日期！' }]
         })(<DatePicker placeholder='20XX-XX-XX' />)}
       </Form.Item>
 
       {/* 截止日期 */}
       <Form.Item label='截止日期'>
-        {getFieldDecorator('closingDate', {
+        {getFieldDecorator('staffClose', {
           rules: [{ required: true, message: '请选择截止日期！' }]
         })(<DatePicker placeholder='20XX-XX-XX' />)}
       </Form.Item>

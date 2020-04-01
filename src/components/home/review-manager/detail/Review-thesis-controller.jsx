@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 
-import ExamineThesisContent from '@/components/home/examination-manager/thesis/Examine-thesis-content-controller.jsx';
+import ReviewThesisContent from '@/components/home/review-manager/thesis/Review-thesis-content-controller.jsx';
 
 // 样式
-import '@/style/home/examination-manager/examination-detail.styl';
-import { Button, Table, Modal } from 'antd';
+import '@/style/home/review-manager/review-item-detail.styl';
+import { Table, Button, Modal, Icon } from 'antd';
 const { Column } = Table;
 
 export default props => {
-  const [examineThesisVisible, setExamineThesisVisible] = useState(false);
+  const [reviewThesisVisible, setReviewThesisVisible] = useState(false);
 
-  const showExamineThesisModal = () => {
-    setExamineThesisVisible(true);
+  const showReviewThesisModal = () => {
+    setReviewThesisVisible(true);
   };
 
-  const hideExamineThesisModal = () => {
-    setExamineThesisVisible(false);
+  const hideReviewThesisModal = () => {
+    setReviewThesisVisible(false);
   };
 
   const leadThesisList = [
@@ -60,16 +60,20 @@ export default props => {
   };
 
   return (
-    <div>
+    <div className='review-item-detail-box'>
+      <div className='detail-title-box'>
+        <Icon type='book' className='icon' />
+        <span>论文/专著</span>
+      </div>
       <Modal
         title='打分'
-        visible={examineThesisVisible}
-        onOk={hideExamineThesisModal}
-        onCancel={hideExamineThesisModal}
+        visible={reviewThesisVisible}
+        onOk={hideReviewThesisModal}
+        onCancel={hideReviewThesisModal}
         okText='确定'
         cancelText='取消'
       >
-        <ExamineThesisContent />
+        <ReviewThesisContent />
       </Modal>
       <Modal
         title='查看附件'
@@ -179,7 +183,7 @@ export default props => {
           width='100px'
           key=''
           render={() => (
-            <Button type='link' onClick={showExamineThesisModal}>
+            <Button type='link' onClick={showReviewThesisModal}>
               打分
             </Button>
           )}

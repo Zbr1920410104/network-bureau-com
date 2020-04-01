@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
-import ExamineAwardContent from '@/components/home/examination-manager/award/Examine-award-content-controller.jsx';
+import ReviewAwardContent from '@/components/home/review-manager/award/Review-award-content-controller.jsx';
 
 // 样式
-import '@/style/home/examination-manager/examination-detail.styl';
-import { Button, Table, Modal } from 'antd';
+import '@/style/home/review-manager/review-item-detail.styl';
+import { Button, Table, Modal, Icon } from 'antd';
 const { Column } = Table;
 
 export default props => {
@@ -28,7 +28,7 @@ export default props => {
       }
     ],
     [uploadAwardVisible, setUploadAwardVisible] = useState(false),
-    [examineAwardVisible, setExamineAwardVisible] = useState(false);
+    [reviewAwardVisible, setReviewAwardVisible] = useState(false);
 
   const showUploadAwardModal = () => {
     setUploadAwardVisible(true);
@@ -38,16 +38,20 @@ export default props => {
     setUploadAwardVisible(false);
   };
 
-  const showExamineAwardModal = () => {
-    setExamineAwardVisible(true);
+  const showReviewAwardModal = () => {
+    setReviewAwardVisible(true);
   };
 
-  const hideExamineAwardModal = () => {
-    setExamineAwardVisible(false);
+  const hideReviewAwardModal = () => {
+    setReviewAwardVisible(false);
   };
 
   return (
-    <div>
+    <div className='review-item-detail-box'>
+      <div className='detail-title-box'>
+        <Icon type='trophy' className='icon' />
+        <span>获奖情况</span>
+      </div>
       <Modal
         title='下载附件'
         visible={uploadAwardVisible}
@@ -69,13 +73,13 @@ export default props => {
       </Modal>
       <Modal
         title='打分'
-        visible={examineAwardVisible}
-        onOk={hideExamineAwardModal}
-        onCancel={hideExamineAwardModal}
+        visible={reviewAwardVisible}
+        onOk={hideReviewAwardModal}
+        onCancel={hideReviewAwardModal}
         okText='确定'
         cancelText='取消'
       >
-        <ExamineAwardContent />
+        <ReviewAwardContent />
       </Modal>
       <Table
         dataSource={leadAwardList}
@@ -151,7 +155,7 @@ export default props => {
           width='100px'
           key=''
           render={() => (
-            <Button type='link' onClick={showExamineAwardModal}>
+            <Button type='link' onClick={showReviewAwardModal}>
               打分
             </Button>
           )}

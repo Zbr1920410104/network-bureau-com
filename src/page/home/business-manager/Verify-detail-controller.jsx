@@ -14,15 +14,13 @@ import { Link } from 'react-router-dom';
 import ExportOneContent from '@/components/home/public/Export-one-content-controller.jsx';
 
 // 样式
-import { Icon, Button, Modal, Input, Tabs } from 'antd';
+import { Icon, Button, Modal } from 'antd';
 import '@/style/home/business-manager/verify-detail.styl';
-const { TabPane } = Tabs,
-  { TextArea } = Input,
-  { confirm } = Modal;
+const { confirm } = Modal;
 
 export default props => {
   const [exportOneVisible, setExportOneVisible] = useState(false),
-    [verifyVisible, setVerifyVisible] = useState(false);
+    [exportOneVerifyVisible, setExportOneVerifyVisible] = useState(false);
 
   const showExportOneModal = () => {
     setExportOneVisible(true);
@@ -32,13 +30,14 @@ export default props => {
     setExportOneVisible(false);
   };
 
-  const showVerifyModal = () => {
-    setVerifyVisible(true);
+  const showExportOneVerifyModal = () => {
+    setExportOneVerifyVisible(true);
   };
 
-  const hideVerifyModal = () => {
-    setVerifyVisible(false);
+  const hideExportOneVerifyModal = () => {
+    setExportOneVerifyVisible(false);
   };
+
   return (
     <div className='verify-detail-box'>
       <p className='title-box'>
@@ -56,13 +55,6 @@ export default props => {
         <div className='list-title-box'>
           <Button
             type='primary'
-            className='opinion-button'
-            onClick={showVerifyModal}
-          >
-            回退
-          </Button>
-          <Button
-            type='primary'
             className='success-button'
             onClick={() => {
               confirm({
@@ -70,7 +62,7 @@ export default props => {
                 okType: 'primary',
                 content: (
                   <div className='text-box'>
-                    <span>我已审核完</span>
+                    <span>我已核实完</span>
                     <span className='important-text'>
                       基本信息,获奖情况,论文/专著,项目,授权专利,软件著作权
                     </span>
@@ -84,7 +76,7 @@ export default props => {
               });
             }}
           >
-            已核实所有信息,审核通过
+            已核实所有信息,核实通过
           </Button>
           <Button
             type='primary'
@@ -92,6 +84,13 @@ export default props => {
             onClick={showExportOneModal}
           >
             导出当前员工信息
+          </Button>
+          <Button
+            type='primary'
+            className='export-button'
+            onClick={showExportOneVerifyModal}
+          >
+            查看/导出核实信息
           </Button>
           <Modal
             title='导出当前员工信息'
@@ -104,42 +103,23 @@ export default props => {
             <ExportOneContent />
           </Modal>
           <Modal
-            title='请输入审核意见(不通过理由)'
-            visible={verifyVisible}
-            onOk={hideVerifyModal}
-            onCancel={hideVerifyModal}
+            title='导出当前员工核实信息'
+            visible={exportOneVerifyVisible}
+            onOk={hideExportOneVerifyModal}
+            onCancel={hideExportOneVerifyModal}
             okText='确定'
             cancelText='取消'
           >
-            <TextArea
-              autoSize={{ minRows: 3, maxRows: 6 }}
-              maxLength='100'
-              placeholder='请输入审核意见(不通过理由)'
-              className='modal-textArea-box'
-            />
+            <ExportOneContent />
           </Modal>
         </div>
         <div className='verify-form-box'>
-          <Tabs defaultActiveKey='1'>
-            <TabPane tab='基本信息' key='1'>
-              <VerifyBasicController />
-            </TabPane>
-            <TabPane tab='项目' key='2'>
-              <VerifyProjectController />
-            </TabPane>
-            <TabPane tab='授权专利' key='3'>
-              <VerifyPatentController />
-            </TabPane>
-            <TabPane tab='软件著作权' key='4'>
-              <VerifyCopyrightController />
-            </TabPane>
-            <TabPane tab='获奖情况' key='5'>
-              <VerifyAwardController />
-            </TabPane>
-            <TabPane tab='论文/专著' key='6'>
-              <VerifyThesisController />
-            </TabPane>
-          </Tabs>
+          <VerifyBasicController />
+          <VerifyProjectController />
+          <VerifyPatentController />
+          <VerifyCopyrightController />
+          <VerifyAwardController />
+          <VerifyThesisController />
         </div>
       </div>
     </div>

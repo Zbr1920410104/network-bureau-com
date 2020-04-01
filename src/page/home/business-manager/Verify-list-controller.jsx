@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import ExportAllContent from '@/components/home/public/Export-all-content-controller.jsx';
+import ExportAllContent from '@/components/home/business-manager/Export-all-content-controller.jsx';
 
 // 路由
 import { HOME_VERIFY_DETAIL } from '@/constants/route-constants';
@@ -60,10 +60,10 @@ export default props => {
             className='export-all-button'
             onClick={showExportAllModal}
           >
-            导出所有人信息
+            批量导出信息
           </Button>
           <Modal
-            title='导出所有人信息'
+            title='批量导出信息'
             visible={exportAllVisible}
             onOk={hideExportAllModal}
             onCancel={hideExportAllModal}

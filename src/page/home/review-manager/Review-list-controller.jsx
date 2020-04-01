@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 
-import ExportAllContent from '@/components/home/public/Export-all-content-controller.jsx';
+import ExportAllContent from '@/components/home/review-manager/Export-all-content-controller.jsx';
 
 // 路由
-import { HOME_EXAMINATION_DETAIL } from '@/constants/route-constants';
+import { HOME_REVIEW_DETAIL } from '@/constants/route-constants';
 import { useHistory } from 'react-router-dom';
 
 // 样式
-import { Table, Button, Select, Modal } from 'antd';
-import '@/style/home/examination-manager/examination-list.styl';
+import { Table, Button, Select, Modal, Input } from 'antd';
+import '@/style/home/review-manager/review-list.styl';
 const { Option } = Select,
-  { Column } = Table;
+  { Column } = Table,
+  { Search } = Input;
 
 export default props => {
   const history = useHistory();
@@ -41,7 +42,7 @@ export default props => {
   };
 
   return (
-    <div className='examination-list-box'>
+    <div className='review-list-box'>
       <p className='title-box'>
         <span>查看信息列表</span>
       </p>
@@ -54,12 +55,13 @@ export default props => {
             <Option value='已评分'>已评分</Option>
             <Option value='未评分'>未评分</Option>
           </Select>
+          <Search className='search' placeholder='请输入姓名' enterButton />
           <Button
             type='primary'
             className='export-all-button'
             onClick={showExportAllModal}
           >
-            导出所有人信息
+            批量导出信息
           </Button>
           <Button type='primary' className='export-all-button'>
             导出所有人得分表
@@ -93,7 +95,7 @@ export default props => {
               <Button
                 type='link'
                 onClick={() => {
-                  history.push(HOME_EXAMINATION_DETAIL.path);
+                  history.push(HOME_REVIEW_DETAIL.path);
                 }}
               >
                 评分

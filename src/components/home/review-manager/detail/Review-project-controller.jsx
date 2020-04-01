@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 
-import ExamineProjectContent from '@/components/home/examination-manager/project/Examine-project-content-controller.jsx';
+import ReviewProjectContent from '@/components/home/review-manager/project/Review-project-content-controller.jsx';
 
 // 样式
-import '@/style/home/examination-manager/examination-detail.styl';
-import { Table, Button, Modal } from 'antd';
+import '@/style/home/review-manager/review-item-detail.styl';
+import { Table, Button, Modal, Icon } from 'antd';
 const { Column } = Table;
 
 export default props => {
-  const [examineProjectVisible, setExamineProjectVisible] = useState(false);
+  const [reviewProjectVisible, setReviewProjectVisible] = useState(false);
 
-  const showExamineProjectModal = () => {
-    setExamineProjectVisible(true);
+  const showReviewProjectModal = () => {
+    setReviewProjectVisible(true);
   };
 
-  const hideExamineProjectModal = () => {
-    setExamineProjectVisible(false);
+  const hideReviewProjectModal = () => {
+    setReviewProjectVisible(false);
   };
 
   const leadProjectList = [
@@ -44,16 +44,20 @@ export default props => {
   ];
 
   return (
-    <div>
+    <div className='review-item-detail-box'>
+      <div className='detail-title-box'>
+        <Icon type='file-done' className='icon' />
+        <span>项目</span>
+      </div>
       <Modal
         title='打分'
-        visible={examineProjectVisible}
-        onOk={hideExamineProjectModal}
-        onCancel={hideExamineProjectModal}
+        visible={reviewProjectVisible}
+        onOk={hideReviewProjectModal}
+        onCancel={hideReviewProjectModal}
         okText='确定'
         cancelText='取消'
       >
-        <ExamineProjectContent />
+        <ReviewProjectContent />
       </Modal>
       <Table
         dataSource={leadProjectList}
@@ -134,7 +138,7 @@ export default props => {
           width='100px'
           key=''
           render={() => (
-            <Button type='link' onClick={showExamineProjectModal}>
+            <Button type='link' onClick={showReviewProjectModal}>
               打分
             </Button>
           )}

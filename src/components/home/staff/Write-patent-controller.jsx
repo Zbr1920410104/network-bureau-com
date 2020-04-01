@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import ModifyPatentContent from '@/components/home/staff/patent/Modify-patent-content-controller.jsx';
 
 // 样式
-import '@/style/home/staff/write-detail.styl';
-import { Button, Table, Modal } from 'antd';
+import '@/style/home/staff/write-item.styl';
+import { Button, Table, Modal, Icon } from 'antd';
 const { Column } = Table,
   { confirm } = Modal;
 
@@ -45,14 +45,22 @@ export default props => {
   };
 
   return (
-    <div>
-      <Button
-        type='primary'
-        style={{ marginBottom: 16 }}
-        onClick={showNewPatentModal}
-      >
-        新增专利
-      </Button>
+    <div className='write-item-box'>
+      <div className='item-title-box'>
+        <div className='title-left-box'>
+          <Icon type='tool' className='icon' />
+          <span>专利</span>
+        </div>
+        <Button
+          type='link'
+          icon='plus'
+          style={{ marginBottom: 16 }}
+          onClick={showNewPatentModal}
+          className='new-button'
+        >
+          新增专利
+        </Button>
+      </div>
       <Modal
         title='新增专利'
         visible={newPatentVisible}
@@ -148,7 +156,11 @@ export default props => {
           )}
         />
       </Table>
-      <Button type='primary'>暂存</Button>
+      <div className='item-bottom-box'>
+        <Button type='primary' className='save-button'>
+          暂存
+        </Button>
+      </div>
     </div>
   );
 };

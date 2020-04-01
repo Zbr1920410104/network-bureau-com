@@ -1,12 +1,16 @@
 import React from 'react';
 
 // 样式
-import '@/style/home/examination-manager/examination-detail.styl';
-import { Descriptions } from 'antd';
+import '@/style/home/review-manager/review-item-detail.styl';
+import { Descriptions, Icon } from 'antd';
 
 export default props => {
   return (
-    <div>
+    <div className='review-item-detail-box'>
+      <div className='detail-title-box'>
+        <Icon type='file-text' className='icon' />
+        <span>基本信息</span>
+      </div>
       <Descriptions className='description-box'>
         <Descriptions.Item label='姓名'>李锐</Descriptions.Item>
         <Descriptions.Item label='身份证号'>

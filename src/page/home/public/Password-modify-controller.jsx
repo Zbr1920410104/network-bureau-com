@@ -1,11 +1,33 @@
 import React from 'react';
 
+// 路由
+import {
+  HOME_WRITE_WELCOME,
+  HOME_REVIEW_LIST,
+  HOME_VERIFY_LIST
+} from '@/constants/route-constants';
+import { useHistory } from 'react-router-dom';
+
+// localStorage
+import { LOCAL_STORAGE } from '@/constants/app-constants';
+
 // 样式
 import { Form, Button, Input, Alert } from 'antd';
 import '@/style/home/public/password-modify.styl';
 
 export default Form.create({ name: 'password' })(({ form }) => {
-  const { getFieldDecorator } = form;
+  const localStorageToken = localStorage.getItem(`${LOCAL_STORAGE}-token`);
+  const { getFieldDecorator } = form,
+    history = useHistory();
+  const handleSave = () => {
+    if (localStorageToken === 'staff') {
+      history.push(HOME_WRITE_WELCOME.path);
+    } else if (localStorageToken === 'businessManager') {
+      history.push(HOME_VERIFY_LIST.path);
+    } else if (localStorageToken === 'reviewManager') {
+      history.push(HOME_REVIEW_LIST.path);
+    }
+  };
 
   return (
     <div className='password-modify-box'>
@@ -15,26 +37,40 @@ export default Form.create({ name: 'password' })(({ form }) => {
       <div className='password-modify-content-box'>
         <div className='content-left-box'>
           <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
-            <Form.Item label='密码' hasFeedback>
-              {getFieldDecorator('password', {
+            <Form.Item label='原始密码' hasFeedback>
+              {getFieldDecorator('oldPassword', {
                 rules: [
                   {
                     required: true,
-                    message: '请输入密码！'
+                    message: '请输入原始密码！'
                   },
                   {
                     pattern: /^\S{6,12}$/,
                     message: '密码需要6-12位'
                   }
                 ]
-              })(<Input.Password placeholder='请输入密码' />)}
+              })(<Input.Password placeholder='请输入原始密码' />)}
             </Form.Item>
-            <Form.Item label='确认密码' hasFeedback>
+            <Form.Item label='新密码' hasFeedback>
+              {getFieldDecorator('password', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入新密码！'
+                  },
+                  {
+                    pattern: /^\S{6,12}$/,
+                    message: '密码需要6-12位'
+                  }
+                ]
+              })(<Input.Password placeholder='请输入新密码' />)}
+            </Form.Item>
+            <Form.Item label='确认新密码' hasFeedback>
               {getFieldDecorator('confirm', {
                 rules: [
                   {
                     required: true,
-                    message: '请再次输入密码！'
+                    message: '请再次输入新密码！'
                   },
                   {
                     pattern: /^\S{6,12}$/,
@@ -43,14 +79,14 @@ export default Form.create({ name: 'password' })(({ form }) => {
                   {
                     validator: (rule, value, callback) => {
                       if (value && value !== form.getFieldValue('password')) {
-                        callback('密码和确认密码要一致！');
+                        callback('新密码和确认密码要一致！');
                       } else {
                         callback();
                       }
                     }
                   }
                 ]
-              })(<Input.Password placeholder='请再次输入密码' />)}
+              })(<Input.Password placeholder='请再次输入新密码' />)}
             </Form.Item>
 
             {/* 保存按钮 */}
@@ -60,6 +96,7 @@ export default Form.create({ name: 'password' })(({ form }) => {
                 htmlType='submit'
                 className='button'
                 size='large'
+                onClick={handleSave}
               >
                 保存
               </Button>

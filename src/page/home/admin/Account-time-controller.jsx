@@ -2,7 +2,7 @@ import React from 'react';
 
 import StaffTimeSet from '@/components/home/admin/time-set/Staff-time-set-controller.jsx';
 import BusinessManagerTimeSet from '@/components/home/admin/time-set/Business-manager-time-set-controller.jsx';
-import ExaminationManagerTimeSet from '@/components/home/admin/time-set/Examination-manager-time-set-controller.jsx';
+import ReviewManagerTimeSet from '@/components/home/admin/time-set/Review-manager-time-set-controller.jsx';
 
 // 样式
 import '@/style/home/admin/account-time-set.styl';
@@ -23,7 +23,7 @@ export default props => {
         </div>
 
         <div className='content-right-box'>
-          <ExaminationManagerTimeSet />
+          <ReviewManagerTimeSet />
         </div>
       </div>
     </div>

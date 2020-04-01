@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 
-import ExaminePatentContent from '@/components/home/examination-manager/patent/Examine-patent-content-controller.jsx';
+import ReviewPatentContent from '@/components/home/review-manager/patent/Review-patent-content-controller.jsx';
 
 // 样式
-import '@/style/home/examination-manager/examination-detail.styl';
-import { Table, Button,Modal } from 'antd';
+import '@/style/home/review-manager/review-item-detail.styl';
+import { Table, Button, Modal, Icon } from 'antd';
 const { Column } = Table;
 
 export default props => {
-  const [examinePatentVisible, setExaminePatentVisible] = useState(false);
+  const [reviewPatentVisible, setReviewPatentVisible] = useState(false);
 
-  const showExaminePatentModal = () => {
-    setExaminePatentVisible(true);
+  const showReviewPatentModal = () => {
+    setReviewPatentVisible(true);
   };
 
-  const hideExaminePatentModal = () => {
-    setExaminePatentVisible(false);
+  const hideReviewPatentModal = () => {
+    setReviewPatentVisible(false);
   };
   const leadPatentList = [
     {
@@ -35,16 +35,20 @@ export default props => {
   ];
 
   return (
-    <div>
+    <div className='review-item-detail-box'>
+      <div className='detail-title-box'>
+        <Icon type='tool' className='icon' />
+        <span>专利</span>
+      </div>
       <Modal
         title='打分'
-        visible={examinePatentVisible}
-        onOk={hideExaminePatentModal}
-        onCancel={hideExaminePatentModal}
+        visible={reviewPatentVisible}
+        onOk={hideReviewPatentModal}
+        onCancel={hideReviewPatentModal}
         okText='确定'
         cancelText='取消'
       >
-        <ExaminePatentContent />
+        <ReviewPatentContent />
       </Modal>
       <Table
         dataSource={leadPatentList}
@@ -93,7 +97,7 @@ export default props => {
           width='100px'
           key=''
           render={() => (
-            <Button type='link' onClick={showExaminePatentModal}>
+            <Button type='link' onClick={showReviewPatentModal}>
               打分
             </Button>
           )}

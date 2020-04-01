@@ -18,8 +18,8 @@ import VerifyListController from '@/page/home/business-manager/Verify-list-contr
 import VerifyDetailController from '@/page/home/business-manager/Verify-detail-controller.jsx';
 
 // 评审员
-import ExaminationListController from '@/page/home/examination-manager/Examination-list-controller.jsx';
-import ExaminationDetailListController from '@/page/home/examination-manager/Examination-detail-controller.jsx';
+import ReviewListController from '@/page/home/review-manager/Review-list-controller.jsx';
+import ReviewDetailListController from '@/page/home/review-manager/Review-detail-controller.jsx';
 
 // 管理员
 import AccountListController from '@/page/home/admin/Account-list-controller.jsx';
@@ -71,12 +71,12 @@ export default props => {
   });
 
   // 评审员页面
-  const homeExaminationList = useRouteMatch({
-    path: ROUTES.HOME_EXAMINATION_LIST.path,
+  const homeReviewList = useRouteMatch({
+    path: ROUTES.HOME_REVIEW_LIST.path,
     exact: true
   });
-  const homeExaminationDetail = useRouteMatch({
-    path: ROUTES.HOME_EXAMINATION_DETAIL.path,
+  const homeReviewDetail = useRouteMatch({
+    path: ROUTES.HOME_REVIEW_DETAIL.path,
     exact: true
   });
 
@@ -109,10 +109,10 @@ export default props => {
     content = <VerifyListController />;
   } else if (homeVerifyDetail) {
     content = <VerifyDetailController />;
-  } else if (homeExaminationList) {
-    content = <ExaminationListController />;
-  } else if (homeExaminationDetail) {
-    content = <ExaminationDetailListController />;
+  } else if (homeReviewList) {
+    content = <ReviewListController />;
+  } else if (homeReviewDetail) {
+    content = <ReviewDetailListController />;
   } else if (homeWriteCurrent) {
     content = <WriteCurrentController />;
   } else if (homeAccountList) {
@@ -130,11 +130,11 @@ export default props => {
     route = [ROUTES.HOME_PASSWORD.path, ROUTES.HOME_WRITE_WELCOME.path];
     text = ['修改密码', '填写信息'];
   } else if (localStorageToken === 'businessManager') {
-    route = [ROUTES.HOME_VERIFY_LIST.path];
-    text = ['核实信息'];
-  } else if (localStorageToken === 'examinationManager') {
-    route = [ROUTES.HOME_EXAMINATION_LIST.path];
-    text = ['信息打分'];
+    route = [ROUTES.HOME_PASSWORD.path, ROUTES.HOME_VERIFY_LIST.path];
+    text = ['修改密码', '核实信息'];
+  } else if (localStorageToken === 'reviewManager') {
+    route = [ROUTES.HOME_PASSWORD.path, ROUTES.HOME_REVIEW_LIST.path];
+    text = ['修改密码', '信息打分'];
   } else if (localStorageToken === 'admin') {
     route = [
       ROUTES.HOME_DEPARTMENT_LIST.path,

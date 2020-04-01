@@ -43,27 +43,27 @@ export default porps => {
           name: '张三',
           userName: 'yuangong',
           phone: 18351923820,
-          office: '战略研究科',
+          department: '战略研究科',
           authority: 'staff',
-          cancellation: 1
+          isCancel: '未注销'
         },
         {
           id: 2,
           name: '李四',
           userName: 'tongji',
           phone: 18351923820,
-          office: '信息安全科',
+          department: '信息安全科',
           authority: 'businessManager',
-          cancellation: 1
+          isCancel: '未注销'
         },
         {
           id: 3,
           name: '王五',
           userName: 'pingshen',
           phone: 18351923820,
-          office: '通信研究科',
-          authority: 'examinationManager',
-          cancellation: 1
+          department: '通信研究科',
+          authority: 'reviewManager',
+          isCancel: '未注销'
         }
       ];
 
@@ -79,7 +79,7 @@ export default porps => {
   //       id: accountList.length + 1,
   //       name: value.name,
   //       phone: value.phone,
-  //       office: value.office,
+  //       department: value.department,
   //       password: 123456
   //     };
   //     setAccountList([...accountList, newAccount]);
@@ -120,7 +120,7 @@ export default porps => {
           <Select placeholder='请选择权限' className='select'>
             <Option value='staff'>科研人员</Option>
             <Option value='businessManager'>统计管理员</Option>
-            <Option value='examinationManager'>评审管理员</Option>
+            <Option value='reviewManager'>评审管理员</Option>
           </Select>
           <Search className='search' placeholder='请输入账号' enterButton />
           <Button
@@ -188,19 +188,16 @@ export default porps => {
                 if (record.authority === 'staff') return '普通员工';
                 else if (record.authority === 'businessManager')
                   return '统计管理员';
-                else if (record.authority === 'examinationManager')
+                else if (record.authority === 'reviewManager')
                   return '评审管理员';
               }}
             />
-            <Column align='center' title='科室' dataIndex='office' key='' />
+            <Column align='center' title='科室' dataIndex='department' key='' />
             <Column
               align='center'
               title='注销状态'
-              dataIndex='cancellation'
+              dataIndex='isCancel'
               key=''
-              render={(text, record) =>
-                record.cancellation === 1 ? '未注销' : '已注销'
-              }
             />
             <Column
               align='center'

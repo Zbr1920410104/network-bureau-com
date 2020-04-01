@@ -1,7 +1,8 @@
-.write-basic-box {
+.verify-item-detail-box {
+  padding-top: 20px;
   border-bottom: 1px solid #ddd;
 
-  .basic-title-box {
+  .detail-title-box {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -19,10 +20,21 @@
       }
     }
   }
+}
 
-  .basic-bottom-box {
-    display: flex;
-    justify-content: center;
-    padding-bottom: 20px;
+.button-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-bottom: 20px;
+
+  .success-button {
+    background: #52c41a;
+    border: 1px solid #52c41a;
+  }
+
+  .fail-button {
+    background: #f5222d;
+    border: 1px solid #f5222d;
   }
 }

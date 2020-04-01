@@ -5,7 +5,7 @@ import UploadAwardContent from '@/components/home/staff/award/Upload-award-conte
 
 // 样式
 import '@/style/home/staff/write-detail.styl';
-import { Button, Table, Modal } from 'antd';
+import { Button, Table, Modal, Icon } from 'antd';
 const { Column } = Table,
   { confirm } = Modal;
 
@@ -58,14 +58,21 @@ export default props => {
   };
 
   return (
-    <div>
-      <Button
-        type='primary'
-        style={{ marginBottom: 16 }}
-        onClick={showNewAwardModal}
-      >
-        新增奖项
-      </Button>
+    <div className='write-item-box'>
+      <div className='item-title-box'>
+        <div className='title-left-box'>
+          <Icon type='trophy' className='icon' />
+          <span>奖项</span>
+        </div>
+        <Button
+          type='link'
+          icon='plus'
+          style={{ marginBottom: 16 }}
+          onClick={showNewAwardModal}
+        >
+          新增奖项
+        </Button>
+      </div>
       <Modal
         title='新增奖项'
         visible={newAwardVisible}
@@ -198,7 +205,11 @@ export default props => {
           )}
         />
       </Table>
-      <Button type='primary'>暂存</Button>
+      <div className='item-bottom-box'>
+        <Button type='primary' className='save-button'>
+          暂存
+        </Button>
+      </div>
     </div>
   );
 };
