@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 // 路由
-import { useRouteMatch, Link } from 'react-router-dom';
+import { useRouteMatch, useHistory } from 'react-router-dom';
 import * as ROUTES from '@/constants/route-constants';
 
 // controller
@@ -29,69 +30,94 @@ import DepartmentListController from '@/page/home/admin/Department-list-controll
 // localStorage
 import { LOCAL_STORAGE } from '@/constants/app-constants';
 
+// actions
+import userAction from '@/redux/action/user';
+
+// components
+import Nav from '@/components/home/Nav.jsx';
+
 // 样式
 import '@/style/home/home.styl';
-import { Layout, Menu, Icon } from 'antd';
+import { Layout, Icon } from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 
-export default props => {
-  const localStorageToken = localStorage.getItem(`${LOCAL_STORAGE}-token`);
+export default (props) => {
+  const token = localStorage.getItem(`${LOCAL_STORAGE}-token`);
   // 各个路由控制
+  const { uuid } = useSelector((state) => state.userStore),
+    history = useHistory(),
+    dispatch = useDispatch();
+
+  // 如果没有token就跳到首页
+  useEffect(() => {
+    if (!token) {
+      history.push(ROUTES.INDEX.path);
+    }
+  }, [token, history]);
+
+  // 刷新页面会导致uuid消失,需要用token再请求一遍
+  useEffect(() => {
+    if (!uuid && token) {
+      // 由token获取manager信息
+      dispatch(userAction.asyncSetUserByToken(token));
+    }
+  }, [uuid, token, dispatch]);
+
   const homeIndex = useRouteMatch({
     path: ROUTES.HOME_INDEX.path,
-    exact: true
+    exact: true,
   });
 
   // 员工
   const homeWriteWelcome = useRouteMatch({
     path: ROUTES.HOME_WRITE_WELCOME.path,
-    exact: true
+    exact: true,
   });
   const homeWriteDetail = useRouteMatch({
     path: ROUTES.HOME_WRITE_DETAIL.path,
-    exact: true
+    exact: true,
   });
   const homeWriteCurrent = useRouteMatch({
     path: ROUTES.HOME_WRITE_CURRENT.path,
-    exact: true
+    exact: true,
   });
   const homePassword = useRouteMatch({
     path: ROUTES.HOME_PASSWORD.path,
-    exact: true
+    exact: true,
   });
 
   // 业务员页面
   const homeVerifyList = useRouteMatch({
     path: ROUTES.HOME_VERIFY_LIST.path,
-    exact: true
+    exact: true,
   });
   const homeVerifyDetail = useRouteMatch({
     path: ROUTES.HOME_VERIFY_DETAIL.path,
-    exact: true
+    exact: true,
   });
 
   // 评审员页面
   const homeReviewList = useRouteMatch({
     path: ROUTES.HOME_REVIEW_LIST.path,
-    exact: true
+    exact: true,
   });
   const homeReviewDetail = useRouteMatch({
     path: ROUTES.HOME_REVIEW_DETAIL.path,
-    exact: true
+    exact: true,
   });
 
   // 管理员页面
   const homeAccountList = useRouteMatch({
     path: ROUTES.HOME_ACCOUNT_LIST.path,
-    exact: true
+    exact: true,
   });
   const homeAccountTime = useRouteMatch({
     path: ROUTES.HOME_ACCOUNT_TIME.path,
-    exact: true
+    exact: true,
   });
   const homeDepartmentList = useRouteMatch({
     path: ROUTES.HOME_DEPARTMENT_LIST.path,
-    exact: true
+    exact: true,
   });
 
   let content = null;
@@ -123,27 +149,6 @@ export default props => {
     content = <DepartmentListController />;
   }
 
-  console.log('localStorageToken=', localStorageToken);
-  let text;
-  let route = [];
-  if (localStorageToken === 'staff') {
-    route = [ROUTES.HOME_PASSWORD.path, ROUTES.HOME_WRITE_WELCOME.path];
-    text = ['修改密码', '填写信息'];
-  } else if (localStorageToken === 'businessManager') {
-    route = [ROUTES.HOME_PASSWORD.path, ROUTES.HOME_VERIFY_LIST.path];
-    text = ['修改密码', '核实信息'];
-  } else if (localStorageToken === 'reviewManager') {
-    route = [ROUTES.HOME_PASSWORD.path, ROUTES.HOME_REVIEW_LIST.path];
-    text = ['修改密码', '信息打分'];
-  } else if (localStorageToken === 'admin') {
-    route = [
-      ROUTES.HOME_DEPARTMENT_LIST.path,
-      ROUTES.HOME_ACCOUNT_LIST.path,
-      ROUTES.HOME_ACCOUNT_TIME.path
-    ];
-    text = ['添加科室', '账号管理列表', '开放填写时间设置'];
-  }
-
   return (
     <Layout>
       <Sider className='home-sider'>
@@ -151,36 +156,7 @@ export default props => {
           <Icon type='reconciliation' />
           <span>业务管理系统</span>
         </div>
-        <Menu theme='dark' mode='inline'>
-          <Menu.Item key='home'>
-            <Link to={ROUTES.HOME_INDEX.path}>
-              <Icon type='bank' />
-              <span>首页</span>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key='1'>
-            <Link to={route[0]}>
-              <Icon type='profile' />
-              <span>{text[0]}</span>
-            </Link>
-          </Menu.Item>
-          {route[1] ? (
-            <Menu.Item key='2'>
-              <Link to={route[1]}>
-                <Icon type='profile' />
-                <span>{text[1]}</span>
-              </Link>
-            </Menu.Item>
-          ) : null}
-          {route[2] ? (
-            <Menu.Item key='3'>
-              <Link to={route[2]}>
-                <Icon type='profile' />
-                <span>{text[2]}</span>
-              </Link>
-            </Menu.Item>
-          ) : null}
-        </Menu>
+        <Nav />
       </Sider>
       <Layout className='home-content'>
         <Header className='home-header' />
