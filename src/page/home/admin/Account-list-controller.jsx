@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from 'react';
 
+// redux
+import { useSelector, useDispatch } from 'react-redux';
+import userAction from '@/redux/action/user';
+
+// 请求
+import proxyFetch from '@/util/request';
+import {
+  QUARY_ACCOUNT,
+  RESET_PASSWORD,
+  ACCOUNT_CANCEL,
+  //SAVE_ACCOUNT,
+} from '@/constants/api-constants';
+
 import AccountFormController from '@/components/home/admin/Account-form-controller.jsx';
 import ModifyAccountContent from '@/components/home/admin/Modify-account-content-controller.jsx';
 
@@ -11,11 +24,14 @@ const { Column } = Table,
   { Option } = Select,
   { Search } = Input;
 
-export default porps => {
+export default (porps) => {
   const [accountLoading, setAccountLoading] = useState(false),
     [accountVisible, setAccountVisible] = useState(false),
+    [isNeedRefresh, setIsNeedRefresh] = useState(true),
     [accountList, setAccountList] = useState([]),
-    [modifyAccountVisible, setModifyAccountVisible] = useState(false);
+    [modifyAccountVisible, setModifyAccountVisible] = useState(false),
+    { addAccount } = useSelector((state) => state.userStore),
+    dispatch = useDispatch();
 
   const showAccountModal = () => {
     setAccountVisible(true);
@@ -34,79 +50,36 @@ export default porps => {
   };
 
   useEffect(() => {
+    let _isMounted = true;
+
     (async () => {
-      setAccountLoading(true);
+      if (isNeedRefresh || addAccount) {
+        setAccountLoading(true);
 
-      let accountList = [
-        {
-          id: 1,
-          name: '张三',
-          userName: 'yuangong',
-          phone: 18351923820,
-          department: '战略研究科',
-          authority: 'staff',
-          isCancel: '未注销'
-        },
-        {
-          id: 2,
-          name: '李四',
-          userName: 'tongji',
-          phone: 18351923820,
-          department: '信息安全科',
-          authority: 'businessManager',
-          isCancel: '未注销'
-        },
-        {
-          id: 3,
-          name: '王五',
-          userName: 'pingshen',
-          phone: 18351923820,
-          department: '通信研究科',
-          authority: 'reviewManager',
-          isCancel: '未注销'
+        const accountList = await proxyFetch(QUARY_ACCOUNT, {}, 'GET');
+
+        if (_isMounted) {
+          setAccountList(accountList);
+          dispatch(userAction.setAddAccount(false));
+          setAccountLoading(false);
+          setIsNeedRefresh(false);
         }
-      ];
-
-      setAccountList(accountList);
-      setAccountLoading(false);
+      }
     })();
-  }, []);
+  }, [isNeedRefresh, addAccount, dispatch]);
 
-  // const handleAdd = () => {
-  //   form.validateFields(async (err, value) => {
-  //     setAccountLoading(true);
-  //     const newAccount = {
-  //       id: accountList.length + 1,
-  //       name: value.name,
-  //       phone: value.phone,
-  //       department: value.department,
-  //       password: 123456
-  //     };
-  //     setAccountList([...accountList, newAccount]);
-  //     setAccountLoading(false);
-  //   });
-  // };
-
-  // const handleModify = key => {
-  //   const index = accountList.findIndex(item => item.key === key);
-  //   form.validateFields(async (err, value) => {
-  //     setAccountLoading(true);
-  //     let newAccountList = accountList;
-  //     newAccountList[index].password = value.password;
-  //     setAccountList(newAccountList);
-  //     setAccountLoading(false);
-  //   });
-  // };
-
-  const handleReset = key => {
-    Modal.destroyAll();
+  const handleReset = async (uuid) => {
+    await proxyFetch(RESET_PASSWORD, { uuid });
   };
 
-  const handleDelete = key => {
-    Modal.destroyAll();
+  const handleCancellation = async (uuid) => {
+    const res = await proxyFetch(ACCOUNT_CANCEL, { uuid });
+    if (res) {
+      setIsNeedRefresh(true);
+    }
   };
 
-  const handleExport = key => {
+  const handleExport = (key) => {
     Modal.destroyAll();
   };
 
@@ -143,7 +116,7 @@ export default porps => {
                 onOk(record) {
                   handleExport(record.key);
                 },
-                onCancel() {}
+                onCancel() {},
               });
             }}
           >
@@ -174,22 +147,28 @@ export default porps => {
           <Table
             dataSource={accountList}
             className='table'
-            rowKey={record => record.id}
+            rowKey={(record) => record.uuid}
+            scroll={{ x: 1200 }}
           >
-            <Column align='center' title='姓名' dataIndex='name' key='' />
+            <Column
+              align='center'
+              title='姓名'
+              dataIndex='name'
+              key=''
+              fixed='left'
+            />
             <Column align='center' title='账号' dataIndex='userName' key='' />
             <Column align='center' title='电话号码' dataIndex='phone' key='' />
             <Column
               align='center'
               title='权限'
-              dataIndex='authority'
+              dataIndex='role'
               key=''
               render={(text, record) => {
-                if (record.authority === 'staff') return '普通员工';
-                else if (record.authority === 'businessManager')
-                  return '统计管理员';
-                else if (record.authority === 'reviewManager')
-                  return '评审管理员';
+                if (record.role === 15) return '普通员工';
+                else if (record.role === 10) return '统计管理员';
+                else if (record.role === 5) return '评审管理员';
+                else if (record.role === 1) return '超级管理员';
               }}
             />
             <Column align='center' title='科室' dataIndex='department' key='' />
@@ -202,9 +181,11 @@ export default porps => {
             <Column
               align='center'
               title='重置密码'
+              fixed='right'
+              width='100px'
               dataIndex=''
               key=''
-              render={() => (
+              render={(text, record) => (
                 <Button
                   type='link'
                   onClick={() => {
@@ -214,10 +195,10 @@ export default porps => {
                       content: '确认要重置密码?',
                       okText: '确认',
                       cancelText: '取消',
-                      onOk(record) {
-                        handleReset(record.key);
+                      onOk() {
+                        handleReset(record.uuid);
                       },
-                      onCancel() {}
+                      onCancel() {},
                     });
                   }}
                 >
@@ -228,9 +209,11 @@ export default porps => {
             <Column
               align='center'
               title='注销'
+              fixed='right'
+              width='100px'
               dataIndex=''
               key=''
-              render={() => (
+              render={(text, record) => (
                 <Button
                   type='link'
                   onClick={() => {
@@ -240,10 +223,10 @@ export default porps => {
                       content: '确认要注销账号(注销后账号将无法登录)?',
                       okText: '确认',
                       cancelText: '取消',
-                      onOk(record) {
-                        handleDelete(record.key);
+                      onOk() {
+                        handleCancellation(record.uuid);
                       },
-                      onCancel() {}
+                      onCancel() {},
                     });
                   }}
                 >

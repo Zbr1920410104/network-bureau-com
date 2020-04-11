@@ -28,10 +28,17 @@ export default handleActions(
         userLoading: result,
       };
     },
+    setAddAccount(state, { payload: result }) {
+      return {
+        ...state,
+        addAccount: result,
+      };
+    },
   },
   {
     loginLoading: false,
     userLoading: false,
+    addAccount: false,
     uuid: '',
     phone: '',
     name: '',

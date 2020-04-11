@@ -34,31 +34,6 @@ export default Form.create({ name: 'login' })((props) => {
     });
   };
 
-  // /**
-  //  * 提交事件
-  //  */
-  // const handleSumbitSave = (e) => {
-  //   e.preventDefault();
-
-  //   // 表单判断
-  //   props.form.validateFields(async (err, value) => {
-  //     console.log(value);
-  //     if (value.userName === 'admin' && value.password === '123456') {
-  //       history.push(`${HOME_INDEX.path}`);
-  //       localStorage.setItem(`${LOCAL_STORAGE}-token`, 'admin');
-  //     } else if (value.userName === 'yuangong' && value.password === '123456') {
-  //       history.push(`${HOME_PASSWORD.path}`);
-  //       localStorage.setItem(`${LOCAL_STORAGE}-token`, 'staff');
-  //     } else if (value.userName === 'tongji' && value.password === '123456') {
-  //       history.push(`${HOME_PASSWORD.path}`);
-  //       localStorage.setItem(`${LOCAL_STORAGE}-token`, 'businessManager');
-  //     } else if (value.userName === 'pingshen' && value.password === '123456') {
-  //       history.push(`${HOME_PASSWORD.path}`);
-  //       localStorage.setItem(`${LOCAL_STORAGE}-token`, 'reviewManager');
-  //     }
-  //   });
-  // };
-
   return (
     <Form onSubmit={handleSubmitLogin}>
       <Form.Item>

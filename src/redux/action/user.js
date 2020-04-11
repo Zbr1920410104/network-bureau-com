@@ -5,5 +5,6 @@ export default {
   setUser: createAction('setUser'),
   setLoginLoading: createAction('setLoginLoading'),
   asyncSetUserByToken: createAction('asyncSetUserByToken'),
-  setUserLoading: createAction('setUserLoading')
+  setUserLoading: createAction('setUserLoading'),
+  setAddAccount: createAction('setAddAccount'),
 };
