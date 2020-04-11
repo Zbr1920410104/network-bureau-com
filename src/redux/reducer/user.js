@@ -34,11 +34,18 @@ export default handleActions(
         addAccount: result,
       };
     },
+    setUserUuid(state, { payload: result }) {
+      return {
+        ...state,
+        userUuid: result,
+      };
+    },
   },
   {
     loginLoading: false,
     userLoading: false,
     addAccount: false,
+    userUuid: '',
     uuid: '',
     phone: '',
     name: '',

@@ -10,8 +10,9 @@ import {
   QUARY_ACCOUNT,
   RESET_PASSWORD,
   ACCOUNT_CANCEL,
-  //SAVE_ACCOUNT,
 } from '@/constants/api-constants';
+
+import ExportJsonExcel from 'js-export-excel';
 
 import AccountFormController from '@/components/home/admin/Account-form-controller.jsx';
 import ModifyAccountContent from '@/components/home/admin/Modify-account-content-controller.jsx';
@@ -26,6 +27,8 @@ const { Column } = Table,
 
 export default (porps) => {
   const [accountLoading, setAccountLoading] = useState(false),
+    [role, setRole] = useState(0),
+    [name, setName] = useState(''),
     [accountVisible, setAccountVisible] = useState(false),
     [isNeedRefresh, setIsNeedRefresh] = useState(true),
     [accountList, setAccountList] = useState([]),
@@ -56,7 +59,11 @@ export default (porps) => {
       if (isNeedRefresh || addAccount) {
         setAccountLoading(true);
 
-        const accountList = await proxyFetch(QUARY_ACCOUNT, {}, 'GET');
+        const accountList = await proxyFetch(
+          QUARY_ACCOUNT,
+          { role, name },
+          'GET'
+        );
 
         if (_isMounted) {
           setAccountList(accountList);
@@ -66,7 +73,7 @@ export default (porps) => {
         }
       }
     })();
-  }, [isNeedRefresh, addAccount, dispatch]);
+  }, [isNeedRefresh, role, name, addAccount, dispatch]);
 
   const handleReset = async (uuid) => {
     await proxyFetch(RESET_PASSWORD, { uuid });
@@ -79,8 +86,55 @@ export default (porps) => {
     }
   };
 
-  const handleExport = (key) => {
-    Modal.destroyAll();
+  const roleToText = (role) => {
+    switch (role) {
+      case 1:
+        return '超级管理员';
+      case 5:
+        return '评审员';
+      case 10:
+        return '统计员';
+      case 15:
+        return '普通员工';
+      default:
+        return '未知';
+    }
+  };
+
+  const downloadExcel = async () => {
+    const accountList = await proxyFetch(QUARY_ACCOUNT, { role, name }, 'GET');
+    const datas = accountList ? accountList : ''; //表格数据
+    var option = {};
+    let dataTable = []; //新建数组放数据
+    console.log(datas);
+    if (datas) {
+      for (const data of datas) {
+        console.log(data);
+        if (data) {
+          let obj = {
+            name: data.name,
+            userName: data.userName,
+            role: roleToText(data.role),
+            isCancel: data.isCancel,
+            phone: data.phone,
+            department: data.department,
+          };
+          dataTable.push(obj);
+        }
+      }
+    }
+    console.log(dataTable);
+    option.fileName = '用户信息'; //文件名
+    option.datas = [
+      {
+        sheetData: dataTable, //数据
+        sheetName: '用户信息', //sheet名字
+        sheetHeader: ['姓名', '用户名', '权限', '注销状态', '电话', '部门'], //// 第一行
+      },
+    ];
+
+    var toExcel = new ExportJsonExcel(option);
+    toExcel.saveExcel(); //保存
   };
 
   return (
@@ -90,12 +144,30 @@ export default (porps) => {
       </p>
       <div className='account-list-content-box'>
         <div className='list-title-box'>
-          <Select placeholder='请选择权限' className='select'>
-            <Option value='staff'>科研人员</Option>
-            <Option value='businessManager'>统计管理员</Option>
-            <Option value='reviewManager'>评审管理员</Option>
+          <Select
+            className='select'
+            defaultValue={0}
+            onChange={(e) => {
+              setRole(e);
+              setName('');
+              setIsNeedRefresh(true);
+            }}
+          >
+            <Option value={0}>全部用户</Option>
+            <Option value={1}>超级管理员</Option>
+            <Option value={5}>评审管理员</Option>
+            <Option value={10}>统计管理员</Option>
+            <Option value={15}>普通员工</Option>
           </Select>
-          <Search className='search' placeholder='请输入账号' enterButton />
+          <Search
+            className='search'
+            placeholder='请输入姓名\账号'
+            enterButton
+            onSearch={(e) => {
+              setName(e);
+              setIsNeedRefresh(true);
+            }}
+          />
           <Button
             type='primary'
             style={{ marginBottom: 16 }}
@@ -108,13 +180,13 @@ export default (porps) => {
             type='primary'
             onClick={() => {
               confirm({
-                title: '导出所有账号信息',
+                title: '导出当前所有账号信息',
                 okType: 'primary',
-                content: '确认要导出所有账号信息?',
+                content: '确认要导出当前所有账号信息?',
                 okText: '确认',
                 cancelText: '取消',
-                onOk(record) {
-                  handleExport(record.key);
+                onOk() {
+                  downloadExcel();
                 },
                 onCancel() {},
               });
@@ -127,7 +199,7 @@ export default (porps) => {
             visible={modifyAccountVisible}
             onOk={hideModifyAccountModal}
             onCancel={hideModifyAccountModal}
-            okText='保存'
+            okText='确认'
             cancelText='取消'
           >
             <ModifyAccountContent />
@@ -241,8 +313,14 @@ export default (porps) => {
               fixed='right'
               width='100px'
               key=''
-              render={() => (
-                <Button type='link' onClick={showModifyAccountModal}>
+              render={(text, record) => (
+                <Button
+                  type='link'
+                  onClick={() => {
+                    dispatch(userAction.setUserUuid(record.uuid));
+                    showModifyAccountModal();
+                  }}
+                >
                   修改账号信息
                 </Button>
               )}

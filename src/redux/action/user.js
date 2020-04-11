@@ -7,4 +7,5 @@ export default {
   asyncSetUserByToken: createAction('asyncSetUserByToken'),
   setUserLoading: createAction('setUserLoading'),
   setAddAccount: createAction('setAddAccount'),
+  setUserUuid: createAction('setUserUuid'),
 };
