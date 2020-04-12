@@ -4,29 +4,46 @@ import React from 'react';
 import {
   HOME_WRITE_WELCOME,
   HOME_REVIEW_LIST,
-  HOME_VERIFY_LIST
+  HOME_VERIFY_LIST,
 } from '@/constants/route-constants';
 import { useHistory } from 'react-router-dom';
 
-// localStorage
-import { LOCAL_STORAGE } from '@/constants/app-constants';
+// 请求
+import proxyFetch from '@/util/request';
+import { SAVE_PASSWORD } from '@/constants/api-constants';
+
+// redux
+import { useSelector } from 'react-redux';
 
 // 样式
 import { Form, Button, Input, Alert } from 'antd';
 import '@/style/home/public/password-modify.styl';
 
 export default Form.create({ name: 'password' })(({ form }) => {
-  const localStorageToken = localStorage.getItem(`${LOCAL_STORAGE}-token`);
+  const { role } = useSelector((state) => state.userStore);
   const { getFieldDecorator } = form,
     history = useHistory();
-  const handleSave = () => {
-    if (localStorageToken === 'staff') {
-      history.push(HOME_WRITE_WELCOME.path);
-    } else if (localStorageToken === 'businessManager') {
-      history.push(HOME_VERIFY_LIST.path);
-    } else if (localStorageToken === 'reviewManager') {
-      history.push(HOME_REVIEW_LIST.path);
-    }
+  const handleSave = (e) => {
+    e.preventDefault();
+
+    // 表单判断
+    form.validateFields(async (err, value) => {
+      if (!err) {
+        delete value.confirm;
+
+        const res = await proxyFetch(SAVE_PASSWORD, value);
+
+        if (res) {
+          if (role === 15) {
+            history.push(HOME_WRITE_WELCOME.path);
+          } else if (role === 10) {
+            history.push(HOME_VERIFY_LIST.path);
+          } else if (role === 5) {
+            history.push(HOME_REVIEW_LIST.path);
+          }
+        }
+      }
+    });
   };
 
   return (
@@ -42,27 +59,27 @@ export default Form.create({ name: 'password' })(({ form }) => {
                 rules: [
                   {
                     required: true,
-                    message: '请输入原始密码！'
+                    message: '请输入原始密码！',
                   },
                   {
                     pattern: /^\S{6,12}$/,
-                    message: '密码需要6-12位'
-                  }
-                ]
+                    message: '密码需要6-12位',
+                  },
+                ],
               })(<Input.Password placeholder='请输入原始密码' />)}
             </Form.Item>
             <Form.Item label='新密码' hasFeedback>
-              {getFieldDecorator('password', {
+              {getFieldDecorator('newPassword', {
                 rules: [
                   {
                     required: true,
-                    message: '请输入新密码！'
+                    message: '请输入新密码！',
                   },
                   {
                     pattern: /^\S{6,12}$/,
-                    message: '密码需要6-12位'
-                  }
-                ]
+                    message: '密码需要6-12位',
+                  },
+                ],
               })(<Input.Password placeholder='请输入新密码' />)}
             </Form.Item>
             <Form.Item label='确认新密码' hasFeedback>
@@ -70,22 +87,22 @@ export default Form.create({ name: 'password' })(({ form }) => {
                 rules: [
                   {
                     required: true,
-                    message: '请再次输入新密码！'
+                    message: '请再次输入新密码！',
                   },
                   {
                     pattern: /^\S{6,12}$/,
-                    message: '密码需要6-12位'
+                    message: '密码需要6-12位',
                   },
                   {
                     validator: (rule, value, callback) => {
-                      if (value && value !== form.getFieldValue('password')) {
+                      if (value && value !== form.getFieldValue('newPassword')) {
                         callback('新密码和确认密码要一致！');
                       } else {
                         callback();
                       }
-                    }
-                  }
-                ]
+                    },
+                  },
+                ],
               })(<Input.Password placeholder='请再次输入新密码' />)}
             </Form.Item>
 

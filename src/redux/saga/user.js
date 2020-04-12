@@ -13,7 +13,15 @@ import * as APIS from '@/constants/api-constants';
 import { LOCAL_STORAGE } from '@/constants/app-constants';
 
 // 路由
-import { HOME_INDEX, HOME_PASSWORD, INDEX } from '@/constants/route-constants';
+import {
+  HOME_INDEX,
+  HOME_PASSWORD,
+  HOME_WRITE_WELCOME,
+  HOME_VERIFY_LIST,
+  HOME_REVIEW_LIST,
+  INDEX,
+} from '@/constants/route-constants';
+import md5 from 'md5';
 
 const effects = {
   asyncSetUser: function* ({ payload }) {
@@ -29,11 +37,38 @@ const effects = {
       yield put(userAction.setUser(res.userInfo));
       localStorage.clear();
       localStorage.setItem(`${LOCAL_STORAGE}-token`, res.token);
-      if (res.userInfo.role === 1) {
-        yield put(navToAction.setNavTo(HOME_INDEX.path));
-      } else {
-        yield put(navToAction.setNavTo(HOME_PASSWORD.path));
-      }
+
+      const roleToNav = (role) => {
+        switch (role) {
+          case 1:
+            return HOME_INDEX.path;
+          case 5:
+            if (res.userInfo.password === md5('123456')) {
+              return HOME_PASSWORD.path;
+            } else {
+              return HOME_REVIEW_LIST.path;
+            }
+          case 10:
+            if (res.userInfo.password === md5('123456')) {
+              return HOME_PASSWORD.path;
+            } else {
+              return HOME_VERIFY_LIST.path;
+            }
+          case 15:
+            if (res.userInfo.password === md5('123456')) {
+              return HOME_PASSWORD.path;
+            } else {
+              return HOME_WRITE_WELCOME.path;
+            }
+          default:
+            return HOME_INDEX.path;;
+        }
+      };
+
+      const route = roleToNav(res.userInfo.role)
+
+      yield put(navToAction.setNavTo(route));
+
     }
     // 不成功不跳
   },
