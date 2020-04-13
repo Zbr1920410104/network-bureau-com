@@ -36,3 +36,15 @@ export const SAVE_STAFF_BASIC = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_S
 export const MODIFY_STAFF_BASIC = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/modifyStaffBasic`;
 export const GET_STAFF_BASIC = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getStaffBasic`;
 export const GET_STAFF_DEPARTMENT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getStaffDepartment`;
+export const GET_STAFF_WRITE_INFO = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getStaffWriteInfo`;
+
+/**
+ * 统计管理员
+ **/
+export const GET_BUSINESS_MANAGER_BASIC = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getBusinessManagerBasic`;
+export const GET_STAFF_VERIFY_INFO = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getStaffVerifyInfo`;
+
+/**
+ * 评审管理员
+ **/
+export const GET_REVIEW_MANAGER_BASIC = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getReviewManagerBasic`;

@@ -1,36 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import ExportAllContent from '@/components/home/business-manager/Export-all-content-controller.jsx';
+
+// localStorage
+import { LOCAL_STORAGE } from '@/constants/app-constants';
+
+// 请求
+import proxyFetch from '@/util/request';
+import { GET_STAFF_VERIFY_INFO } from '@/constants/api-constants';
+
+// redux
+import { useDispatch } from 'react-redux';
+import userAction from '@/redux/action/user';
 
 // 路由
 import { HOME_VERIFY_DETAIL } from '@/constants/route-constants';
 import { useHistory } from 'react-router-dom';
 
+import moment from 'moment';
+
 // 样式
-import { Table, Button, Select, Modal } from 'antd';
+import { Table, Button, Select, Modal, Skeleton } from 'antd';
 import '@/style/home/business-manager/verify-list.styl';
 const { Option } = Select,
   { Column } = Table;
 
-export default props => {
+export default (props) => {
   const history = useHistory();
-  const personalInfoList = [
-      {
-        id: 1,
-        name: '李锐',
-        office: '战略研究科',
-        phone: '0451-87654321',
-        date: '2020-03-02'
-      },
-      {
-        id: 2,
-        name: '葛军',
-        office: '数学教研科',
-        phone: '0451-87654321',
-        date: '2020-03-02'
-      }
-    ],
-    [exportAllVisible, setExportAllVisible] = useState(false);
+  const [staffVerifyInfo, setStaffVerifyInfo] = useState([]),
+    [exportAllVisible, setExportAllVisible] = useState(false),
+    [staffLoading, setStaffLoading] = useState(false),
+    dispatch = useDispatch();
 
   const showExportAllModal = () => {
     setExportAllVisible(true);
@@ -39,6 +39,21 @@ export default props => {
   const hideExportAllModal = () => {
     setExportAllVisible(false);
   };
+
+  useEffect(() => {
+    (async () => {
+      setStaffLoading(true);
+
+      const staffVerifyInfo = await proxyFetch(
+        GET_STAFF_VERIFY_INFO,
+        {},
+        'GET'
+      );
+
+      setStaffVerifyInfo(staffVerifyInfo);
+      setStaffLoading(false);
+    })();
+  }, []);
 
   return (
     <div className='verify-list-box'>
@@ -73,32 +88,53 @@ export default props => {
             <ExportAllContent />
           </Modal>
         </div>
-        <Table
-          dataSource={personalInfoList}
-          className='table'
-          rowKey={record => record.id}
-        >
-          <Column align='center' title='姓名' dataIndex='name' key='' />
-          <Column align='center' title='科室' dataIndex='office' key='' />
-          <Column align='center' title='办公号码' dataIndex='phone' key='' />
-          <Column align='center' title='最后修改时间' dataIndex='date' key='' />
-          <Column
-            align='center'
-            title='核实'
-            dataIndex=''
-            key=''
-            render={(text, record) => (
-              <Button
-                type='link'
-                onClick={() => {
-                  history.push(HOME_VERIFY_DETAIL.path);
-                }}
-              >
-                核实
-              </Button>
-            )}
-          />
-        </Table>
+        <Skeleton loading={staffLoading}>
+          <Table
+            dataSource={staffVerifyInfo}
+            className='table'
+            rowKey={(record) => record.uuid}
+          >
+            <Column align='center' title='姓名' dataIndex='name' key='' />
+            <Column align='center' title='科室' dataIndex='department' key='' />
+            <Column align='center' title='手机号码' dataIndex='phone' key='' />
+            <Column
+              align='center'
+              title='最后修改时间'
+              dataIndex='currentWriteTime'
+              key=''
+              render={(text, record) => (
+                <span>
+                  {record.currentWriteTime
+                    ? moment(record.currentWriteTime).format(
+                        'YYYY-MM-DD h:mm:ss a'
+                      )
+                    : ''}
+                </span>
+              )}
+            />
+            <Column
+              align='center'
+              title='核实'
+              dataIndex=''
+              key=''
+              render={(text, record) => (
+                <Button
+                  type='link'
+                  onClick={() => {
+                    localStorage.setItem(
+                      `${LOCAL_STORAGE}-staffUuid`,
+                      record.uuid
+                    );
+                    dispatch(userAction.setStaffUuid(record.uuid));
+                    history.push(HOME_VERIFY_DETAIL.path);
+                  }}
+                >
+                  核实
+                </Button>
+              )}
+            />
+          </Table>
+        </Skeleton>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import VerifyProjectController from '@/components/home/business-manager/detail/Verify-project-controller.jsx';
 import VerifyBasicController from '@/components/home/business-manager/detail/Verify-basic-controller.jsx';
@@ -13,14 +13,32 @@ import { Link } from 'react-router-dom';
 
 import ExportOneContent from '@/components/home/public/Export-one-content-controller.jsx';
 
+// localStorage
+import { LOCAL_STORAGE } from '@/constants/app-constants';
+
+// redux
+import { useSelector, useDispatch } from 'react-redux';
+import userAction from '@/redux/action/user';
+
 // 样式
 import { Icon, Button, Modal } from 'antd';
 import '@/style/home/business-manager/verify-detail.styl';
 const { confirm } = Modal;
 
-export default props => {
-  const [exportOneVisible, setExportOneVisible] = useState(false),
-    [exportOneVerifyVisible, setExportOneVerifyVisible] = useState(false);
+export default (props) => {
+  const localStorageStaffUuid = localStorage.getItem(
+      `${LOCAL_STORAGE}-staffUuid`
+    ),
+    { staffUuid } = useSelector((state) => state.userStore),
+    [exportOneVisible, setExportOneVisible] = useState(false),
+    [exportOneVerifyVisible, setExportOneVerifyVisible] = useState(false),
+    dispatch = useDispatch();
+
+  useEffect(() => {
+    if (localStorageStaffUuid && !staffUuid) {
+      dispatch(userAction.setStaffUuid(localStorageStaffUuid));
+    }
+  }, [localStorageStaffUuid, staffUuid, dispatch]);
 
   const showExportOneModal = () => {
     setExportOneVisible(true);
@@ -72,7 +90,7 @@ export default props => {
                 okText: '确认',
                 cancelText: '取消',
                 onOk() {},
-                onCancel() {}
+                onCancel() {},
               });
             }}
           >

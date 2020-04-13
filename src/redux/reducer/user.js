@@ -46,6 +46,12 @@ export default handleActions(
         userUuid: result,
       };
     },
+    setStaffUuid(state, { payload: result }) {
+      return {
+        ...state,
+        staffUuid: result,
+      };
+    },
   },
   {
     loginLoading: false,
@@ -60,5 +66,6 @@ export default handleActions(
     departmentUuid: '',
     isCancel: '',
     role: 0,
+    staffUuid: '',
   }
 );

@@ -1,13 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+// 请求
+import proxyFetch from '@/util/request';
+import { GET_BUSINESS_MANAGER_BASIC } from '@/constants/api-constants';
+
+import moment from 'moment';
+
+// redux
+import { useSelector } from 'react-redux';
 
 // 样式
 import '@/style/home/business-manager/verify-item-detail.styl';
-import { Descriptions, Icon, Button, Modal, Input } from 'antd';
+import { Descriptions, Icon, Button, Modal, Input, Skeleton } from 'antd';
 const { TextArea } = Input,
   { confirm } = Modal;
 
-export default props => {
-  const [verifyVisible, setVerifyVisible] = useState(false);
+export default (props) => {
+  const { staffUuid } = useSelector((state) => state.userStore),
+    [verifyVisible, setVerifyVisible] = useState(false),
+    [basicLoading, setBasicLoading] = useState(false),
+    [staffBasic, setStaffBasic] = useState([]);
 
   const showVerifyModal = () => {
     setVerifyVisible(true);
@@ -16,6 +28,24 @@ export default props => {
   const hideVerifyModal = () => {
     setVerifyVisible(false);
   };
+
+  // 将已有的数据回显
+  useEffect(() => {
+    (async () => {
+      setBasicLoading(true);
+      const staffBasic = await proxyFetch(
+        GET_BUSINESS_MANAGER_BASIC,
+        { staffUuid },
+        'GET'
+      );
+
+      if (staffBasic) {
+        setStaffBasic(staffBasic);
+      }
+
+      setBasicLoading(false);
+    })();
+  }, [staffUuid]);
 
   return (
     <div className='verify-item-detail-box'>
@@ -46,7 +76,7 @@ export default props => {
             <Button
               type='primary'
               className='fail-button'
-              onOk={hideVerifyModal}
+              onClick={hideVerifyModal}
             >
               核实未通过
             </Button>
@@ -67,7 +97,7 @@ export default props => {
                   okText: '确认',
                   cancelText: '取消',
                   onOk() {},
-                  onCancel() {}
+                  onCancel() {},
                 });
               }}
             >
@@ -82,27 +112,63 @@ export default props => {
           />
         </Modal>
       </div>
-      <Descriptions className='description-box'>
-        <Descriptions.Item label='姓名'>李锐</Descriptions.Item>
-        <Descriptions.Item label='身份证号'>
-          230108198005120614
-        </Descriptions.Item>
-        <Descriptions.Item label='性别'>男</Descriptions.Item>
-        <Descriptions.Item label='民族'>汉</Descriptions.Item>
-        <Descriptions.Item label='籍贯'>辽宁省盖州</Descriptions.Item>
-        <Descriptions.Item label='政治面貌'>共产党员</Descriptions.Item>
-        <Descriptions.Item label='科室'>战略研究科</Descriptions.Item>
-        <Descriptions.Item label='办公电话'>0451-58685774</Descriptions.Item>
-        <Descriptions.Item label='手机'>18351923820</Descriptions.Item>
-        <Descriptions.Item label='学历/学位'>硕士</Descriptions.Item>
-        <Descriptions.Item label='毕业学校'>哈尔滨理工大学</Descriptions.Item>
-        <Descriptions.Item label='所学专业'>软件工程</Descriptions.Item>
-        <Descriptions.Item label='职务'>研究员</Descriptions.Item>
-        <Descriptions.Item label='参加工作时间'>2020-03-10</Descriptions.Item>
-        <Descriptions.Item label='职称'>副高级</Descriptions.Item>
-        <Descriptions.Item label='获得时间'>2020-03-11</Descriptions.Item>
-        <Descriptions.Item label='研究方向'>人工智能</Descriptions.Item>
-      </Descriptions>
+      <Skeleton loading={basicLoading}>
+        <Descriptions className='description-box'>
+          <Descriptions.Item label='姓名'>{staffBasic.name}</Descriptions.Item>
+          <Descriptions.Item label='身份证号'>
+            {staffBasic.idNumber}
+          </Descriptions.Item>
+          <Descriptions.Item label='性别'>{staffBasic.sex}</Descriptions.Item>
+          <Descriptions.Item label='民族'>
+            {staffBasic.nation}
+          </Descriptions.Item>
+          <Descriptions.Item label='籍贯'>
+            {staffBasic.nativePlace}
+          </Descriptions.Item>
+          <Descriptions.Item label='政治面貌'>
+            {staffBasic.politicalAffiliation}
+          </Descriptions.Item>
+          <Descriptions.Item label='科室'>
+            {staffBasic.department}
+          </Descriptions.Item>
+          <Descriptions.Item label='办公电话'>
+            {staffBasic.officePhone}
+          </Descriptions.Item>
+          <Descriptions.Item label='手机'>{staffBasic.phone}</Descriptions.Item>
+          <Descriptions.Item label='学历/学位'>
+            {staffBasic.education}
+          </Descriptions.Item>
+          <Descriptions.Item label='毕业学校'>
+            {staffBasic.graduateSchool}
+          </Descriptions.Item>
+          <Descriptions.Item label='所学专业'>
+            {staffBasic.major}
+          </Descriptions.Item>
+          <Descriptions.Item label='职务'>{staffBasic.duty}</Descriptions.Item>
+          <Descriptions.Item label='参加工作时间'>
+            {staffBasic.workTime
+              ? moment(staffBasic.workTime).format('YYYY-MM-DD')
+              : ''}
+          </Descriptions.Item>
+          <Descriptions.Item label='职称'>
+            {staffBasic.professionTitle}
+          </Descriptions.Item>
+          <Descriptions.Item label='获得时间'>
+            {staffBasic.getTime
+              ? moment(staffBasic.getTime).format('YYYY-MM-DD')
+              : ''}
+          </Descriptions.Item>
+          <Descriptions.Item label='研究方向' span={2}>
+            {staffBasic.researchDirection}
+          </Descriptions.Item>
+          <Descriptions.Item label='学习经历' span={3}>
+            {staffBasic.studyExperience}
+          </Descriptions.Item>
+          <Descriptions.Item label='工作经历' span={3}>
+            {staffBasic.workExperience}
+          </Descriptions.Item>
+        </Descriptions>
+      </Skeleton>
     </div>
   );
 };

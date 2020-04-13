@@ -9,4 +9,5 @@ export default {
   setAddAccount: createAction('setAddAccount'),
   setModifyBasic: createAction('setModifyBasic'),
   setUserUuid: createAction('setUserUuid'),
+  setStaffUuid: createAction('setStaffUuid'),
 };

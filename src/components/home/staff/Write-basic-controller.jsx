@@ -84,7 +84,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
 
       setBasicLoading(false);
     })();
-  }, [modifyBasic, dispatch]);
+  }, [isWritten, modifyBasic, dispatch]);
 
   const showModifyBasic = () => {
     setModifyBasicVisible(true);

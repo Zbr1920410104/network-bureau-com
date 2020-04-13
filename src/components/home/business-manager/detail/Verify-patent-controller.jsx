@@ -63,7 +63,7 @@ export default props => {
             <Button
               type='primary'
               className='fail-button'
-              onOk={hideVerifyModal}
+              onClick={hideVerifyModal}
             >
               核实未通过
             </Button>
