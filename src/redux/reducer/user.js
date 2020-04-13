@@ -34,6 +34,12 @@ export default handleActions(
         addAccount: result,
       };
     },
+    setModifyBasic(state, { payload: result }) {
+      return {
+        ...state,
+        modifyBasic: result,
+      };
+    },
     setUserUuid(state, { payload: result }) {
       return {
         ...state,
@@ -45,6 +51,7 @@ export default handleActions(
     loginLoading: false,
     userLoading: false,
     addAccount: false,
+    modifyBasic: false,
     userUuid: '',
     uuid: '',
     phone: '',
