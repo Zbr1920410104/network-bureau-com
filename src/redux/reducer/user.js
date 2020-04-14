@@ -52,12 +52,19 @@ export default handleActions(
         staffUuid: result,
       };
     },
+    setCreateProject(state, { payload: result }) {
+      return {
+        ...state,
+        createProject: result,
+      };
+    },
   },
   {
     loginLoading: false,
     userLoading: false,
     addAccount: false,
     modifyBasic: false,
+    createProject: false,
     userUuid: '',
     uuid: '',
     phone: '',

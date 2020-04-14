@@ -1,41 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import ModifyProjectContent from '@/components/home/staff/project/Modify-project-content-controller.jsx';
+import CreateProjectContent from '@/components/home/staff/project/Create-project-content-controller.jsx';
+
+// 请求
+import proxyFetch from '@/util/request';
+import { GET_WRITE_PROJECT_LIST } from '@/constants/api-constants';
+
+// redux
+import { useSelector, useDispatch } from 'react-redux';
+import userAction from '@/redux/action/user';
+
+import moment from 'moment';
 
 // 样式
 import '@/style/home/staff/write-item.styl';
-import { Button, Table, Modal, Icon } from 'antd';
-const { Column } = Table,
-  { confirm } = Modal;
+import { Button, Modal, Icon, Descriptions, Skeleton } from 'antd';
+const { confirm } = Modal;
 
-export default props => {
-
-  const leadProjectList = [
-      {
-        id: 1,
-        type: 1,
-        name: '软件测试1',
-        time: '2020-03-04~202003-20',
-        code: '101010101',
-        resource: '网信办',
-        funds: '23',
-        participant: '钱程、张博荣',
-        content: 'js开发'
-      },
-      {
-        id: 2,
-        type: 2,
-        name: '软件测试2',
-        time: '2020-03-05~202003-25',
-        code: '101010106',
-        resource: '网信办',
-        funds: '32',
-        participant: '钱程、张博荣',
-        content: '系统开发'
-      }
-    ],
-    [newProjectVisible, setNewProjectVisible] = useState(false),
-    [modifyProjectVisible, setModifyProjectVisible] = useState(false);
+export default (props) => {
+  const [newProjectVisible, setNewProjectVisible] = useState(false),
+    { createProject } = useSelector((state) => state.userStore),
+    [modifyProjectVisible, setModifyProjectVisible] = useState(false),
+    [writeProjectList, setWriteProjectList] = useState([]),
+    [writeProjectLoading, setWriteProjectLoading] = useState(false),
+    dispatch = useDispatch();
 
   const showNewProjectModal = () => {
     setNewProjectVisible(true);
@@ -52,6 +41,22 @@ export default props => {
   const hideModifyProjectModal = () => {
     setModifyProjectVisible(false);
   };
+
+  useEffect(() => {
+    (async () => {
+      setWriteProjectLoading(true);
+
+      const writeProjectList = await proxyFetch(
+        GET_WRITE_PROJECT_LIST,
+        {},
+        'GET'
+      );
+
+      setWriteProjectList(writeProjectList);
+      setWriteProjectLoading(false);
+      dispatch(userAction.setCreateProject(false));
+    })();
+  }, [createProject, dispatch]);
 
   return (
     <div className='write-item-box'>
@@ -75,10 +80,10 @@ export default props => {
         visible={newProjectVisible}
         onOk={hideNewProjectModal}
         onCancel={hideNewProjectModal}
-        okText='保存'
+        okText='确定'
         cancelText='取消'
       >
-        <ModifyProjectContent />
+        <CreateProjectContent />
       </Modal>
       <Modal
         title='修改项目内容'
@@ -90,7 +95,93 @@ export default props => {
       >
         <ModifyProjectContent />
       </Modal>
-      <Table
+      <div className='write-description-box'>
+        <Skeleton loading={writeProjectLoading}>
+          {writeProjectList?.length ? (
+            writeProjectList.map((item, index) => (
+              <Descriptions
+                key={item.uuid}
+                title={
+                  <div className='write-description-title'>
+                    <div className='description-title-text'>
+                      <span>{`项目${index + 1}:  ${item.name}`}</span>
+                      <span>{`状态: ${item.isVerify}`}</span>
+                      <span>{`最近填写/修改于: ${
+                        item.currentWriteTime
+                          ? moment(item.currentWriteTime).format(
+                              'YYYY-MM-DD h:mm:ss a'
+                            )
+                          : ''
+                      }`}</span>
+                    </div>
+                    <div className='description-title-button'>
+                      <Button
+                        type='link'
+                        onClick={showModifyProjectModal}
+                        className='link-button'
+                      >
+                        <Icon type='edit' />
+                      </Button>
+                      <Button
+                        type='link'
+                        className='link-button'
+                        onClick={() => {
+                          confirm({
+                            title: '删除项目?',
+                            okType: 'primary',
+                            content: '确认要删除项目?',
+                            okText: '确认',
+                            cancelText: '取消',
+                            onOk() {},
+                            onCancel() {},
+                          });
+                        }}
+                      >
+                        <Icon type='delete' />
+                      </Button>
+                    </div>
+                  </div>
+                }
+              >
+                <Descriptions.Item label='项目类型'>
+                  {item.type}
+                </Descriptions.Item>
+                <Descriptions.Item label='开始时间'>
+                  {item.startTime
+                    ? moment(item.startTime).format('YYYY-MM-DD')
+                    : ''}
+                </Descriptions.Item>
+                <Descriptions.Item label='结束时间'>
+                  {item.endTime
+                    ? moment(item.endTime).format('YYYY-MM-DD')
+                    : ''}
+                </Descriptions.Item>
+                <Descriptions.Item label='项目编号'>
+                  {item.code}
+                </Descriptions.Item>
+                <Descriptions.Item label='项目来源'>
+                  {item.resource}
+                </Descriptions.Item>
+                <Descriptions.Item label='项目经费'>
+                  {item.funds}
+                </Descriptions.Item>
+                <Descriptions.Item label='负责人'>
+                  {item.controller}
+                </Descriptions.Item>
+                <Descriptions.Item label='参与人名单'>
+                  {item.participant}
+                </Descriptions.Item>
+                <Descriptions.Item label='主要研究内容'>
+                  {item.content}
+                </Descriptions.Item>
+              </Descriptions>
+            ))
+          ) : (
+            <span>未填写项目</span>
+          )}
+        </Skeleton>
+      </div>
+      {/* <Table
         dataSource={leadProjectList}
         className='table'
         rowKey={record => record.id}
@@ -196,12 +287,12 @@ export default props => {
             </Button>
           )}
         />
-      </Table>
-      <div className='item-bottom-box'>
-        <Button type='primary' className='save-button' >
+      </Table> */}
+      {/* <div className='item-bottom-box'>
+        <Button type='primary' className='save-button'>
           暂存
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 };
