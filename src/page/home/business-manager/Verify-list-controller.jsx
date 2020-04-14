@@ -20,16 +20,20 @@ import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 
 // 样式
-import { Table, Button, Select, Modal, Skeleton } from 'antd';
+import { Table, Button, Select, Modal, Skeleton, Input } from 'antd';
 import '@/style/home/business-manager/verify-list.styl';
 const { Option } = Select,
-  { Column } = Table;
+  { Column } = Table,
+  { Search } = Input;
 
 export default (props) => {
   const history = useHistory();
   const [staffVerifyInfo, setStaffVerifyInfo] = useState([]),
     [exportAllVisible, setExportAllVisible] = useState(false),
     [staffLoading, setStaffLoading] = useState(false),
+    [verifyStatus, setVerifyStatus] = useState(0),
+    [name, setName] = useState(''),
+    [isNeedRefresh, setIsNeedRefresh] = useState(true),
     dispatch = useDispatch();
 
   const showExportAllModal = () => {
@@ -46,14 +50,15 @@ export default (props) => {
 
       const staffVerifyInfo = await proxyFetch(
         GET_STAFF_VERIFY_INFO,
-        {},
+        { verifyStatus, name },
         'GET'
       );
 
       setStaffVerifyInfo(staffVerifyInfo);
       setStaffLoading(false);
+      setIsNeedRefresh(false);
     })();
-  }, []);
+  }, [isNeedRefresh, verifyStatus, name]);
 
   return (
     <div className='verify-list-box'>
@@ -65,11 +70,31 @@ export default (props) => {
       </div>
       <div className='list-content-box'>
         <div className='list-title-box'>
-          <Select placeholder='分类查看' className='list-select'>
+          <Select
+            placeholder='分类查看'
+            className='list-select'
+            defaultValue='0'
+            onChange={(e) => {
+              setVerifyStatus(e);
+              setName('');
+              setIsNeedRefresh(true);
+            }}
+          >
+            <Option value='0'>全部</Option>
+            <Option value='未填写完毕'>未填写完毕</Option>
             <Option value='未核实'>未核实</Option>
             <Option value='核实通过'>核实通过</Option>
             <Option value='核实未通过'>核实未通过</Option>
           </Select>
+          <Search
+            className='search'
+            placeholder='请输入姓名'
+            enterButton
+            onSearch={(e) => {
+              setName(e);
+              setIsNeedRefresh(true);
+            }}
+          />
           <Button
             type='primary'
             className='export-all-button'
@@ -111,6 +136,12 @@ export default (props) => {
                     : ''}
                 </span>
               )}
+            />
+            <Column
+              align='center'
+              title='核实状态'
+              dataIndex='verifyStatus'
+              key=''
             />
             <Column
               align='center'

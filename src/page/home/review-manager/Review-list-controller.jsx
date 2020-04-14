@@ -1,37 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+// localStorage
+import { LOCAL_STORAGE } from '@/constants/app-constants';
 
 import ExportAllContent from '@/components/home/review-manager/Export-all-content-controller.jsx';
+
+// redux
+import { useDispatch } from 'react-redux';
+import userAction from '@/redux/action/user';
 
 // 路由
 import { HOME_REVIEW_DETAIL } from '@/constants/route-constants';
 import { useHistory } from 'react-router-dom';
 
+// 请求
+import proxyFetch from '@/util/request';
+import { GET_STAFF_REVIEW_INFO } from '@/constants/api-constants';
+
+import moment from 'moment';
+
 // 样式
-import { Table, Button, Select, Modal, Input } from 'antd';
+import { Table, Button, Select, Modal, Input, Skeleton } from 'antd';
 import '@/style/home/review-manager/review-list.styl';
 const { Option } = Select,
   { Column } = Table,
   { Search } = Input;
 
-export default props => {
-  const history = useHistory();
-  const personalInfoList = [
-      {
-        id: 1,
-        name: '李锐',
-        office: '战略研究科',
-        phone: '0451-87654321',
-        date: '2020-03-02'
-      },
-      {
-        id: 2,
-        name: '葛军',
-        office: '数学教研科',
-        phone: '0451-87654321',
-        date: '2020-03-02'
-      }
-    ],
-    [exportAllVisible, setExportAllVisible] = useState(false);
+export default (props) => {
+  const history = useHistory(),
+    [staffReviewInfo, setStaffReviewInfo] = useState([]),
+    [staffLoading, setStaffLoading] = useState(false),
+    [reviewStatus, setReviewStatus] = useState(0),
+    [name, setName] = useState(''),
+    [isNeedRefresh, setIsNeedRefresh] = useState(true),
+    [exportAllVisible, setExportAllVisible] = useState(false),
+    dispatch = useDispatch();
 
   const showExportAllModal = () => {
     setExportAllVisible(true);
@@ -40,6 +43,22 @@ export default props => {
   const hideExportAllModal = () => {
     setExportAllVisible(false);
   };
+
+  useEffect(() => {
+    (async () => {
+      setStaffLoading(true);
+
+      const staffReviewInfo = await proxyFetch(
+        GET_STAFF_REVIEW_INFO,
+        { reviewStatus, name },
+        'GET'
+      );
+
+      setStaffReviewInfo(staffReviewInfo);
+      setStaffLoading(false);
+      setIsNeedRefresh(false);
+    })();
+  }, [isNeedRefresh, reviewStatus, name]);
 
   return (
     <div className='review-list-box'>
@@ -51,11 +70,29 @@ export default props => {
       </div>
       <div className='list-content-box'>
         <div className='list-title-box'>
-          <Select placeholder='分类查看' className='list-select'>
+          <Select
+            placeholder='分类查看'
+            className='list-select'
+            defaultValue='0'
+            onChange={(e) => {
+              setReviewStatus(e);
+              setName('');
+              setIsNeedRefresh(true);
+            }}
+          >
+            <Option value='0'>全部</Option>
             <Option value='已评分'>已评分</Option>
             <Option value='未评分'>未评分</Option>
           </Select>
-          <Search className='search' placeholder='请输入姓名' enterButton />
+          <Search
+            className='search'
+            placeholder='请输入姓名'
+            onSearch={(e) => {
+              setName(e);
+              setIsNeedRefresh(true);
+            }}
+            enterButton
+          />
           <Button
             type='primary'
             className='export-all-button'
@@ -77,32 +114,59 @@ export default props => {
             <ExportAllContent />
           </Modal>
         </div>
-        <Table
-          dataSource={personalInfoList}
-          className='table'
-          rowKey={record => record.id}
-        >
-          <Column align='center' title='姓名' dataIndex='name' key='' />
-          <Column align='center' title='科室' dataIndex='office' key='' />
-          <Column align='center' title='办公号码' dataIndex='phone' key='' />
-          <Column align='center' title='最后修改时间' dataIndex='date' key='' />
-          <Column
-            align='center'
-            title='评分'
-            dataIndex=''
-            key=''
-            render={(text, record) => (
-              <Button
-                type='link'
-                onClick={() => {
-                  history.push(HOME_REVIEW_DETAIL.path);
-                }}
-              >
-                评分
-              </Button>
-            )}
-          />
-        </Table>
+        <Skeleton loading={staffLoading}>
+          <Table
+            dataSource={staffReviewInfo}
+            className='table'
+            rowKey={(record) => record.uuid}
+          >
+            <Column align='center' title='姓名' dataIndex='name' key='' />
+            <Column align='center' title='科室' dataIndex='department' key='' />
+            <Column align='center' title='办公号码' dataIndex='phone' key='' />
+            <Column
+              align='center'
+              title='最后修改时间'
+              dataIndex='currentWriteTime'
+              key=''
+              render={(text, record) => (
+                <span>
+                  {record.currentWriteTime
+                    ? moment(record.currentWriteTime).format(
+                        'YYYY-MM-DD h:mm:ss a'
+                      )
+                    : ''}
+                </span>
+              )}
+            />
+            <Column
+              align='center'
+              title='总得分'
+              dataIndex='totalScore'
+              key=''
+            />
+            <Column
+              align='center'
+              title='评分'
+              dataIndex=''
+              key=''
+              render={(text, record) => (
+                <Button
+                  type='link'
+                  onClick={() => {
+                    localStorage.setItem(
+                      `${LOCAL_STORAGE}-staffUuid`,
+                      record.uuid
+                    );
+                    dispatch(userAction.setStaffUuid(record.uuid));
+                    history.push(HOME_REVIEW_DETAIL.path);
+                  }}
+                >
+                  评分
+                </Button>
+              )}
+            />
+          </Table>
+        </Skeleton>
       </div>
     </div>
   );
