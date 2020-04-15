@@ -10,5 +10,6 @@ export default {
   setModifyBasic: createAction('setModifyBasic'),
   setUserUuid: createAction('setUserUuid'),
   setStaffUuid: createAction('setStaffUuid'),
-  setCreateProject: createAction('setCreateProject'),
+  setChangeProject: createAction('setChangeProject'),
+  setStaffProjectUuid: createAction('setStaffProjectUuid'),
 };

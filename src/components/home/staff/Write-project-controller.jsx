@@ -5,7 +5,10 @@ import CreateProjectContent from '@/components/home/staff/project/Create-project
 
 // 请求
 import proxyFetch from '@/util/request';
-import { GET_WRITE_PROJECT_LIST } from '@/constants/api-constants';
+import {
+  GET_WRITE_PROJECT_LIST,
+  DELETE_PROJECT,
+} from '@/constants/api-constants';
 
 // redux
 import { useSelector, useDispatch } from 'react-redux';
@@ -20,7 +23,7 @@ const { confirm } = Modal;
 
 export default (props) => {
   const [newProjectVisible, setNewProjectVisible] = useState(false),
-    { createProject } = useSelector((state) => state.userStore),
+    { changeProject } = useSelector((state) => state.userStore),
     [modifyProjectVisible, setModifyProjectVisible] = useState(false),
     [writeProjectList, setWriteProjectList] = useState([]),
     [writeProjectLoading, setWriteProjectLoading] = useState(false),
@@ -34,8 +37,16 @@ export default (props) => {
     setNewProjectVisible(false);
   };
 
-  const showModifyProjectModal = () => {
+  const showModifyProjectModal = (uuid) => {
+    dispatch(userAction.setStaffProjectUuid(uuid));
     setModifyProjectVisible(true);
+  };
+
+  const handleDelete = async (uuid) => {
+    const res = await proxyFetch(DELETE_PROJECT, { uuid }, 'DELETE');
+    if (res) {
+      dispatch(userAction.setChangeProject(true));
+    }
   };
 
   const hideModifyProjectModal = () => {
@@ -54,9 +65,9 @@ export default (props) => {
 
       setWriteProjectList(writeProjectList);
       setWriteProjectLoading(false);
-      dispatch(userAction.setCreateProject(false));
+      dispatch(userAction.setChangeProject(false));
     })();
-  }, [createProject, dispatch]);
+  }, [changeProject, dispatch]);
 
   return (
     <div className='write-item-box'>
@@ -90,7 +101,7 @@ export default (props) => {
         visible={modifyProjectVisible}
         onOk={hideModifyProjectModal}
         onCancel={hideModifyProjectModal}
-        okText='保存'
+        okText='确定'
         cancelText='取消'
       >
         <ModifyProjectContent />
@@ -117,7 +128,9 @@ export default (props) => {
                     <div className='description-title-button'>
                       <Button
                         type='link'
-                        onClick={showModifyProjectModal}
+                        onClick={() => {
+                          showModifyProjectModal(item.uuid);
+                        }}
                         className='link-button'
                       >
                         <Icon type='edit' />
@@ -132,7 +145,9 @@ export default (props) => {
                             content: '确认要删除项目?',
                             okText: '确认',
                             cancelText: '取消',
-                            onOk() {},
+                            onOk() {
+                              handleDelete(item.uuid);
+                            },
                             onCancel() {},
                           });
                         }}
@@ -144,7 +159,11 @@ export default (props) => {
                 }
               >
                 <Descriptions.Item label='项目类型'>
-                  {item.type}
+                  {item.type === 1 ? (
+                    <span>主持项目</span>
+                  ) : (
+                    <span>参与项目</span>
+                  )}
                 </Descriptions.Item>
                 <Descriptions.Item label='开始时间'>
                   {item.startTime
@@ -163,15 +182,15 @@ export default (props) => {
                   {item.resource}
                 </Descriptions.Item>
                 <Descriptions.Item label='项目经费'>
-                  {item.funds}
+                  {`${item.funds}万元`}
                 </Descriptions.Item>
                 <Descriptions.Item label='负责人'>
                   {item.controller}
                 </Descriptions.Item>
-                <Descriptions.Item label='参与人名单'>
+                <Descriptions.Item label='参与人名单' span={2}>
                   {item.participant}
                 </Descriptions.Item>
-                <Descriptions.Item label='主要研究内容'>
+                <Descriptions.Item label='主要研究内容' span={3}>
                   {item.content}
                 </Descriptions.Item>
               </Descriptions>

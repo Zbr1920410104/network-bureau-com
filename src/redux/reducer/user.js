@@ -52,10 +52,16 @@ export default handleActions(
         staffUuid: result,
       };
     },
-    setCreateProject(state, { payload: result }) {
+    setChangeProject(state, { payload: result }) {
       return {
         ...state,
-        createProject: result,
+        changeProject: result,
+      };
+    },
+    setStaffProjectUuid(state, { payload: result }) {
+      return {
+        ...state,
+        staffProjectUuid: result,
       };
     },
   },
@@ -64,7 +70,7 @@ export default handleActions(
     userLoading: false,
     addAccount: false,
     modifyBasic: false,
-    createProject: false,
+    changeProject: false,
     userUuid: '',
     uuid: '',
     phone: '',
@@ -74,5 +80,6 @@ export default handleActions(
     isCancel: '',
     role: 0,
     staffUuid: '',
+    staffProjectUuid: '',
   }
 );

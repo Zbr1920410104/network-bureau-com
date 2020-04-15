@@ -39,6 +39,9 @@ export const GET_STAFF_DEPARTMENT = `${DominConfigs.DOMAIN}${DominConfigs.PART.O
 export const GET_STAFF_WRITE_INFO = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getStaffWriteInfo`;
 export const CREATE_STAFF_PROJECT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/createStaffProject`;
 export const GET_WRITE_PROJECT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getWriteProjectList`;
+export const GET_STAFF_PROJECT_BY_UUID = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getStaffProjectByUuid`;
+export const MODIFY_STAFF_PROJECT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/modifyStaffProject`;
+export const DELETE_PROJECT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/deleteProject`;
 
 /**
  * 统计管理员

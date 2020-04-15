@@ -36,7 +36,7 @@ export default Form.create({ name: 'writeProject' })(({ form }) => {
 
         if (res) {
           resetFields();
-          dispatch(userAction.setCreateProject(true));
+          dispatch(userAction.setChangeProject(true));
         }
       }
     });
