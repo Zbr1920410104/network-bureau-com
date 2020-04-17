@@ -64,6 +64,18 @@ export default handleActions(
         staffProjectUuid: result,
       };
     },
+    setChangePatent(state, { payload: result }) {
+      return {
+        ...state,
+        changePatent: result,
+      };
+    },
+    setStaffPatentUuid(state, { payload: result }) {
+      return {
+        ...state,
+        staffPatentUuid: result,
+      };
+    },
   },
   {
     loginLoading: false,
@@ -71,6 +83,7 @@ export default handleActions(
     addAccount: false,
     modifyBasic: false,
     changeProject: false,
+    changePatent: false,
     userUuid: '',
     uuid: '',
     phone: '',
@@ -81,5 +94,6 @@ export default handleActions(
     role: 0,
     staffUuid: '',
     staffProjectUuid: '',
+    staffPatentUuid: '',
   }
 );

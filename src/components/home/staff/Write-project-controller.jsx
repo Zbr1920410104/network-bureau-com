@@ -134,6 +134,7 @@ export default (props) => {
                         className='link-button'
                       >
                         <Icon type='edit' />
+                        <span>修改</span>
                       </Button>
                       <Button
                         type='link'
@@ -153,6 +154,7 @@ export default (props) => {
                         }}
                       >
                         <Icon type='delete' />
+                        <span>删除</span>
                       </Button>
                     </div>
                   </div>

@@ -1,40 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 // redux
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import userAction from '@/redux/action/user';
 
 // 请求
 import proxyFetch from '@/util/request';
-import {
-  MODIFY_STAFF_PATENT,
-  GET_STAFF_PATENT_BY_UUID,
-} from '@/constants/api-constants';
+import { CREATE_STAFF_PATENT } from '@/constants/api-constants';
 
 // 样式
 import { Form, Input, Select, Button } from 'antd';
 const { Option } = Select;
 
-export default Form.create({ name: 'modifyPatent' })(({ form }) => {
-  const { getFieldDecorator, setFieldsValue } = form,
-    { staffPatentUuid } = useSelector((state) => state.userStore),
+export default Form.create({ name: 'writePatent' })(({ form }) => {
+  const { getFieldDecorator, resetFields } = form,
     [saveDataLoading, setSaveDataLoading] = useState(false),
     dispatch = useDispatch();
-
-  useEffect(() => {
-    (async () => {
-      const staffPatent = await proxyFetch(
-        GET_STAFF_PATENT_BY_UUID,
-        { staffPatentUuid },
-        'GET'
-      );
-
-      if (staffPatent) {
-        setFieldsValue(staffPatent);
-        dispatch(userAction.setChangePatent(false));
-      }
-    })();
-  }, [setFieldsValue, staffPatentUuid, dispatch]);
 
   /**
    * 提交事件
@@ -47,18 +28,17 @@ export default Form.create({ name: 'modifyPatent' })(({ form }) => {
       if (!err) {
         setSaveDataLoading(true);
 
-        value.uuid = staffPatentUuid;
-        const res = await proxyFetch(MODIFY_STAFF_PATENT, value);
+        const res = await proxyFetch(CREATE_STAFF_PATENT, value);
 
         setSaveDataLoading(false);
 
         if (res) {
+          resetFields();
           dispatch(userAction.setChangePatent(true));
         }
       }
     });
   };
-
   return (
     <div className='inner-form-box'>
       <Form>

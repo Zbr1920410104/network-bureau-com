@@ -1,32 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import ModifyPatentContent from '@/components/home/staff/patent/Modify-patent-content-controller.jsx';
+import CreatePatentContent from '@/components/home/staff/patent/Create-patent-content-controller.jsx';
+
+// 请求
+import proxyFetch from '@/util/request';
+import {
+  GET_WRITE_PATENT_LIST,
+  DELETE_PATENT,
+} from '@/constants/api-constants';
+
+// redux
+import { useSelector, useDispatch } from 'react-redux';
+import userAction from '@/redux/action/user';
+
+import moment from 'moment';
 
 // 样式
 import '@/style/home/staff/write-item.styl';
-import { Button, Table, Modal, Icon } from 'antd';
-const { Column } = Table,
-  { confirm } = Modal;
+import { Button, Modal, Icon, Descriptions, Skeleton } from 'antd';
+const { confirm } = Modal;
 
-export default props => {
-  const leadPatentList = [
-      {
-        id: 1,
-        patentType: '发明',
-        patentName: '软件测试1',
-        patentCode: '101010101453243',
-        patentNation: '中国、美国、日本'
-      },
-      {
-        id: 2,
-        patentType: '发明',
-        patentName: '软件测试1',
-        patentCode: '1010101013242432',
-        patentNation: '中国、美国、日本'
-      }
-    ],
-    [newPatentVisible, setNewPatentVisible] = useState(false),
-    [modifyPatentVisible, setModifyPatentVisible] = useState(false);
+export default (props) => {
+  const [newPatentVisible, setNewPatentVisible] = useState(false),
+    [modifyPatentVisible, setModifyPatentVisible] = useState(false),
+    { changePatent } = useSelector((state) => state.userStore),
+    [writePatentList, setWritePatentList] = useState([]),
+    [writePatentLoading, setWritePatentLoading] = useState(false),
+    dispatch = useDispatch();
 
   const showNewPatentModal = () => {
     setNewPatentVisible(true);
@@ -36,13 +37,37 @@ export default props => {
     setNewPatentVisible(false);
   };
 
-  const showModifyPatentModal = () => {
+  const showModifyPatentModal = (uuid) => {
+    dispatch(userAction.setStaffPatentUuid(uuid));
     setModifyPatentVisible(true);
   };
 
   const hideModifyPatentModal = () => {
     setModifyPatentVisible(false);
   };
+
+  const handleDelete = async (uuid) => {
+    const res = await proxyFetch(DELETE_PATENT, { uuid }, 'DELETE');
+    if (res) {
+      dispatch(userAction.setChangePatent(true));
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      setWritePatentLoading(true);
+
+      const writePatentList = await proxyFetch(
+        GET_WRITE_PATENT_LIST,
+        {},
+        'GET'
+      );
+
+      setWritePatentList(writePatentList);
+      setWritePatentLoading(false);
+      dispatch(userAction.setChangePatent(false));
+    })();
+  }, [changePatent, dispatch]);
 
   return (
     <div className='write-item-box'>
@@ -66,25 +91,95 @@ export default props => {
         visible={newPatentVisible}
         onOk={hideNewPatentModal}
         onCancel={hideNewPatentModal}
-        okText='保存'
+        okText='确定'
         cancelText='取消'
       >
-        <ModifyPatentContent />
+        <CreatePatentContent />
       </Modal>
       <Modal
         title='修改专利内容'
         visible={modifyPatentVisible}
         onOk={hideModifyPatentModal}
         onCancel={hideModifyPatentModal}
-        okText='保存'
+        okText='确定'
         cancelText='取消'
       >
         <ModifyPatentContent />
       </Modal>
-      <Table
-        dataSource={leadPatentList}
+      <div className='write-description-box'>
+        <Skeleton loading={writePatentLoading}>
+          {writePatentList?.length ? (
+            writePatentList.map((item, index) => (
+              <Descriptions
+                key={item.uuid}
+                title={
+                  <div className='write-description-title'>
+                    <div className='description-title-text'>
+                      <span>{`专利${index + 1}:  ${item.patentName}`}</span>
+                      <span>{`状态: ${item.isVerify}`}</span>
+                      <span>{`最近填写/修改于: ${
+                        item.currentWriteTime
+                          ? moment(item.currentWriteTime).format(
+                              'YYYY-MM-DD h:mm:ss a'
+                            )
+                          : ''
+                      }`}</span>
+                    </div>
+                    <div className='description-title-button'>
+                      <Button
+                        type='link'
+                        onClick={() => {
+                          showModifyPatentModal(item.uuid);
+                        }}
+                        className='link-button'
+                      >
+                        <Icon type='edit' />
+                        <span>修改</span>
+                      </Button>
+                      <Button
+                        type='link'
+                        className='link-button'
+                        onClick={() => {
+                          confirm({
+                            title: '删除专利?',
+                            okType: 'primary',
+                            content: '确认要删除专利?',
+                            okText: '确认',
+                            cancelText: '取消',
+                            onOk() {
+                              handleDelete(item.uuid);
+                            },
+                            onCancel() {},
+                          });
+                        }}
+                      >
+                        <Icon type='delete' />
+                        <span>删除</span>
+                      </Button>
+                    </div>
+                  </div>
+                }
+              >
+                <Descriptions.Item label='专利类型'>
+                  {item.patentType}
+                </Descriptions.Item>
+                <Descriptions.Item label='授权国家和地区'>
+                  {item.patentNation}
+                </Descriptions.Item>
+                <Descriptions.Item label='授权号'>
+                  {item.patentCode}
+                </Descriptions.Item>
+              </Descriptions>
+            ))
+          ) : (
+            <span>未填写专利</span>
+          )}
+        </Skeleton>
+      </div>
+      {/* <Table
+        dataSource={writePatentList}
         className='table'
-        rowKey={record => record.id}
+        rowKey={(record) => record.id}
         scroll={{ x: 1300 }}
       >
         <Column
@@ -147,7 +242,7 @@ export default props => {
                   okText: '确认',
                   cancelText: '取消',
                   onOk() {},
-                  onCancel() {}
+                  onCancel() {},
                 });
               }}
             >
@@ -155,12 +250,12 @@ export default props => {
             </Button>
           )}
         />
-      </Table>
-      <div className='item-bottom-box'>
+      </Table> */}
+      {/* <div className='item-bottom-box'>
         <Button type='primary' className='save-button'>
           暂存
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 };

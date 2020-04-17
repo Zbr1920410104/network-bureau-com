@@ -42,6 +42,11 @@ export const GET_WRITE_PROJECT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART
 export const GET_STAFF_PROJECT_BY_UUID = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getStaffProjectByUuid`;
 export const MODIFY_STAFF_PROJECT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/modifyStaffProject`;
 export const DELETE_PROJECT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/deleteProject`;
+export const CREATE_STAFF_PATENT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/createStaffPatent`;
+export const GET_WRITE_PATENT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getWritePatentList`;
+export const GET_STAFF_PATENT_BY_UUID = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getStaffPatentByUuid`;
+export const MODIFY_STAFF_PATENT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/modifyStaffPatent`;
+export const DELETE_PATENT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/deletePatent`;
 
 /**
  * 统计管理员
