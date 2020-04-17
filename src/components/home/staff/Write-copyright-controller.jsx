@@ -1,32 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import ModifyCopyrightContent from '@/components/home/staff/copyright/Modify-copyright-content-controller.jsx';
+import CreateCopyrightContent from '@/components/home/staff/copyright/Create-copyright-content-controller.jsx';
+
+// 请求
+import proxyFetch from '@/util/request';
+import {
+  GET_WRITE_COPYRIGHT_LIST,
+  DELETE_COPYRIGHT,
+} from '@/constants/api-constants';
+
+// redux
+import { useSelector, useDispatch } from 'react-redux';
+import userAction from '@/redux/action/user';
+
+import moment from 'moment';
 
 // 样式
 import '@/style/home/staff/write-detail.styl';
-import { Button, Table, Modal, Icon } from 'antd';
-const { Column } = Table,
-  { confirm } = Modal;
+import { Button, Modal, Icon, Descriptions, Skeleton } from 'antd';
+const { confirm } = Modal;
 
-export default props => {
-  const leadCopyrightList = [
-      {
-        id: 1,
-        copyrightType: '原始取得',
-        copyrightName: '软件测试1',
-        copyrightCode: '101010101453243',
-        copyrightArrange: '专有许可'
-      },
-      {
-        id: 2,
-        copyrightType: '继受取得',
-        copyrightName: '软件测试1',
-        copyrightCode: '1010101013242432',
-        copyrightArrange: '专有许可'
-      }
-    ],
-    [newCopyrightVisible, setNewCopyrightVisible] = useState(false),
-    [modifyCopyrightVisible, setModifyCopyrightVisible] = useState(false);
+export default (props) => {
+  const [newCopyrightVisible, setNewCopyrightVisible] = useState(false),
+    [modifyCopyrightVisible, setModifyCopyrightVisible] = useState(false),
+    { changeCopyright } = useSelector((state) => state.userStore),
+    [writeCopyrightList, setWriteCopyrightList] = useState([]),
+    [writeCopyrightLoading, setWriteCopyrightLoading] = useState(false),
+    dispatch = useDispatch();
 
   const showNewCopyrightModal = () => {
     setNewCopyrightVisible(true);
@@ -36,13 +37,37 @@ export default props => {
     setNewCopyrightVisible(false);
   };
 
-  const showModifyCopyrightModal = () => {
+  const showModifyCopyrightModal = (uuid) => {
+    dispatch(userAction.setStaffCopyrightUuid(uuid));
     setModifyCopyrightVisible(true);
   };
 
   const hideModifyCopyrightModal = () => {
     setModifyCopyrightVisible(false);
   };
+
+  const handleDelete = async (uuid) => {
+    const res = await proxyFetch(DELETE_COPYRIGHT, { uuid }, 'DELETE');
+    if (res) {
+      dispatch(userAction.setChangeCopyright(true));
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      setWriteCopyrightLoading(true);
+
+      const writeCopyrightList = await proxyFetch(
+        GET_WRITE_COPYRIGHT_LIST,
+        {},
+        'GET'
+      );
+
+      setWriteCopyrightList(writeCopyrightList);
+      setWriteCopyrightLoading(false);
+      dispatch(userAction.setChangeCopyright(false));
+    })();
+  }, [changeCopyright, dispatch]);
 
   return (
     <div className='write-item-box'>
@@ -65,22 +90,94 @@ export default props => {
         visible={newCopyrightVisible}
         onOk={hideNewCopyrightModal}
         onCancel={hideNewCopyrightModal}
-        okText='保存'
+        okText='确定'
         cancelText='取消'
       >
-        <ModifyCopyrightContent />
+        <CreateCopyrightContent />
       </Modal>
       <Modal
         title='修改软件著作权内容'
         visible={modifyCopyrightVisible}
         onOk={hideModifyCopyrightModal}
         onCancel={hideModifyCopyrightModal}
-        okText='保存'
+        okText='确定'
         cancelText='取消'
       >
         <ModifyCopyrightContent />
       </Modal>
-      <Table
+      <div className='write-description-box'>
+        <Skeleton loading={writeCopyrightLoading}>
+          {writeCopyrightList?.length ? (
+            writeCopyrightList.map((item, index) => (
+              <Descriptions
+                key={item.uuid}
+                title={
+                  <div className='write-description-title'>
+                    <div className='description-title-text'>
+                      <span>{`软件著作权${index + 1}:  ${
+                        item.copyrightName
+                      }`}</span>
+                      <span>{`状态: ${item.isVerify}`}</span>
+                      <span>{`最近填写/修改于: ${
+                        item.currentWriteTime
+                          ? moment(item.currentWriteTime).format(
+                              'YYYY-MM-DD h:mm:ss a'
+                            )
+                          : ''
+                      }`}</span>
+                    </div>
+                    <div className='description-title-button'>
+                      <Button
+                        type='link'
+                        onClick={() => {
+                          showModifyCopyrightModal(item.uuid);
+                        }}
+                        className='link-button'
+                      >
+                        <Icon type='edit' />
+                        <span>修改</span>
+                      </Button>
+                      <Button
+                        type='link'
+                        className='link-button'
+                        onClick={() => {
+                          confirm({
+                            title: '删除软件著作权?',
+                            okType: 'primary',
+                            content: '确认要删除软件著作权?',
+                            okText: '确认',
+                            cancelText: '取消',
+                            onOk() {
+                              handleDelete(item.uuid);
+                            },
+                            onCancel() {},
+                          });
+                        }}
+                      >
+                        <Icon type='delete' />
+                        <span>删除</span>
+                      </Button>
+                    </div>
+                  </div>
+                }
+              >
+                <Descriptions.Item label='权利取得方式'>
+                  {item.copyrightType}
+                </Descriptions.Item>
+                <Descriptions.Item label='登记号'>
+                  {item.copyrightCode}
+                </Descriptions.Item>
+                <Descriptions.Item label='授权范围'>
+                  {item.copyrightArrange}
+                </Descriptions.Item>
+              </Descriptions>
+            ))
+          ) : (
+            <span>未填写软件著作权</span>
+          )}
+        </Skeleton>
+      </div>
+      {/* <Table
         dataSource={leadCopyrightList}
         className='table'
         rowKey={record => record.id}
@@ -154,12 +251,12 @@ export default props => {
             </Button>
           )}
         />
-      </Table>
-      <div className='item-bottom-box'>
+      </Table> */}
+      {/* <div className='item-bottom-box'>
         <Button type='primary' className='save-button'>
           暂存
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -163,11 +163,11 @@ export default (props) => {
                 <Descriptions.Item label='专利类型'>
                   {item.patentType}
                 </Descriptions.Item>
-                <Descriptions.Item label='授权国家和地区'>
-                  {item.patentNation}
-                </Descriptions.Item>
-                <Descriptions.Item label='授权号'>
+                <Descriptions.Item label='授权号' span={2}>
                   {item.patentCode}
+                </Descriptions.Item>
+                <Descriptions.Item label='授权国家和地区' span={3}>
+                  {item.patentNation}
                 </Descriptions.Item>
               </Descriptions>
             ))

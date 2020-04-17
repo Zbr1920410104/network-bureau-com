@@ -76,6 +76,18 @@ export default handleActions(
         staffPatentUuid: result,
       };
     },
+    setChangeCopyright(state, { payload: result }) {
+      return {
+        ...state,
+        changeCopyright: result,
+      };
+    },
+    setStaffCopyrightUuid(state, { payload: result }) {
+      return {
+        ...state,
+        staffCopyrightUuid: result,
+      };
+    },
   },
   {
     loginLoading: false,
@@ -84,6 +96,10 @@ export default handleActions(
     modifyBasic: false,
     changeProject: false,
     changePatent: false,
+    changeCopyright: false,
+    staffProjectUuid: '',
+    staffPatentUuid: '',
+    staffCopyrightUuid: '',
     userUuid: '',
     uuid: '',
     phone: '',
@@ -93,7 +109,5 @@ export default handleActions(
     isCancel: '',
     role: 0,
     staffUuid: '',
-    staffProjectUuid: '',
-    staffPatentUuid: '',
   }
 );

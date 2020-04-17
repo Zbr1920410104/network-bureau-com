@@ -1,40 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 // redux
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import userAction from '@/redux/action/user';
 
 // 请求
 import proxyFetch from '@/util/request';
-import {
-  MODIFY_STAFF_COPYRIGHT,
-  GET_STAFF_COPYRIGHT_BY_UUID,
-} from '@/constants/api-constants';
+import { CREATE_STAFF_COPYRIGHT } from '@/constants/api-constants';
 
 // 样式
 import { Form, Input, Select, Button } from 'antd';
 const { Option } = Select;
 
-export default Form.create({ name: 'modifyCopyright' })(({ form }) => {
-  const { getFieldDecorator, setFieldsValue } = form,
-    { staffCopyrightUuid } = useSelector((state) => state.userStore),
+export default Form.create({ name: 'writeCopyright' })(({ form }) => {
+  const { getFieldDecorator, resetFields } = form,
     [saveDataLoading, setSaveDataLoading] = useState(false),
     dispatch = useDispatch();
-
-  useEffect(() => {
-    (async () => {
-      const staffCopyright = await proxyFetch(
-        GET_STAFF_COPYRIGHT_BY_UUID,
-        { staffCopyrightUuid },
-        'GET'
-      );
-
-      if (staffCopyright) {
-        setFieldsValue(staffCopyright);
-        dispatch(userAction.setChangeCopyright(false));
-      }
-    })();
-  }, [setFieldsValue, staffCopyrightUuid, dispatch]);
 
   /**
    * 提交事件
@@ -47,18 +28,17 @@ export default Form.create({ name: 'modifyCopyright' })(({ form }) => {
       if (!err) {
         setSaveDataLoading(true);
 
-        value.uuid = staffCopyrightUuid;
-        const res = await proxyFetch(MODIFY_STAFF_COPYRIGHT, value);
+        const res = await proxyFetch(CREATE_STAFF_COPYRIGHT, value);
 
         setSaveDataLoading(false);
 
         if (res) {
+          resetFields();
           dispatch(userAction.setChangeCopyright(true));
         }
       }
     });
   };
-
   return (
     <div className='inner-form-box'>
       <Form>

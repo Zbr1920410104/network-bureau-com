@@ -47,6 +47,11 @@ export const GET_WRITE_PATENT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.
 export const GET_STAFF_PATENT_BY_UUID = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getStaffPatentByUuid`;
 export const MODIFY_STAFF_PATENT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/modifyStaffPatent`;
 export const DELETE_PATENT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/deletePatent`;
+export const CREATE_STAFF_COPYRIGHT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/createStaffCopyright`;
+export const GET_WRITE_COPYRIGHT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getWriteCopyrightList`;
+export const GET_STAFF_COPYRIGHT_BY_UUID = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getStaffCopyrightByUuid`;
+export const MODIFY_STAFF_COPYRIGHT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/modifyStaffCopyright`;
+export const DELETE_COPYRIGHT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/deleteCopyright`;
 
 /**
  * 统计管理员

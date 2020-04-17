@@ -14,4 +14,6 @@ export default {
   setStaffProjectUuid: createAction('setStaffProjectUuid'),
   setChangePatent: createAction('setChangePatent'),
   setStaffPatentUuid: createAction('setStaffPatentUuid'),
+  setChangeCopyright: createAction('setChangeCopyright'),
+  setStaffCopyrightUuid: createAction('setStaffCopyrightUuid'),
 };
