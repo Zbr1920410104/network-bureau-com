@@ -88,6 +88,18 @@ export default handleActions(
         staffCopyrightUuid: result,
       };
     },
+    setChangeAward(state, { payload: result }) {
+      return {
+        ...state,
+        changeAward: result,
+      };
+    },
+    setStaffAwardUuid(state, { payload: result }) {
+      return {
+        ...state,
+        staffAwardUuid: result,
+      };
+    },
   },
   {
     loginLoading: false,
@@ -97,9 +109,11 @@ export default handleActions(
     changeProject: false,
     changePatent: false,
     changeCopyright: false,
+    changeAward: false,
     staffProjectUuid: '',
     staffPatentUuid: '',
     staffCopyrightUuid: '',
+    staffAwardUuid: '',
     userUuid: '',
     uuid: '',
     phone: '',

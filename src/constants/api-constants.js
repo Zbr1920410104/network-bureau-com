@@ -52,6 +52,11 @@ export const GET_WRITE_COPYRIGHT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PA
 export const GET_STAFF_COPYRIGHT_BY_UUID = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getStaffCopyrightByUuid`;
 export const MODIFY_STAFF_COPYRIGHT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/modifyStaffCopyright`;
 export const DELETE_COPYRIGHT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/deleteCopyright`;
+export const CREATE_STAFF_AWARD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/createStaffAward`;
+export const GET_WRITE_AWARD_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getWriteAwardList`;
+export const GET_STAFF_AWARD_BY_UUID = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getStaffAwardByUuid`;
+export const MODIFY_STAFF_AWARD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/modifyStaffAward`;
+export const DELETE_AWARD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/deleteAward`;
 
 /**
  * 统计管理员

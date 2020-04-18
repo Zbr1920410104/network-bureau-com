@@ -1,48 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 // redux
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import userAction from '@/redux/action/user';
 
 // 请求
 import proxyFetch from '@/util/request';
-import {
-  MODIFY_STAFF_AWARD,
-  GET_STAFF_AWARD_BY_UUID,
-} from '@/constants/api-constants';
-
-// 组件
-import moment from 'moment';
+import { CREATE_STAFF_AWARD } from '@/constants/api-constants';
 
 // 样式
 import { Form, Input, Select, Button, DatePicker } from 'antd';
 const { Option } = Select;
 
-export default Form.create({ name: 'modifyAward' })(({ form }) => {
-  const { getFieldDecorator, setFieldsValue } = form,
-    { staffAwardUuid } = useSelector((state) => state.userStore),
+export default Form.create({ name: 'writeAward' })(({ form }) => {
+  const { getFieldDecorator, resetFields } = form,
     [saveDataLoading, setSaveDataLoading] = useState(false),
     dispatch = useDispatch();
-
-  useEffect(() => {
-    (async () => {
-      const staffAward = await proxyFetch(
-        GET_STAFF_AWARD_BY_UUID,
-        { staffAwardUuid },
-        'GET'
-      );
-
-      if (staffAward) {
-        // 时间处理
-        if (staffAward.awardTime) {
-          staffAward.awardTime = moment(staffAward.awardTime);
-        }
-
-        setFieldsValue(staffAward);
-        dispatch(userAction.setChangeAward(false));
-      }
-    })();
-  }, [setFieldsValue, staffAwardUuid, dispatch]);
 
   /**
    * 提交事件
@@ -55,18 +28,17 @@ export default Form.create({ name: 'modifyAward' })(({ form }) => {
       if (!err) {
         setSaveDataLoading(true);
 
-        value.uuid = staffAwardUuid;
-        const res = await proxyFetch(MODIFY_STAFF_AWARD, value);
+        const res = await proxyFetch(CREATE_STAFF_AWARD, value);
 
         setSaveDataLoading(false);
 
         if (res) {
+          resetFields();
           dispatch(userAction.setChangeAward(true));
         }
       }
     });
   };
-
   return (
     <div className='inner-form-box'>
       <Form>
