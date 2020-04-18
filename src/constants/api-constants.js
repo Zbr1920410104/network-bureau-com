@@ -57,6 +57,15 @@ export const GET_WRITE_AWARD_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.O
 export const GET_STAFF_AWARD_BY_UUID = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getStaffAwardByUuid`;
 export const MODIFY_STAFF_AWARD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/modifyStaffAward`;
 export const DELETE_AWARD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/deleteAward`;
+export const CREATE_STAFF_THESIS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/createStaffThesis`;
+export const GET_WRITE_THESIS_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getWriteThesisList`;
+export const GET_STAFF_THESIS_BY_UUID = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getStaffThesisByUuid`;
+export const MODIFY_STAFF_THESIS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/modifyStaffThesis`;
+export const DELETE_THESIS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/deleteThesis`;
+export const SELECT_UPLOAD_AWARD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/selectUploadAward`;
+export const SAVE_UPLOAD_AWARD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/saveUploadAward`;
+export const SELECT_UPLOAD_THESIS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/selectUploadThesis`;
+export const SAVE_UPLOAD_THESIS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/saveUploadThesis`;
 
 /**
  * 统计管理员
@@ -69,3 +78,10 @@ export const GET_STAFF_VERIFY_INFO = `${DominConfigs.DOMAIN}${DominConfigs.PART.
  **/
 export const GET_REVIEW_MANAGER_BASIC = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getReviewManagerBasic`;
 export const GET_STAFF_REVIEW_INFO = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getStaffReviewInfo`;
+
+/**
+ * 文件
+ */
+export const UPLOAD_JPG_FILE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_FILE}/uploadJpgFile`; // 上传word,pdf文件
+export const UPLOAD_ZIP_FILE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_FILE}/uploadZipFile`; // 上传word,pdf文件
+export const GET_FILE_URL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_FILE}/getFileUrl`; // 获取文件url

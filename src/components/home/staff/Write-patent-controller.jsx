@@ -132,12 +132,13 @@ export default (props) => {
                           showModifyPatentModal(item.uuid);
                         }}
                         className='link-button'
+                        icon='edit'
                       >
-                        <Icon type='edit' />
                         <span>修改</span>
                       </Button>
                       <Button
                         type='link'
+                        icon='delete'
                         className='link-button'
                         onClick={() => {
                           confirm({
@@ -153,7 +154,6 @@ export default (props) => {
                           });
                         }}
                       >
-                        <Icon type='delete' />
                         <span>删除</span>
                       </Button>
                     </div>

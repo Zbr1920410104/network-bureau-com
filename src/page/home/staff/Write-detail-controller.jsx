@@ -15,7 +15,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { Icon, Button, Modal } from 'antd';
 const { confirm } = Modal;
 
-export default props => {
+export default (props) => {
   const history = useHistory();
 
   return (
@@ -48,18 +48,25 @@ export default props => {
           onClick={() => {
             confirm({
               title: '确定所有信息填写完毕?',
-              content:
-                '确认填写完基本信息,获奖情况,论文/专著,项目,授权专利,软件著作权的所有信息方可提交',
+              content: (
+                <div className='text-box'>
+                  <span>确认填写完</span>
+                  <span className='important-text'>
+                    基本信息，获奖情况，论文/专著，项目，授权专利，软件著作权
+                  </span>
+                  <span>的所有信息方可提交</span>
+                </div>
+              ),
               okText: '确认',
               cancelText: '取消',
               onOk() {
                 history.push(HOME_WRITE_WELCOME.path);
               },
-              onCancel() {}
+              onCancel() {},
             });
           }}
         >
-          我已确认填写完基本信息,获奖情况,论文/专著,项目,授权专利,软件著作权的所有信息-进行提交
+          确认提交
         </Button>
       </div>
     </div>

@@ -100,6 +100,18 @@ export default handleActions(
         staffAwardUuid: result,
       };
     },
+    setChangeThesis(state, { payload: result }) {
+      return {
+        ...state,
+        changeThesis: result,
+      };
+    },
+    setStaffThesisUuid(state, { payload: result }) {
+      return {
+        ...state,
+        staffThesisUuid: result,
+      };
+    },
   },
   {
     loginLoading: false,
@@ -110,10 +122,12 @@ export default handleActions(
     changePatent: false,
     changeCopyright: false,
     changeAward: false,
+    changeThesis: false,
     staffProjectUuid: '',
     staffPatentUuid: '',
     staffCopyrightUuid: '',
     staffAwardUuid: '',
+    staffThesisUuid: '',
     userUuid: '',
     uuid: '',
     phone: '',

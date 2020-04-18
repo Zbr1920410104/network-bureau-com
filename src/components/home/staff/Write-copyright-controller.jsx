@@ -129,17 +129,18 @@ export default (props) => {
                     <div className='description-title-button'>
                       <Button
                         type='link'
+                        icon='edit'
                         onClick={() => {
                           showModifyCopyrightModal(item.uuid);
                         }}
                         className='link-button'
                       >
-                        <Icon type='edit' />
                         <span>修改</span>
                       </Button>
                       <Button
                         type='link'
                         className='link-button'
+                        icon='delete'
                         onClick={() => {
                           confirm({
                             title: '删除软件著作权?',
@@ -154,7 +155,6 @@ export default (props) => {
                           });
                         }}
                       >
-                        <Icon type='delete' />
                         <span>删除</span>
                       </Button>
                     </div>

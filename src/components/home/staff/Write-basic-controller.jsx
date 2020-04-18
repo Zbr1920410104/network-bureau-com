@@ -105,7 +105,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
           {isWritten ? (
             <Button
               type='link'
-              icon='form'
+              icon='edit'
               onClick={showModifyBasic}
               className='modify-button'
             >

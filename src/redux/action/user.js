@@ -18,4 +18,6 @@ export default {
   setStaffCopyrightUuid: createAction('setStaffCopyrightUuid'),
   setChangeAward: createAction('setChangeAward'),
   setStaffAwardUuid: createAction('setStaffAwardUuid'),
+  setChangeThesis: createAction('setChangeThesis'),
+  setStaffThesisUuid: createAction('setStaffThesisUuid'),
 };

@@ -132,13 +132,14 @@ export default (props) => {
                           showModifyProjectModal(item.uuid);
                         }}
                         className='link-button'
+                        icon='edit'
                       >
-                        <Icon type='edit' />
                         <span>修改</span>
                       </Button>
                       <Button
                         type='link'
                         className='link-button'
+                        icon='delete'
                         onClick={() => {
                           confirm({
                             title: '删除项目?',
@@ -153,7 +154,6 @@ export default (props) => {
                           });
                         }}
                       >
-                        <Icon type='delete' />
                         <span>删除</span>
                       </Button>
                     </div>

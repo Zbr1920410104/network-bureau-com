@@ -45,7 +45,8 @@ export default (props) => {
     setModifyAwardVisible(false);
   };
 
-  const showUploadAwardModal = () => {
+  const showUploadAwardModal = (uuid) => {
+    dispatch(userAction.setStaffAwardUuid(uuid));
     setUploadAwardVisible(true);
   };
 
@@ -93,7 +94,7 @@ export default (props) => {
         visible={newAwardVisible}
         onOk={hideNewAwardModal}
         onCancel={hideNewAwardModal}
-        okText='保存'
+        okText='确定'
         cancelText='取消'
       >
         <CreateAwardContent />
@@ -103,7 +104,7 @@ export default (props) => {
         visible={modifyAwardVisible}
         onOk={hideModifyAwardModal}
         onCancel={hideModifyAwardModal}
-        okText='保存'
+        okText='确定'
         cancelText='取消'
       >
         <ModifyAwardContent />
@@ -113,7 +114,7 @@ export default (props) => {
         visible={uploadAwardVisible}
         onOk={hideUploadAwardModal}
         onCancel={hideUploadAwardModal}
-        okText='保存'
+        okText='确定'
         cancelText='取消'
       >
         <UploadAwardContent />
@@ -140,17 +141,18 @@ export default (props) => {
                     <div className='description-title-button'>
                       <Button
                         type='link'
+                        icon='edit'
                         onClick={() => {
                           showModifyAwardModal(item.uuid);
                         }}
                         className='link-button'
                       >
-                        <Icon type='edit' />
                         <span>修改</span>
                       </Button>
                       <Button
                         type='link'
                         className='link-button'
+                        icon='delete'
                         onClick={() => {
                           confirm({
                             title: '删除奖项?',
@@ -165,7 +167,6 @@ export default (props) => {
                           });
                         }}
                       >
-                        <Icon type='delete' />
                         <span>删除</span>
                       </Button>
                     </div>
