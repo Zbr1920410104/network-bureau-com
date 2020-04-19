@@ -13,7 +13,8 @@ import proxyFetch from '@/util/request';
 import { SAVE_PASSWORD } from '@/constants/api-constants';
 
 // redux
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import userAction from '@/redux/action/user';
 
 // 样式
 import { Form, Button, Input, Alert } from 'antd';
@@ -22,7 +23,9 @@ import '@/style/home/public/password-modify.styl';
 export default Form.create({ name: 'password' })(({ form }) => {
   const { role } = useSelector((state) => state.userStore);
   const { getFieldDecorator } = form,
-    history = useHistory();
+    history = useHistory(),
+    dispatch = useDispatch();
+
   const handleSave = (e) => {
     e.preventDefault();
 
@@ -34,6 +37,7 @@ export default Form.create({ name: 'password' })(({ form }) => {
         const res = await proxyFetch(SAVE_PASSWORD, value);
 
         if (res) {
+          dispatch(userAction.setModifyPassword(true));
           if (role === 15) {
             history.push(HOME_WRITE_WELCOME.path);
           } else if (role === 10) {
@@ -95,7 +99,10 @@ export default Form.create({ name: 'password' })(({ form }) => {
                   },
                   {
                     validator: (rule, value, callback) => {
-                      if (value && value !== form.getFieldValue('newPassword')) {
+                      if (
+                        value &&
+                        value !== form.getFieldValue('newPassword')
+                      ) {
                         callback('新密码和确认密码要一致！');
                       } else {
                         callback();

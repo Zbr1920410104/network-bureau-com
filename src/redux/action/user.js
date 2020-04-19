@@ -6,6 +6,7 @@ export default {
   setLoginLoading: createAction('setLoginLoading'),
   asyncSetUserByToken: createAction('asyncSetUserByToken'),
   setUserLoading: createAction('setUserLoading'),
+  setModifyPassword: createAction('setModifyPassword'),
   setAddAccount: createAction('setAddAccount'),
   setModifyBasic: createAction('setModifyBasic'),
   setUserUuid: createAction('setUserUuid'),

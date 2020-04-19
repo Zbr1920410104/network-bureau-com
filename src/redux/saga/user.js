@@ -61,14 +61,13 @@ const effects = {
               return HOME_WRITE_WELCOME.path;
             }
           default:
-            return HOME_INDEX.path;;
+            return HOME_INDEX.path;
         }
       };
 
-      const route = roleToNav(res.userInfo.role)
+      const route = roleToNav(res.userInfo.role);
 
       yield put(navToAction.setNavTo(route));
-
     }
     // 不成功不跳
   },

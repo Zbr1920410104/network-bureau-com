@@ -6,28 +6,31 @@ import { LOCAL_STORAGE } from '@/constants/app-constants';
 import ExportAllContent from '@/components/home/review-manager/Export-all-content-controller.jsx';
 
 // redux
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import userAction from '@/redux/action/user';
 
 // 路由
-import { HOME_REVIEW_DETAIL } from '@/constants/route-constants';
+import { HOME_REVIEW_DETAIL, HOME_PASSWORD } from '@/constants/route-constants';
 import { useHistory } from 'react-router-dom';
 
 // 请求
 import proxyFetch from '@/util/request';
 import { GET_STAFF_REVIEW_INFO } from '@/constants/api-constants';
 
+// 工具
 import moment from 'moment';
+import md5 from 'md5';
 
 // 样式
-import { Table, Button, Select, Modal, Input, Skeleton } from 'antd';
+import { Table, Button, Select, Modal, Input, Skeleton, message } from 'antd';
 import '@/style/home/review-manager/review-list.styl';
 const { Option } = Select,
   { Column } = Table,
   { Search } = Input;
 
 export default (props) => {
-  const history = useHistory(),
+  const { password, modifyPassword } = useSelector((state) => state.userStore),
+    history = useHistory(),
     [staffReviewInfo, setStaffReviewInfo] = useState([]),
     [staffLoading, setStaffLoading] = useState(false),
     [reviewStatus, setReviewStatus] = useState(0),
@@ -43,6 +46,14 @@ export default (props) => {
   const hideExportAllModal = () => {
     setExportAllVisible(false);
   };
+
+  useEffect(() => {
+    if (password === md5('123456') && !modifyPassword) {
+      message.error('请修改初始密码后再进行评审');
+      history.push(HOME_PASSWORD.path);
+      dispatch(userAction.setModifyPassword(false));
+    }
+  }, [password, modifyPassword, dispatch, history]);
 
   useEffect(() => {
     (async () => {

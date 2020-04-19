@@ -13,6 +13,7 @@ export default handleActions(
         department: result.department,
         departmentUuid: result.departmentUuid,
         isCancel: result.isCancel,
+        password: result.password,
       };
     },
     // 设置登录loading
@@ -26,6 +27,12 @@ export default handleActions(
       return {
         ...state,
         userLoading: result,
+      };
+    },
+    setModifyPassword(state, { payload: result }) {
+      return {
+        ...state,
+        modifyPassword: result,
       };
     },
     setAddAccount(state, { payload: result }) {
@@ -116,6 +123,7 @@ export default handleActions(
   {
     loginLoading: false,
     userLoading: false,
+    modifyPassword: false,
     addAccount: false,
     modifyBasic: false,
     changeProject: false,
@@ -136,6 +144,7 @@ export default handleActions(
     departmentUuid: '',
     isCancel: '',
     role: 0,
+    password: '',
     staffUuid: '',
   }
 );

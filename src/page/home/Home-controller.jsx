@@ -1,4 +1,7 @@
 import React, { useEffect } from 'react';
+
+// redux
+import userAction from '@/redux/action/user';
 import { useSelector, useDispatch } from 'react-redux';
 
 // 路由
@@ -29,9 +32,6 @@ import DepartmentListController from '@/page/home/admin/Department-list-controll
 
 // localStorage
 import { LOCAL_STORAGE } from '@/constants/app-constants';
-
-// actions
-import userAction from '@/redux/action/user';
 
 // components
 import Nav from '@/components/home/Nav.jsx';
