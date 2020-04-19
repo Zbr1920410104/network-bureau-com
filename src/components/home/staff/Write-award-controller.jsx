@@ -67,9 +67,15 @@ export default (props) => {
 
       const writeAwardList = await proxyFetch(GET_WRITE_AWARD_LIST, {}, 'GET');
 
-      setWriteAwardList(writeAwardList);
+      if (writeAwardList) {
+        setWriteAwardList(writeAwardList);
+        setUploadAwardVisible(false);
+        setNewAwardVisible(false);
+        setModifyAwardVisible(false);
+        dispatch(userAction.setChangeAward(false));
+      }
+      
       setWriteAwardLoading(false);
-      dispatch(userAction.setChangeAward(false));
     })();
   }, [changeAward, dispatch]);
 
@@ -92,8 +98,20 @@ export default (props) => {
       <Modal
         title='新增奖项'
         visible={newAwardVisible}
-        onOk={hideNewAwardModal}
-        onCancel={hideNewAwardModal}
+        onCancel={() => {
+          confirm({
+            title: '确认离开?',
+            okType: 'primary',
+            content: '离开填写内容将不会保存!',
+            okText: '确认',
+            cancelText: '取消',
+            onOk() {
+              hideNewAwardModal();
+            },
+            onCancel() {},
+          });
+        }}
+        footer={null}
         okText='确定'
         cancelText='取消'
       >
@@ -102,8 +120,20 @@ export default (props) => {
       <Modal
         title='修改奖项'
         visible={modifyAwardVisible}
-        onOk={hideModifyAwardModal}
-        onCancel={hideModifyAwardModal}
+        footer={null}
+        onCancel={() => {
+          confirm({
+            title: '确认离开?',
+            okType: 'primary',
+            content: '离开修改内容将不会保存!',
+            okText: '确认',
+            cancelText: '取消',
+            onOk() {
+              hideModifyAwardModal();
+            },
+            onCancel() {},
+          });
+        }}
         okText='确定'
         cancelText='取消'
       >
@@ -112,8 +142,20 @@ export default (props) => {
       <Modal
         title='上传附件'
         visible={uploadAwardVisible}
-        onOk={hideUploadAwardModal}
-        onCancel={hideUploadAwardModal}
+        footer={null}
+        onCancel={() => {
+          confirm({
+            title: '确认离开?',
+            okType: 'primary',
+            content: '确认文件已保存后离开,否则文件无法保存',
+            okText: '确认',
+            cancelText: '取消',
+            onOk() {
+              hideUploadAwardModal();
+            },
+            onCancel() {},
+          });
+        }}
         okText='确定'
         cancelText='取消'
       >

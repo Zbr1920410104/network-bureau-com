@@ -63,9 +63,14 @@ export default (props) => {
         'GET'
       );
 
-      setWritePatentList(writePatentList);
+      if (writePatentList) {
+        setWritePatentList(writePatentList);
+        setNewPatentVisible(false);
+        setModifyPatentVisible(false);
+        dispatch(userAction.setChangePatent(false));
+      }
+
       setWritePatentLoading(false);
-      dispatch(userAction.setChangePatent(false));
     })();
   }, [changePatent, dispatch]);
 
@@ -89,8 +94,20 @@ export default (props) => {
       <Modal
         title='新增专利'
         visible={newPatentVisible}
-        onOk={hideNewPatentModal}
-        onCancel={hideNewPatentModal}
+        onCancel={() => {
+          confirm({
+            title: '确认离开?',
+            okType: 'primary',
+            content: '离开填写内容将不会保存!',
+            okText: '确认',
+            cancelText: '取消',
+            onOk() {
+              hideNewPatentModal();
+            },
+            onCancel() {},
+          });
+        }}
+        footer={null}
         okText='确定'
         cancelText='取消'
       >
@@ -99,8 +116,20 @@ export default (props) => {
       <Modal
         title='修改专利内容'
         visible={modifyPatentVisible}
-        onOk={hideModifyPatentModal}
-        onCancel={hideModifyPatentModal}
+        onCancel={() => {
+          confirm({
+            title: '确认离开?',
+            okType: 'primary',
+            content: '离开修改的内容将不会保存!',
+            okText: '确认',
+            cancelText: '取消',
+            onOk() {
+              hideModifyPatentModal();
+            },
+            onCancel() {},
+          });
+        }}
+        footer={null}
         okText='确定'
         cancelText='取消'
       >

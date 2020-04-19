@@ -63,9 +63,14 @@ export default (props) => {
         'GET'
       );
 
-      setWriteCopyrightList(writeCopyrightList);
+      if (writeCopyrightList) {
+        setNewCopyrightVisible(false);
+        setModifyCopyrightVisible(false);
+        setWriteCopyrightList(writeCopyrightList);
+        dispatch(userAction.setChangeCopyright(false));
+      }
+
       setWriteCopyrightLoading(false);
-      dispatch(userAction.setChangeCopyright(false));
     })();
   }, [changeCopyright, dispatch]);
 
@@ -88,8 +93,20 @@ export default (props) => {
       <Modal
         title='新增软件著作权'
         visible={newCopyrightVisible}
-        onOk={hideNewCopyrightModal}
-        onCancel={hideNewCopyrightModal}
+        onCancel={() => {
+          confirm({
+            title: '确认离开?',
+            okType: 'primary',
+            content: '离开填写内容将不会保存!',
+            okText: '确认',
+            cancelText: '取消',
+            onOk() {
+              hideNewCopyrightModal();
+            },
+            onCancel() {},
+          });
+        }}
+        footer={null}
         okText='确定'
         cancelText='取消'
       >
@@ -98,8 +115,20 @@ export default (props) => {
       <Modal
         title='修改软件著作权内容'
         visible={modifyCopyrightVisible}
-        onOk={hideModifyCopyrightModal}
-        onCancel={hideModifyCopyrightModal}
+        onCancel={() => {
+          confirm({
+            title: '确认离开?',
+            okType: 'primary',
+            content: '离开修改的内容将不会保存!',
+            okText: '确认',
+            cancelText: '取消',
+            onOk() {
+              hideModifyCopyrightModal();
+            },
+            onCancel() {},
+          });
+        }}
+        footer={null}
         okText='确定'
         cancelText='取消'
       >

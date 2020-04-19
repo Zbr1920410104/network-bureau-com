@@ -10,7 +10,8 @@ import {
 } from '@/constants/api-constants';
 
 // redux
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import userAction from '@/redux/action/user';
 
 // 样式
 import { Form, Upload, Button, Icon, Alert, message } from 'antd';
@@ -23,6 +24,7 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
     [isNeedUrlFresh, setIsNeedUrlFresh] = useState(false),
     [previewUrl, setPreviewUrl] = useState(''),
     [saveDataLoading, setSaveDataLoading] = useState(false),
+    dispatch = useDispatch(),
     formThesisUrl = getFieldValue('thesisUrl') && getFieldValue('thesisUrl')[0];
 
   // 将已有的数据回显
@@ -106,8 +108,12 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
           value.thesisUrl = value.thesisUrl[0];
 
           setSaveDataLoading(true);
-          await proxyFetch(SAVE_UPLOAD_THESIS, value);
+          const res = await proxyFetch(SAVE_UPLOAD_THESIS, value);
           setSaveDataLoading(false);
+
+          if (res) {
+            dispatch(userAction.setChangeThesis(true));
+          }
         }
       }
     });

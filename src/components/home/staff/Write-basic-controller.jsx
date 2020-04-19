@@ -32,7 +32,8 @@ import {
   Modal,
 } from 'antd';
 const { Option } = Select,
-  { TextArea } = Input;
+  { TextArea } = Input,
+  { confirm } = Modal;
 
 export default Form.create({ name: 'staffBasic' })(({ form }) => {
   const { getFieldDecorator } = form;
@@ -80,6 +81,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
         setIswritten(true);
         setStaffBasic(staffBasic);
         dispatch(userAction.setModifyBasic(false));
+        setModifyBasicVisible(false);
       }
 
       setBasicLoading(false);
@@ -116,8 +118,20 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
         <Modal
           title='修改基本信息'
           visible={modifyBasicVisible}
-          onOk={hideModifyBasic}
-          onCancel={hideModifyBasic}
+          footer={null}
+          onCancel={() => {
+            confirm({
+              title: '确认离开?',
+              okType: 'primary',
+              content: '离开修改的内容将不会保存!',
+              okText: '确认',
+              cancelText: '取消',
+              onOk() {
+                hideModifyBasic();
+              },
+              onCancel() {},
+            });
+          }}
           okText='确定'
           cancelText='取消'
         >

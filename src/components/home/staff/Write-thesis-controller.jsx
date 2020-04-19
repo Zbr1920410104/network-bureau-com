@@ -74,9 +74,15 @@ export default (props) => {
         'GET'
       );
 
-      setWriteThesisList(writeThesisList);
+      if (writeThesisList) {
+        setWriteThesisList(writeThesisList);
+        setNewThesisVisible(false);
+        setModifyThesisVisible(false);
+        setUploadThesisVisible(false);
+        dispatch(userAction.setChangeThesis(false));
+      }
+
       setWriteThesisLoading(false);
-      dispatch(userAction.setChangeThesis(false));
     })();
   }, [changeThesis, dispatch]);
 
@@ -99,8 +105,20 @@ export default (props) => {
       <Modal
         title='新增论文/专著'
         visible={newThesisVisible}
-        onOk={hideNewThesisModal}
-        onCancel={hideNewThesisModal}
+        onCancel={() => {
+          confirm({
+            title: '确认离开?',
+            okType: 'primary',
+            content: '离开填写内容将不会保存!',
+            okText: '确认',
+            cancelText: '取消',
+            onOk() {
+              hideNewThesisModal();
+            },
+            onCancel() {},
+          });
+        }}
+        footer={null}
         okText='确定'
         cancelText='取消'
       >
@@ -109,8 +127,20 @@ export default (props) => {
       <Modal
         title='修改论文/专著'
         visible={modifyThesisVisible}
-        onOk={hideModifyThesisModal}
-        onCancel={hideModifyThesisModal}
+        footer={null}
+        onCancel={() => {
+          confirm({
+            title: '确认离开?',
+            okType: 'primary',
+            content: '离开修改内容将不会保存!',
+            okText: '确认',
+            cancelText: '取消',
+            onOk() {
+              hideModifyThesisModal();
+            },
+            onCancel() {},
+          });
+        }}
         okText='确定'
         cancelText='取消'
       >
@@ -119,8 +149,20 @@ export default (props) => {
       <Modal
         title='上传附件'
         visible={uploadThesisVisible}
-        onOk={hideUploadThesisModal}
-        onCancel={hideUploadThesisModal}
+        footer={null}
+        onCancel={() => {
+          confirm({
+            title: '确认离开?',
+            okType: 'primary',
+            content: '确认文件已保存后离开,否则文件无法保存',
+            okText: '确认',
+            cancelText: '取消',
+            onOk() {
+              hideUploadThesisModal();
+            },
+            onCancel() {},
+          });
+        }}
         okText='保存'
         cancelText='取消'
       >

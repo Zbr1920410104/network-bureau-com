@@ -10,7 +10,8 @@ import {
 } from '@/constants/api-constants';
 
 // redux
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import userAction from '@/redux/action/user';
 
 // 样式
 import { Form, Upload, Button, Icon, Alert, message } from 'antd';
@@ -22,8 +23,8 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
     [isNeedUrlFresh, setIsNeedUrlFresh] = useState(false),
     [previewUrl, setPreviewUrl] = useState(''),
     [saveDataLoading, setSaveDataLoading] = useState(false),
+    dispatch = useDispatch(),
     formAwardUrl = getFieldValue('awardUrl') && getFieldValue('awardUrl')[0];
-  console.log('staffAwardUuid=', staffAwardUuid, 'previewUrl=', previewUrl);
 
   // 将已有的数据回显
   useEffect(() => {
@@ -106,8 +107,12 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
           value.awardUrl = value.awardUrl[0];
 
           setSaveDataLoading(true);
-          await proxyFetch(SAVE_UPLOAD_AWARD, value);
+          const res = await proxyFetch(SAVE_UPLOAD_AWARD, value);
           setSaveDataLoading(false);
+
+          if (res) {
+            dispatch(userAction.setChangeAward(true));
+          }
         }
       }
     });
