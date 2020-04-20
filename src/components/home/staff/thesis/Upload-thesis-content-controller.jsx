@@ -171,7 +171,7 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
           )}
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 6 }}>
+        <Form.Item wrapperCol={{ offset: 4 }}>
           <Button
             type='primary'
             htmlType='submit'

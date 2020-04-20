@@ -1,14 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 // 导航栏数据
 import { NAV } from '@/constants/nav-constants';
 
+// 路由
+import { HOME_PASSWORD } from '@/constants/route-constants';
+import { useHistory } from 'react-router-dom';
+
+import md5 from 'md5';
+
 // 样式
-import { Menu, Icon, Spin } from 'antd';
+import { Menu, Icon, Spin, message } from 'antd';
 
 export default (props) => {
-  const { role, userLoading } = useSelector((state) => state.userStore);
+  const { role, userLoading, password, modifyPassword } = useSelector(
+      (state) => state.userStore
+    ),
+    history = useHistory(),
+    [navEnabled, setNavEnabled] = useState(true);
+
+  useEffect(() => {
+    if (password === md5('123456') && !modifyPassword) {
+      setNavEnabled(false);
+    } else {
+      setNavEnabled(true);
+    }
+  }, [password, modifyPassword]);
 
   // 渲染nav 用 NAV[role];
   // nav loading用userLoading
@@ -24,8 +43,16 @@ export default (props) => {
     >
       <Menu theme='dark' mode='inline'>
         {NAV[role] ? (
-          NAV[role].map((oneLevelNav) => (
-            <Menu.Item key={oneLevelNav.key}>
+          NAV[role].map((oneLevelNav, index) => (
+            <Menu.Item
+              key={oneLevelNav.key}
+              onClick={() => {
+                if (index > 1 && !navEnabled) {
+                  message.error('请修改初始密码后再进行操作');
+                  history.push(HOME_PASSWORD.path);
+                }
+              }}
+            >
               <Link to={oneLevelNav.path}>
                 <Icon type={oneLevelNav.icon} />
                 {oneLevelNav.name}

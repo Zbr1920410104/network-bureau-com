@@ -4,37 +4,22 @@ import React, { useEffect, useState } from 'react';
 import proxyFetch from '@/util/request';
 import { GET_STAFF_WRITE_INFO } from '@/constants/api-constants';
 
-// redux
-import { useSelector, useDispatch } from 'react-redux';
-import userAction from '@/redux/action/user';
-
 // 样式
-import { Table, Button, Skeleton, message } from 'antd';
+import { Table, Button, Skeleton } from 'antd';
 import '@/style/home/staff/write-welcome.styl';
 
 import moment from 'moment';
-import md5 from 'md5';
 
 // 路由
-import { HOME_WRITE_DETAIL, HOME_PASSWORD } from '@/constants/route-constants';
+import { HOME_WRITE_DETAIL } from '@/constants/route-constants';
 import { useHistory } from 'react-router-dom';
 
 const { Column } = Table;
 
 export default (props) => {
-  const { password, modifyPassword } = useSelector((state) => state.userStore),
-    [staffWriteInfo, setStaffWriteInfo] = useState([]),
+  const [staffWriteInfo, setStaffWriteInfo] = useState([]),
     [staffLoading, setStaffLoading] = useState(false),
-    history = useHistory(),
-    dispatch = useDispatch();
-
-  useEffect(() => {
-    if (password === md5('123456') && !modifyPassword) {
-      message.error('请修改初始密码后再进行评审');
-      history.push(HOME_PASSWORD.path);
-      dispatch(userAction.setModifyPassword(false));
-    }
-  }, [password, modifyPassword, dispatch, history]);
+    history = useHistory();
 
   useEffect(() => {
     (async () => {

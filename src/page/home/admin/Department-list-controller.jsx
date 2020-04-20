@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // 请求
 import proxyFetch from '@/util/request';
@@ -10,7 +10,7 @@ import {
 
 // 样式
 import '@/style/home/admin/department-list.styl';
-import { Button, Table, Modal, Skeleton, Input, Form } from 'antd';
+import { Button, Table, Modal, Input, Form } from 'antd';
 const { Column } = Table;
 const { confirm } = Modal;
 
@@ -176,49 +176,48 @@ export default Form.create({ name: 'department' })(({ form }) => {
             </Form>
           </div>
         </Modal>
-        <Skeleton loading={departmentLoading}>
-          <Table
-            dataSource={departmentList}
-            className='table'
-            rowKey={(record) => record.uuid}
-            pagination={{
-              current: page,
-              total,
-              pageSize,
-              onChange: (page) => {
-                setPage(page);
-              },
-            }}
-          >
-            <Column align='center' title='科室' dataIndex='name' key='name' />
-            <Column
-              align='center'
-              title='操作'
-              dataIndex=''
-              key=''
-              render={(text, record) => (
-                <Button
-                  type='link'
-                  onClick={() => {
-                    confirm({
-                      title: '删除科室?',
-                      okType: 'primary',
-                      content: '确认要删除科室?',
-                      okText: '确认',
-                      cancelText: '取消',
-                      onOk() {
-                        setDeleteUuid(record.uuid);
-                      },
-                      onCancel() {},
-                    });
-                  }}
-                >
-                  删除
-                </Button>
-              )}
-            />
-          </Table>
-        </Skeleton>
+        <Table
+          dataSource={departmentList}
+          loading={departmentLoading}
+          className='table'
+          rowKey={(record) => record.uuid}
+          pagination={{
+            current: page,
+            total,
+            pageSize,
+            onChange: (page) => {
+              setPage(page);
+            },
+          }}
+        >
+          <Column align='center' title='科室' dataIndex='name' key='name' />
+          <Column
+            align='center'
+            title='操作'
+            dataIndex=''
+            key=''
+            render={(text, record) => (
+              <Button
+                type='link'
+                onClick={() => {
+                  confirm({
+                    title: '删除科室?',
+                    okType: 'primary',
+                    content: '确认要删除科室?',
+                    okText: '确认',
+                    cancelText: '取消',
+                    onOk() {
+                      setDeleteUuid(record.uuid);
+                    },
+                    onCancel() {},
+                  });
+                }}
+              >
+                删除
+              </Button>
+            )}
+          />
+        </Table>
       </div>
     </div>
   );

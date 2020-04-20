@@ -5,6 +5,7 @@ import {
   HOME_WRITE_WELCOME,
   HOME_REVIEW_LIST,
   HOME_VERIFY_LIST,
+  HOME_ACCOUNT_LIST,
 } from '@/constants/route-constants';
 import { useHistory } from 'react-router-dom';
 
@@ -44,6 +45,8 @@ export default Form.create({ name: 'password' })(({ form }) => {
             history.push(HOME_VERIFY_LIST.path);
           } else if (role === 5) {
             history.push(HOME_REVIEW_LIST.path);
+          } else if (role === 1) {
+            history.push(HOME_ACCOUNT_LIST.path);
           }
         }
       }

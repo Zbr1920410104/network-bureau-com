@@ -66,6 +66,7 @@ export const SELECT_UPLOAD_AWARD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OP
 export const SAVE_UPLOAD_AWARD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/saveUploadAward`;
 export const SELECT_UPLOAD_THESIS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/selectUploadThesis`;
 export const SAVE_UPLOAD_THESIS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/saveUploadThesis`;
+export const FINISH_STAFF_WRITE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/finishStaffWrite`;
 
 /**
  * 统计管理员

@@ -120,7 +120,7 @@ export default Form.create({ name: 'writeCopyright' })(({ form }) => {
         </Form.Item>
 
         {/* 保存按钮 */}
-        <Form.Item wrapperCol={{ offset: 6 }}>
+        <Form.Item wrapperCol={{ offset: 5 }}>
           <Button
             type='primary'
             htmlType='submit'

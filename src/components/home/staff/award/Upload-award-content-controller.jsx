@@ -151,7 +151,7 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
                     size='large'
                     onClick={(e) => {
                       e.stopPropagation();
-                      window.open(previewUrl);
+                      window.open(previewUrl, '_blank');
                     }}
                   >
                     查看上传

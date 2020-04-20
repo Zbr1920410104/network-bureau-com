@@ -15,7 +15,6 @@ import PasswordModifyController from '@/page/home/public/Password-modify-control
 // 员工
 import WriteWelcomeController from '@/page/home/staff/Write-welcome-controller.jsx';
 import WriteDetailController from '@/page/home/staff/Write-detail-controller.jsx';
-import WriteCurrentController from '@/page/home/staff/Write-current-controller.jsx';
 
 // 业务员
 import VerifyListController from '@/page/home/business-manager/Verify-list-controller.jsx';
@@ -38,13 +37,13 @@ import Nav from '@/components/home/Nav.jsx';
 
 // 样式
 import '@/style/home/home.styl';
-import { Layout, Icon } from 'antd';
+import { Layout, Icon, Button } from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 
 export default (props) => {
   const token = localStorage.getItem(`${LOCAL_STORAGE}-token`);
   // 各个路由控制
-  const { uuid } = useSelector((state) => state.userStore),
+  const { uuid, name, role } = useSelector((state) => state.userStore),
     history = useHistory(),
     dispatch = useDispatch();
 
@@ -75,10 +74,6 @@ export default (props) => {
   });
   const homeWriteDetail = useRouteMatch({
     path: ROUTES.HOME_WRITE_DETAIL.path,
-    exact: true,
-  });
-  const homeWriteCurrent = useRouteMatch({
-    path: ROUTES.HOME_WRITE_CURRENT.path,
     exact: true,
   });
   const homePassword = useRouteMatch({
@@ -120,6 +115,21 @@ export default (props) => {
     exact: true,
   });
 
+  const roleToText = (role) => {
+    switch (role) {
+      case 1:
+        return '超级管理员';
+      case 5:
+        return '评审员';
+      case 10:
+        return '统计员';
+      case 15:
+        return '普通员工';
+      default:
+        return '未知';
+    }
+  };
+
   let content = null;
 
   if (homeIndex) {
@@ -139,9 +149,7 @@ export default (props) => {
     content = <ReviewListController />;
   } else if (homeReviewDetail) {
     content = <ReviewDetailListController />;
-  } else if (homeWriteCurrent) {
-    content = <WriteCurrentController />;
-  } else if (homeAccountList) {
+  }  else if (homeAccountList) {
     content = <AccountListController />;
   } else if (homeAccountTime) {
     content = <AccountTimeController />;
@@ -156,10 +164,27 @@ export default (props) => {
           <Icon type='reconciliation' />
           <span>业务管理系统</span>
         </div>
+        <div className='user-info'>
+          <span>
+            欢迎:{name}({roleToText(role)})
+          </span>
+        </div>
         <Nav />
       </Sider>
       <Layout className='home-content'>
-        <Header className='home-header' />
+        <Header className='home-header'>
+          <div className='exit-box'>
+            <Button
+              type='link'
+              className='exit-button'
+              onClick={() => {
+                history.push(ROUTES.INDEX.path);
+              }}
+            >
+              [退出登录]
+            </Button>
+          </div>
+        </Header>
         <Content className='content-box'>
           <div className='content-inner-box'>{content}</div>
         </Content>

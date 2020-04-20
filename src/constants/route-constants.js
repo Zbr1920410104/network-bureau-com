@@ -19,10 +19,6 @@ export const HOME_WRITE_DETAIL = {
   path: '/home/write/detail',
   name: '员工填写详情页'
 };
-export const HOME_WRITE_CURRENT = {
-  path: '/home/write/current',
-  name: '员工填写详情页'
-};
 
 // 业务员页面
 export const HOME_VERIFY_LIST = {

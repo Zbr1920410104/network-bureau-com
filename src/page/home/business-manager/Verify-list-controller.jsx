@@ -10,18 +10,17 @@ import proxyFetch from '@/util/request';
 import { GET_STAFF_VERIFY_INFO } from '@/constants/api-constants';
 
 // redux
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import userAction from '@/redux/action/user';
 
 // 路由
-import { HOME_VERIFY_DETAIL, HOME_PASSWORD } from '@/constants/route-constants';
+import { HOME_VERIFY_DETAIL } from '@/constants/route-constants';
 import { useHistory } from 'react-router-dom';
 
 import moment from 'moment';
-import md5 from 'md5';
 
 // 样式
-import { Table, Button, Select, Modal, Skeleton, Input, message } from 'antd';
+import { Table, Button, Select, Modal, Skeleton, Input } from 'antd';
 import '@/style/home/business-manager/verify-list.styl';
 const { Option } = Select,
   { Column } = Table,
@@ -29,8 +28,7 @@ const { Option } = Select,
 
 export default (props) => {
   const history = useHistory(),
-    { password, modifyPassword } = useSelector((state) => state.userStore);
-  const [staffVerifyInfo, setStaffVerifyInfo] = useState([]),
+    [staffVerifyInfo, setStaffVerifyInfo] = useState([]),
     [exportAllVisible, setExportAllVisible] = useState(false),
     [staffLoading, setStaffLoading] = useState(false),
     [verifyStatus, setVerifyStatus] = useState(0),
@@ -45,14 +43,6 @@ export default (props) => {
   const hideExportAllModal = () => {
     setExportAllVisible(false);
   };
-
-  useEffect(() => {
-    if (password === md5('123456') && !modifyPassword) {
-      message.error('请修改初始密码后再进行评审');
-      history.push(HOME_PASSWORD.path);
-      dispatch(userAction.setModifyPassword(false));
-    }
-  }, [password, modifyPassword, dispatch, history]);
 
   useEffect(() => {
     (async () => {

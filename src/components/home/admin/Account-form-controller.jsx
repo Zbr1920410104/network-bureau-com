@@ -144,7 +144,7 @@ export default Form.create({ name: 'account' })(({ form }) => {
       </Form.Item>
 
       {/* 保存按钮 */}
-      <Form.Item wrapperCol={{ offset: 7 }}>
+      <Form.Item wrapperCol={{ offset: 6 }}>
         <Button
           type='primary'
           htmlType='submit'

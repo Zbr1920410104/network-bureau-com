@@ -11,22 +11,28 @@ export const NAV = {
       name: '首页',
     },
     {
-      key: 'addAppartment',
-      path: ROUTE.HOME_DEPARTMENT_LIST.path,
-      icon: 'audit',
-      name: '添加科室',
+      key: 'password',
+      path: ROUTE.HOME_PASSWORD.path,
+      name: '修改密码',
+      icon: 'key',
     },
     {
       key: 'accountManage',
       path: ROUTE.HOME_ACCOUNT_LIST.path,
-      name: '账号管理列表',
-      icon: 'audit',
+      name: '账号管理',
+      icon: 'solution',
+    },
+    {
+      key: 'addAppartment',
+      path: ROUTE.HOME_DEPARTMENT_LIST.path,
+      icon: 'apartment',
+      name: '科室管理',
     },
     {
       key: 'timeSetting',
       path: ROUTE.HOME_ACCOUNT_TIME.path,
-      name: '开放填写时间设置',
-      icon: 'audit',
+      name: '开放时间设置',
+      icon: 'setting',
     },
   ],
   /* 评审员 */
@@ -41,7 +47,7 @@ export const NAV = {
       key: 'password',
       path: ROUTE.HOME_PASSWORD.path,
       name: '修改密码',
-      icon: 'file-done',
+      icon: 'key',
     },
     {
       key: 'reviewList',
@@ -62,7 +68,7 @@ export const NAV = {
       key: 'password',
       path: ROUTE.HOME_PASSWORD.path,
       name: '修改密码',
-      icon: 'file-done',
+      icon: 'key',
     },
     {
       key: 'businessVerify',
@@ -83,7 +89,7 @@ export const NAV = {
       key: 'password',
       path: ROUTE.HOME_PASSWORD.path,
       name: '修改密码',
-      icon: 'file-done',
+      icon: 'key',
     },
     {
       key: 'write',

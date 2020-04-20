@@ -11,12 +11,29 @@ import WriteThesisController from '@/components/home/staff/Write-thesis-controll
 import { HOME_WRITE_WELCOME } from '@/constants/route-constants';
 import { Link, useHistory } from 'react-router-dom';
 
+// 请求
+import proxyFetch from '@/util/request';
+import { FINISH_STAFF_WRITE } from '@/constants/api-constants';
+
 // 样式
 import { Icon, Button, Modal } from 'antd';
 const { confirm } = Modal;
 
 export default (props) => {
   const history = useHistory();
+
+  /**
+   * 提交事件
+   */
+  const handleSumbitSave = () => {
+    (async () => {
+      const res = await proxyFetch(FINISH_STAFF_WRITE, {});
+
+      if (res) {
+        history.push(HOME_WRITE_WELCOME.path);
+      }
+    })();
+  };
 
   return (
     <div className='write-detail-box'>
@@ -60,7 +77,7 @@ export default (props) => {
               okText: '确认',
               cancelText: '取消',
               onOk() {
-                history.push(HOME_WRITE_WELCOME.path);
+                handleSumbitSave();
               },
               onCancel() {},
             });

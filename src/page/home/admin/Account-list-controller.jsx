@@ -19,7 +19,7 @@ import ModifyAccountContent from '@/components/home/admin/Modify-account-content
 
 // 样式
 import '@/style/home/admin/account-list.styl';
-import { Button, Table, Modal, Skeleton, Select, Input } from 'antd';
+import { Button, Table, Modal, Select, Input } from 'antd';
 const { Column } = Table,
   { confirm } = Modal,
   { Option } = Select,
@@ -67,10 +67,13 @@ export default (porps) => {
 
         if (_isMounted) {
           setAccountList(accountList);
+          setAccountVisible(false);
+          setModifyAccountVisible(false);
           dispatch(userAction.setAddAccount(false));
-          setAccountLoading(false);
           setIsNeedRefresh(false);
         }
+
+        setAccountLoading(false);
       }
     })();
   }, [isNeedRefresh, role, name, addAccount, dispatch]);
@@ -197,28 +200,48 @@ export default (porps) => {
           <Modal
             title='修改账号信息'
             visible={modifyAccountVisible}
-            onOk={hideModifyAccountModal}
-            onCancel={hideModifyAccountModal}
-            okText='确认'
-            cancelText='取消'
+            onCancel={() => {
+              confirm({
+                title: '确认离开?',
+                okType: 'primary',
+                content: '离开修改的内容将不会保存!',
+                okText: '确认',
+                cancelText: '取消',
+                onOk() {
+                  hideModifyAccountModal();
+                },
+                onCancel() {},
+              });
+            }}
+            footer={null}
           >
             <ModifyAccountContent />
           </Modal>
           <Modal
             title='新增账号'
             visible={accountVisible}
-            onOk={hideAccountModal}
-            onCancel={hideAccountModal}
-            okText='确认'
-            cancelText='取消'
+            onCancel={() => {
+              confirm({
+                title: '确认离开?',
+                okType: 'primary',
+                content: '离开填写内容将不会保存!',
+                okText: '确认',
+                cancelText: '取消',
+                onOk() {
+                  hideAccountModal();
+                },
+                onCancel() {},
+              });
+            }}
+            footer={null}
           >
             <AccountFormController />
           </Modal>
         </div>
-        <Skeleton loading={accountLoading}>
           <Table
             dataSource={accountList}
             className='table'
+            loading={accountLoading}
             rowKey={(record) => record.uuid}
             scroll={{ x: 1200 }}
           >
@@ -326,7 +349,6 @@ export default (porps) => {
               )}
             />
           </Table>
-        </Skeleton>
       </div>
     </div>
   );

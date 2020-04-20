@@ -16,6 +16,7 @@ import { LOCAL_STORAGE } from '@/constants/app-constants';
 import {
   HOME_INDEX,
   HOME_PASSWORD,
+  HOME_ACCOUNT_LIST,
   HOME_WRITE_WELCOME,
   HOME_VERIFY_LIST,
   HOME_REVIEW_LIST,
@@ -41,7 +42,11 @@ const effects = {
       const roleToNav = (role) => {
         switch (role) {
           case 1:
-            return HOME_INDEX.path;
+            if (res.userInfo.password === md5('123456')) {
+              return HOME_PASSWORD.path;
+            } else {
+              return HOME_ACCOUNT_LIST.path;
+            }
           case 5:
             if (res.userInfo.password === md5('123456')) {
               return HOME_PASSWORD.path;
