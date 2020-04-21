@@ -131,14 +131,16 @@ export default (props) => {
             <ExportOneContent />
           </Modal>
         </div>
-        <div className='verify-form-box'>
-          <VerifyBasicController />
-          <VerifyProjectController />
-          <VerifyPatentController />
-          <VerifyCopyrightController />
-          <VerifyAwardController />
-          <VerifyThesisController />
-        </div>
+        {staffUuid ? (
+          <div className='verify-form-box'>
+            <VerifyBasicController />
+            <VerifyProjectController />
+            <VerifyPatentController />
+            <VerifyCopyrightController />
+            <VerifyAwardController />
+            <VerifyThesisController />
+          </div>
+        ) : null}
       </div>
     </div>
   );

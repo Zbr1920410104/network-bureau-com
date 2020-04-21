@@ -11,6 +11,7 @@ export default {
   setModifyBasic: createAction('setModifyBasic'),
   setUserUuid: createAction('setUserUuid'),
   setStaffUuid: createAction('setStaffUuid'),
+  // 普通员工填写
   setChangeProject: createAction('setChangeProject'),
   setStaffProjectUuid: createAction('setStaffProjectUuid'),
   setChangePatent: createAction('setChangePatent'),
@@ -21,4 +22,10 @@ export default {
   setStaffAwardUuid: createAction('setStaffAwardUuid'),
   setChangeThesis: createAction('setChangeThesis'),
   setStaffThesisUuid: createAction('setStaffThesisUuid'),
+  // 统计员核实
+  setVerifyProject: createAction('setVerifyProject'),
+  setVerifyPatent: createAction('setVerifyPatent'),
+  setVerifyCopyright: createAction('setVerifyCopyright'),
+  setVerifyAward: createAction('setVerifyAward'),
+  setVerifyThesis: createAction('setVerifyThesis'),
 };

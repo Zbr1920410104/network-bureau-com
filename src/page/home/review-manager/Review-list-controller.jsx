@@ -45,6 +45,14 @@ export default (props) => {
     setExportAllVisible(false);
   };
 
+  const showError = () => {
+    Modal.error({
+      title: '请确认员工信息核实通过后评分',
+      content: '员工所有信息未核实通过无法开始评分',
+      okText: '确认',
+    });
+  };
+
   useEffect(() => {
     (async () => {
       setStaffLoading(true);
@@ -141,6 +149,12 @@ export default (props) => {
             />
             <Column
               align='center'
+              title='核实状态'
+              dataIndex='verifyStatus'
+              key=''
+            />
+            <Column
+              align='center'
               title='总得分'
               dataIndex='totalScore'
               key=''
@@ -154,12 +168,16 @@ export default (props) => {
                 <Button
                   type='link'
                   onClick={() => {
-                    localStorage.setItem(
-                      `${LOCAL_STORAGE}-staffUuid`,
-                      record.uuid
-                    );
-                    dispatch(userAction.setStaffUuid(record.uuid));
-                    history.push(HOME_REVIEW_DETAIL.path);
+                    if (record.verifyStatus === '核实通过') {
+                      localStorage.setItem(
+                        `${LOCAL_STORAGE}-staffUuid`,
+                        record.uuid
+                      );
+                      dispatch(userAction.setStaffUuid(record.uuid));
+                      history.push(HOME_REVIEW_DETAIL.path);
+                    } else {
+                      showError();
+                    }
                   }}
                 >
                   评分

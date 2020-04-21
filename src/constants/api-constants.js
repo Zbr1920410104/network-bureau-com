@@ -73,12 +73,22 @@ export const FINISH_STAFF_WRITE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT
  **/
 export const GET_BUSINESS_MANAGER_BASIC = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getBusinessManagerBasic`;
 export const GET_STAFF_VERIFY_INFO = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getStaffVerifyInfo`;
+export const GET_VERIFY_COPYRIGHT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getVerifyCopyrightList`;
+export const GET_VERIFY_PATENT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getVerifyPatentList`;
+export const GET_VERIFY_PROJECT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getVerifyProjectList`;
+export const GET_VERIFY_AWARD_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getVerifyAwardList`;
+export const GET_VERIFY_THESIS_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getVerifyThesisList`;
 
 /**
  * 评审管理员
  **/
 export const GET_REVIEW_MANAGER_BASIC = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getReviewManagerBasic`;
 export const GET_STAFF_REVIEW_INFO = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getStaffReviewInfo`;
+export const GET_REVIEW_COPYRIGHT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getReviewCopyrightList`;
+export const GET_REVIEW_PATENT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getReviewPatentList`;
+export const GET_REVIEW_PROJECT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getReviewProjectList`;
+export const GET_REVIEW_AWARD_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getReviewAwardList`;
+export const GET_REVIEW_THESIS_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getReviewThesisList`;
 
 /**
  * 文件

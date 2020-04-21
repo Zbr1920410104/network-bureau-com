@@ -1,14 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+// 请求
+import proxyFetch from '@/util/request';
+import { GET_VERIFY_AWARD_LIST } from '@/constants/api-constants';
+
+// redux
+import { useSelector, useDispatch } from 'react-redux';
+import userAction from '@/redux/action/user';
+
+import moment from 'moment';
 
 // 样式
 import '@/style/home/business-manager/verify-item-detail.styl';
-import { Table, Icon, Button, Modal, Input } from 'antd';
+import { Icon, Button, Modal, Input, Descriptions, Skeleton } from 'antd';
 const { TextArea } = Input,
-  { confirm } = Modal,
-  { Column } = Table;
+  { confirm } = Modal;
 
-export default props => {
-  const [verifyVisible, setVerifyVisible] = useState(false);
+export default (props) => {
+  const { staffUuid } = useSelector((state) => state.userStore),
+    [verifyVisible, setVerifyVisible] = useState(false),
+    [verifyAwardList, setVerifyAwardList] = useState([]),
+    [verifyAwardLoading, setVerifyAwardLoading] = useState(false),
+    [uploadAwardVisible, setUploadAwardVisible] = useState(false),
+    dispatch = useDispatch();
 
   const showVerifyModal = () => {
     setVerifyVisible(true);
@@ -17,26 +31,6 @@ export default props => {
   const hideVerifyModal = () => {
     setVerifyVisible(false);
   };
-  const leadAwardList = [
-      {
-        id: 1,
-        awardType: '个人',
-        awardName: '陈德杯',
-        awardTime: '2020-03-06',
-        awardGrade: '一等奖',
-        awardDepartment: '黑龙江省人民政府'
-      },
-      {
-        id: 2,
-        awardType: '团体',
-        awardName: '陈德杯',
-        awardTime: '2020-03-06',
-        awardGrade: '一等奖',
-        awardDepartment: '黑龙江省人民政府',
-        awardNameList: '钱程、张博荣'
-      }
-    ],
-    [uploadAwardVisible, setUploadAwardVisible] = useState(false);
 
   const showUploadAwardModal = () => {
     setUploadAwardVisible(true);
@@ -46,22 +40,33 @@ export default props => {
     setUploadAwardVisible(false);
   };
 
+  useEffect(() => {
+    (async () => {
+      setVerifyAwardLoading(true);
+
+      const verifyAwardList = await proxyFetch(
+        GET_VERIFY_AWARD_LIST,
+        { staffUuid },
+        'GET'
+      );
+
+      if (verifyAwardList) {
+        setVerifyAwardList(verifyAwardList);
+        setVerifyVisible(false);
+        setUploadAwardVisible(false);
+        dispatch(userAction.setVerifyAward(false));
+      }
+
+      setVerifyAwardLoading(false);
+    })();
+  }, [staffUuid, dispatch]);
+
   return (
     <div className='verify-item-detail-box'>
       <div className='detail-title-box'>
         <div className='title-left-box'>
           <Icon type='trophy' className='icon' />
           <span>获奖情况</span>
-        </div>
-        <div className='title-right-box'>
-          <Button
-            type='link'
-            icon='edit'
-            className='opinion-button'
-            onClick={showVerifyModal}
-          >
-            核实
-          </Button>
         </div>
         <Modal
           title='请核实'
@@ -89,16 +94,14 @@ export default props => {
                   content: (
                     <div className='text-box'>
                       <span>我已核实完</span>
-                      <span className='important-text'>
-                        获奖情况
-                      </span>
+                      <span className='important-text'>获奖情况</span>
                       <span>的所有信息,确认通过?</span>
                     </div>
                   ),
                   okText: '确认',
                   cancelText: '取消',
                   onOk() {},
-                  onCancel() {}
+                  onCancel() {},
                 });
               }}
             >
@@ -106,7 +109,7 @@ export default props => {
             </Button>
           </div>
           <TextArea
-            autoSize={{ minRows: 3, maxRows: 6 }}
+            rows={3}
             maxLength='100'
             placeholder='请输入核实意见及不通过理由'
             className='modal-textArea-box'
@@ -132,73 +135,76 @@ export default props => {
           </Button>
         </div>
       </Modal>
-      <Table
-        dataSource={leadAwardList}
-        className='table'
-        rowKey={record => record.id}
-        scroll={{ x: 1200 }}
-        rowSelection={{
-          type: 'radio',
-          columnWidth: '100px'
-        }}
-      >
-        <Column
-          align='center'
-          title='奖项名称'
-          dataIndex='awardName'
-          key=''
-          fixed='left'
-          width='150px'
-        />
-        <Column
-          align='center'
-          title='奖项类型'
-          dataIndex='awardType'
-          key=''
-          width='100px'
-        />
-        <Column
-          align='center'
-          title='获奖时间'
-          dataIndex='awardTime'
-          key=''
-          width='100px'
-        />
-        <Column
-          align='center'
-          title='奖项级别'
-          dataIndex='awardGrade'
-          key=''
-          width='100px'
-        />
-        <Column
-          align='center'
-          title='颁奖部门'
-          dataIndex='awardDepartment'
-          key=''
-          width='100px'
-        />
-        <Column
-          align='center'
-          title='获奖名单(团体)'
-          dataIndex='awardNameList'
-          key=''
-          width='200px'
-        />
-        <Column
-          align='center'
-          title='查看附件'
-          dataIndex=''
-          fixed='right'
-          width='100px'
-          key=''
-          render={() => (
-            <Button type='link' onClick={showUploadAwardModal}>
-              查看附件
-            </Button>
+      <div className='verify-description-box'>
+        <Skeleton loading={verifyAwardLoading}>
+          {verifyAwardList?.length ? (
+            verifyAwardList.map((item, index) => (
+              <Descriptions
+                key={item.uuid}
+                title={
+                  <div className='verify-description-title'>
+                    <div className='description-title-text'>
+                      <span>{`奖项${index + 1}:  ${item.awardName}`}</span>
+                      <span>{`状态: ${item.isVerify}`}</span>
+                      <span>{`最近填写/修改于: ${
+                        item.currentWriteTime
+                          ? moment(item.currentWriteTime).format(
+                              'YYYY-MM-DD h:mm:ss a'
+                            )
+                          : ''
+                      }`}</span>
+                    </div>
+                    <div className='description-title-button'>
+                      <Button
+                        type='link'
+                        icon='edit'
+                        className='opinion-button'
+                        onClick={showVerifyModal}
+                      >
+                        核实
+                      </Button>
+                    </div>
+                  </div>
+                }
+              >
+                <Descriptions.Item label='奖项类型'>
+                  {item.awardType}
+                </Descriptions.Item>
+                <Descriptions.Item label='获奖时间'>
+                  {item.awardTime
+                    ? moment(item.awardTime).format('YYYY-MM-DD')
+                    : ''}
+                </Descriptions.Item>
+                <Descriptions.Item label='奖项级别'>
+                  {item.awardGrade}
+                </Descriptions.Item>
+                <Descriptions.Item label='颁奖部门'>
+                  {item.awardDepartment}
+                </Descriptions.Item>
+                {item.awardNameList ? (
+                  <Descriptions.Item label='获奖名单' span={2}>
+                    {item.awardNameList}
+                  </Descriptions.Item>
+                ) : null}
+                <Descriptions.Item label='上传/查看附件'>
+                  <Button
+                    type='link'
+                    onClick={() => {
+                      showUploadAwardModal(item.uuid);
+                    }}
+                    className='link-button'
+                  >
+                    <Icon type='upload' />
+                    <span>上传/查看</span>
+                  </Button>
+                </Descriptions.Item>
+              </Descriptions>
+            ))
+          ) : (
+            <span>未填写奖项</span>
           )}
-        />
-      </Table>
+        </Skeleton>
+      </div>
     </div>
   );
 };

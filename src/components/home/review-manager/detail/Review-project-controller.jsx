@@ -1,14 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+// 请求
+import proxyFetch from '@/util/request';
+import { GET_REVIEW_PROJECT_LIST } from '@/constants/api-constants';
+
+// redux
+import { useSelector, useDispatch } from 'react-redux';
+import userAction from '@/redux/action/user';
+
+import moment from 'moment';
 
 import ReviewProjectContent from '@/components/home/review-manager/project/Review-project-content-controller.jsx';
 
 // 样式
 import '@/style/home/review-manager/review-item-detail.styl';
-import { Table, Button, Modal, Icon } from 'antd';
-const { Column } = Table;
+import { Button, Modal, Icon, Skeleton, Descriptions } from 'antd';
 
-export default props => {
-  const [reviewProjectVisible, setReviewProjectVisible] = useState(false);
+export default (props) => {
+  const { staffUuid } = useSelector((state) => state.userStore),
+    [reviewProjectVisible, setReviewProjectVisible] = useState(false),
+    [reviewProjectList, setReviewProjectList] = useState([]),
+    [reviewProjectLoading, setReviewProjectLoading] = useState(false),
+    dispatch = useDispatch();
 
   const showReviewProjectModal = () => {
     setReviewProjectVisible(true);
@@ -18,30 +31,25 @@ export default props => {
     setReviewProjectVisible(false);
   };
 
-  const leadProjectList = [
-    {
-      id: 1,
-      type: 1,
-      name: '软件测试1',
-      time: '2020-03-04~202003-20',
-      code: '101010101',
-      resource: '网信办',
-      funds: 23,
-      participant: '钱程、张博荣',
-      content: 'js开发'
-    },
-    {
-      id: 2,
-      type: 2,
-      name: '软件测试2',
-      time: '2020-03-05~202003-25',
-      code: '101010106',
-      resource: '网信办',
-      funds: 32,
-      participant: '钱程、张博荣',
-      content: '系统开发'
-    }
-  ];
+  useEffect(() => {
+    (async () => {
+      setReviewProjectLoading(true);
+
+      const reviewProjectList = await proxyFetch(
+        GET_REVIEW_PROJECT_LIST,
+        { staffUuid },
+        'GET'
+      );
+
+      if (reviewProjectList) {
+        setReviewProjectList(reviewProjectList);
+        setReviewProjectVisible(false);
+        dispatch(userAction.setReviewProject(false));
+      }
+
+      setReviewProjectLoading(false);
+    })();
+  }, [staffUuid, dispatch]);
 
   return (
     <div className='review-item-detail-box'>
@@ -59,91 +67,75 @@ export default props => {
       >
         <ReviewProjectContent />
       </Modal>
-      <Table
-        dataSource={leadProjectList}
-        className='table'
-        rowKey={record => record.id}
-        scroll={{ x: 1000 }}
-        rowSelection={{
-          type: 'radio',
-          columnWidth: '100px'
-        }}
-      >
-        <Column
-          align='center'
-          title='项目类型'
-          dataIndex='type'
-          key=''
-          fixed='left'
-          width='100px'
-          render={(text, record) =>
-            record.type === 1 ? '主持项目' : '参与项目'
-          }
-        />
-        <Column
-          align='center'
-          title='项目名称'
-          dataIndex='name'
-          key=''
-          fixed='left'
-          width='200px'
-        />
-        <Column
-          align='center'
-          title='项目起止时间'
-          dataIndex='time'
-          key=''
-          width='150px'
-        />
-        <Column
-          align='center'
-          title='项目编号'
-          dataIndex='code'
-          key=''
-          width='150px'
-        />
-        <Column
-          align='center'
-          title='项目来源'
-          dataIndex='resource'
-          key=''
-          width='150px'
-        />
-        <Column
-          align='center'
-          title='项目经费(万元)'
-          dataIndex='funds'
-          key=''
-          width='100px'
-        />
-        <Column
-          align='center'
-          title='主要研究内容'
-          dataIndex='content'
-          key='content'
-          width='300px'
-        />
-        <Column
-          align='center'
-          title='参与者名单'
-          dataIndex='participant'
-          key=''
-          width='300px'
-        />
-        <Column
-          align='center'
-          title='打分'
-          dataIndex=''
-          fixed='right'
-          width='100px'
-          key=''
-          render={() => (
-            <Button type='link' onClick={showReviewProjectModal}>
-              打分
-            </Button>
+      <div className='review-description-box'>
+        <Skeleton loading={reviewProjectLoading}>
+          {reviewProjectList?.length ? (
+            reviewProjectList.map((item, index) => (
+              <Descriptions
+                key={item.uuid}
+                title={
+                  <div className='review-description-title'>
+                    <div className='description-title-text'>
+                      <span>{`项目${index + 1}:  ${item.name}`}</span>
+                      <span>{`状态: ${item.isReview}`}</span>
+                      <span>{`最近填写/修改于: ${
+                        item.currentWriteTime
+                          ? moment(item.currentWriteTime).format(
+                              'YYYY-MM-DD h:mm:ss a'
+                            )
+                          : ''
+                      }`}</span>
+                    </div>
+                    <div className='description-title-button'>
+                      <Button type='link' onClick={showReviewProjectModal()}>
+                        打分
+                      </Button>
+                    </div>
+                  </div>
+                }
+              >
+                <Descriptions.Item label='项目类型'>
+                  {item.type === 1 ? (
+                    <span>主持项目</span>
+                  ) : (
+                    <span>参与项目</span>
+                  )}
+                </Descriptions.Item>
+                <Descriptions.Item label='开始时间'>
+                  {item.startTime
+                    ? moment(item.startTime).format('YYYY-MM-DD')
+                    : ''}
+                </Descriptions.Item>
+                <Descriptions.Item label='结束时间'>
+                  {item.endTime
+                    ? moment(item.endTime).format('YYYY-MM-DD')
+                    : ''}
+                </Descriptions.Item>
+                <Descriptions.Item label='项目编号'>
+                  {item.code}
+                </Descriptions.Item>
+                <Descriptions.Item label='项目来源'>
+                  {item.resource}
+                </Descriptions.Item>
+                <Descriptions.Item label='项目经费'>
+                  {`${item.funds}万元`}
+                </Descriptions.Item>
+                <Descriptions.Item label='负责人'>
+                  {item.controller}
+                </Descriptions.Item>
+                <Descriptions.Item label='参与人名单' span={2}>
+                  {item.participant}
+                </Descriptions.Item>
+                <Descriptions.Item label='主要研究内容' span={3}>
+                  {item.content}
+                </Descriptions.Item>
+              </Descriptions>
+            ))
+          ) : (
+            <span>未填写项目</span>
           )}
-        />
-      </Table>
+        </Skeleton>
+      </div>
     </div>
   );
 };

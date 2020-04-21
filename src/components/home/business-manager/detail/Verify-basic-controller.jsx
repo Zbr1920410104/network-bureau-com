@@ -105,7 +105,7 @@ export default (props) => {
             </Button>
           </div>
           <TextArea
-            autoSize={{ minRows: 3, maxRows: 6 }}
+            rows={3}
             maxLength='100'
             placeholder='请输入核实意见及不通过理由'
             className='modal-textArea-box'

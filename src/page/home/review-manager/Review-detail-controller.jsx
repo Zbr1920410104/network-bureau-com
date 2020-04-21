@@ -108,14 +108,16 @@ export default (props) => {
             <ExportOneContent />
           </Modal>
         </div>
-        <div className='review-form-box'>
-          <ReviewBasicController />
-          <ReviewProjectController />
-          <ReviewPatentController />
-          <ReviewCopyrightController />
-          <ReviewAwardController />
-          <ReviewThesisController />
-        </div>
+        {staffUuid ? (
+          <div className='review-form-box'>
+            <ReviewBasicController />
+            <ReviewProjectController />
+            <ReviewPatentController />
+            <ReviewCopyrightController />
+            <ReviewAwardController />
+            <ReviewThesisController />
+          </div>
+        ) : null}
       </div>
     </div>
   );

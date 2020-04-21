@@ -119,12 +119,50 @@ export default handleActions(
         staffThesisUuid: result,
       };
     },
+    // 统计员核实
+    setVerifyBasic(state, { payload: result }) {
+      return {
+        ...state,
+        verifyBasic: result,
+      };
+    },
+    setVerifyProject(state, { payload: result }) {
+      return {
+        ...state,
+        verifyProject: result,
+      };
+    },
+    setVerifyPatent(state, { payload: result }) {
+      return {
+        ...state,
+        verifyPatent: result,
+      };
+    },
+    setVerifyCopyright(state, { payload: result }) {
+      return {
+        ...state,
+        verifyCopyright: result,
+      };
+    },
+    setVerifyAward(state, { payload: result }) {
+      return {
+        ...state,
+        verifyAward: result,
+      };
+    },
+    setVerifyThesis(state, { payload: result }) {
+      return {
+        ...state,
+        verifyThesis: result,
+      };
+    },
   },
   {
     loginLoading: false,
     userLoading: false,
     modifyPassword: false,
     addAccount: false,
+    // 普通员工
     modifyBasic: false,
     changeProject: false,
     changePatent: false,
@@ -136,6 +174,13 @@ export default handleActions(
     staffCopyrightUuid: '',
     staffAwardUuid: '',
     staffThesisUuid: '',
+    // 统计员
+    verifyBasic: false,
+    verifyProject: false,
+    verifyPatent: false,
+    verifyCopyright: false,
+    verifyAward: false,
+    verifyThesis: false,
     userUuid: '',
     uuid: '',
     phone: '',

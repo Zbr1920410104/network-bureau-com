@@ -74,7 +74,7 @@ export default (props) => {
         setModifyAwardVisible(false);
         dispatch(userAction.setChangeAward(false));
       }
-      
+
       setWriteAwardLoading(false);
     })();
   }, [changeAward, dispatch]);
@@ -229,6 +229,11 @@ export default (props) => {
                 <Descriptions.Item label='颁奖部门'>
                   {item.awardDepartment}
                 </Descriptions.Item>
+                {item.awardNameList ? (
+                  <Descriptions.Item label='获奖名单' span={2}>
+                    {item.awardNameList}
+                  </Descriptions.Item>
+                ) : null}
                 <Descriptions.Item label='上传/查看附件'>
                   <Button
                     type='link'
@@ -248,113 +253,6 @@ export default (props) => {
           )}
         </Skeleton>
       </div>
-      {/* <Table
-        dataSource={writeAwardList}
-        className='table'
-        rowKey={(record) => record.id}
-        scroll={{ x: 1450 }}
-      >
-        <Column
-          align='center'
-          title='奖项名称'
-          dataIndex='awardName'
-          key=''
-          fixed='left'
-          width='150px'
-        />
-        <Column
-          align='center'
-          title='奖项类型'
-          dataIndex='awardType'
-          key=''
-          width='100px'
-        />
-        <Column
-          align='center'
-          title='获奖时间'
-          dataIndex='awardTime'
-          key=''
-          width='100px'
-        />
-        <Column
-          align='center'
-          title='奖项级别'
-          dataIndex='awardGrade'
-          key=''
-          width='100px'
-        />
-        <Column
-          align='center'
-          title='颁奖部门'
-          dataIndex='awardDepartment'
-          key=''
-          width='100px'
-        />
-        <Column
-          align='center'
-          title='获奖名单(团体)'
-          dataIndex='awardNameList'
-          key=''
-          width='200px'
-        />
-        <Column
-          align='center'
-          title='上传/查看附件'
-          dataIndex=''
-          fixed='right'
-          width='100px'
-          key=''
-          render={() => (
-            <Button type='link' onClick={showUploadAwardModal}>
-              上传/查看附件
-            </Button>
-          )}
-        />
-        <Column
-          align='center'
-          title='修改'
-          dataIndex=''
-          fixed='right'
-          width='100px'
-          key=''
-          render={() => (
-            <Button type='link' onClick={showModifyAwardModal}>
-              修改奖项内容
-            </Button>
-          )}
-        />
-        <Column
-          align='center'
-          title='删除'
-          fixed='right'
-          width='80px'
-          dataIndex=''
-          key=''
-          render={() => (
-            <Button
-              type='link'
-              onClick={() => {
-                confirm({
-                  title: '删除奖项?',
-                  okType: 'primary',
-                  content: '确认要删除奖项?',
-                  okText: '确认',
-                  cancelText: '取消',
-                  onOk() {},
-                  onCancel() {},
-                });
-              }}
-            >
-              删除奖项
-            </Button>
-          )}
-        />
-      </Table>
-      <div className='item-bottom-box'>
-        <Button type='primary' className='save-button'>
-          暂存
-        </Button>
-      </div> */}
     </div>
   );
 };

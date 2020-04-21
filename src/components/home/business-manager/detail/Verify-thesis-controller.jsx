@@ -1,14 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+// 请求
+import proxyFetch from '@/util/request';
+import { GET_VERIFY_THESIS_LIST } from '@/constants/api-constants';
+
+// redux
+import { useSelector, useDispatch } from 'react-redux';
+import userAction from '@/redux/action/user';
+
+import moment from 'moment';
 
 // 样式
 import '@/style/home/business-manager/verify-item-detail.styl';
-import { Table, Icon, Button, Modal, Input } from 'antd';
+import { Icon, Button, Modal, Input, Descriptions, Skeleton } from 'antd';
 const { TextArea } = Input,
-  { confirm } = Modal,
-  { Column } = Table;
+  { confirm } = Modal;
 
-export default props => {
-  const [verifyVisible, setVerifyVisible] = useState(false);
+export default (props) => {
+  const { staffUuid, verifyThesis } = useSelector((state) => state.userStore),
+    [verifyVisible, setVerifyVisible] = useState(false),
+    [uploadThesisVisible, setUploadThesisVisible] = useState(false),
+    [verifyThesisList, setVerifyThesisList] = useState([]),
+    [verifyThesisLoading, setVerifyThesisLoading] = useState(false),
+    dispatch = useDispatch();
 
   const showVerifyModal = () => {
     setVerifyVisible(true);
@@ -17,38 +31,6 @@ export default props => {
   const hideVerifyModal = () => {
     setVerifyVisible(false);
   };
-  const leadThesisList = [
-      {
-        id: 1,
-        thesisTitle: '基于VueJs的WEB前端开发研究',
-        thesisType: 1,
-        thesisJournal: 'Chinese Science Bulletin',
-        thesisTime: '2020-03-06',
-        thesisGrade: 'SCI',
-        thesisCode: '123456',
-        thesisFirstAuthor: '翟天临',
-        thesisAuthorSequence: '通讯作者'
-      },
-      {
-        id: 2,
-        thesisType: 1,
-        thesisTitle: 'Javascript的运用与提高',
-        thesisJournal: 'Nature methods',
-        thesisTime: '2020-03-06',
-        thesisGrade: 'SCI',
-        thesisCode: '12345678',
-        thesisFirstAuthor: '翟天临',
-        thesisAuthorSequence: '第一作者'
-      },
-      {
-        id: 3,
-        thesisType: 2,
-        thesisTitle: 'Typescript的运用与提高',
-        thesisFirstAuthor: '翟天临',
-        thesisAuthorSequence: '编辑'
-      }
-    ],
-    [uploadThesisVisible, setUploadThesisVisible] = useState(false);
 
   const showUploadThesisModal = () => {
     setUploadThesisVisible(true);
@@ -58,22 +40,33 @@ export default props => {
     setUploadThesisVisible(false);
   };
 
+  useEffect(() => {
+    (async () => {
+      setVerifyThesisLoading(true);
+
+      const verifyThesisList = await proxyFetch(
+        GET_VERIFY_THESIS_LIST,
+        { staffUuid },
+        'GET'
+      );
+
+      if (verifyThesisList) {
+        setVerifyThesisList(verifyThesisList);
+        setUploadThesisVisible(false);
+        setVerifyVisible(false);
+        dispatch(userAction.setVerifyThesis(false));
+      }
+
+      setVerifyThesisLoading(false);
+    })();
+  }, [verifyThesis, staffUuid, dispatch]);
+
   return (
     <div className='verify-item-detail-box'>
       <div className='detail-title-box'>
         <div className='title-left-box'>
           <Icon type='book' className='icon' />
           <span>论文/专著</span>
-        </div>
-        <div className='title-right-box'>
-          <Button
-            type='link'
-            icon='edit'
-            className='opinion-button'
-            onClick={showVerifyModal}
-          >
-            核实
-          </Button>
         </div>
         <Modal
           title='请核实'
@@ -108,7 +101,7 @@ export default props => {
                   okText: '确认',
                   cancelText: '取消',
                   onOk() {},
-                  onCancel() {}
+                  onCancel() {},
                 });
               }}
             >
@@ -116,7 +109,7 @@ export default props => {
             </Button>
           </div>
           <TextArea
-            autoSize={{ minRows: 3, maxRows: 6 }}
+            rows={3}
             maxLength='100'
             placeholder='请输入核实意见及不通过理由'
             className='modal-textArea-box'
@@ -142,88 +135,86 @@ export default props => {
           </Button>
         </div>
       </Modal>
-      <Table
-        dataSource={leadThesisList}
-        className='table'
-        rowKey={record => record.id}
-        scroll={{ x: 1450 }}
-        rowSelection={{
-          type: 'radio',
-          columnWidth: '100px'
-        }}
-      >
-        <Column
-          align='center'
-          title='标题'
-          dataIndex='thesisTitle'
-          key=''
-          fixed='left'
-          width='240px'
-        />
-        <Column
-          align='center'
-          title='类型'
-          dataIndex='thesisType'
-          key=''
-          width='100px'
-          render={(text, record) => (record.thesisType === 1 ? '论文' : '专著')}
-        />
-        <Column
-          align='center'
-          title='发表期刊名称'
-          dataIndex='thesisJournal'
-          key=''
-          width='180px'
-        />
-        <Column
-          align='center'
-          title='发表期刊时间'
-          dataIndex='thesisTime'
-          key=''
-          width='100px'
-        />
-        <Column
-          align='center'
-          title='期刊级别'
-          dataIndex='thesisGrade'
-          key=''
-          width='100px'
-        />
-        <Column
-          align='center'
-          title='论文索引号'
-          dataIndex='thesisCode'
-          key=''
-          width='100px'
-        />
-        <Column
-          align='center'
-          title='提交人作者次序'
-          dataIndex='thesisAuthorSequence'
-          key=''
-          width='100px'
-        />
-        <Column
-          align='center'
-          title='第一作者'
-          dataIndex='thesisFirstAuthor'
-          key=''
-          width='100px'
-        />
-        <Column
-          align='center'
-          title='查看附件'
-          dataIndex=''
-          fixed='right'
-          width='100px'
-          key=''
-          render={() => (
-            <Button type='link' onClick={showUploadThesisModal}>
-              查看附件
-            </Button>
+      <div className='verify-description-box'>
+        <Skeleton loading={verifyThesisLoading}>
+          {verifyThesisList?.length ? (
+            verifyThesisList.map((item, index) => (
+              <Descriptions
+                key={item.uuid}
+                title={
+                  <div className='verify-description-title'>
+                    <div className='description-title-text'>
+                      <span>{`论文/专著${index + 1}:  ${
+                        item.thesisTitle
+                      }`}</span>
+                      <span>{`状态: ${item.isVerify}`}</span>
+                      <span>{`最近填写/修改于: ${
+                        item.currentVerifyTime
+                          ? moment(item.currentVerifyTime).format(
+                              'YYYY-MM-DD h:mm:ss a'
+                            )
+                          : ''
+                      }`}</span>
+                    </div>
+                    <div className='description-title-button'>
+                      <Button
+                        type='link'
+                        icon='edit'
+                        className='opinion-button'
+                        onClick={showVerifyModal}
+                      >
+                        核实
+                      </Button>
+                    </div>
+                  </div>
+                }
+              >
+                <Descriptions.Item label='类型'>
+                  {item.thesisType}
+                </Descriptions.Item>
+                <Descriptions.Item label='发表时间'>
+                  {item.thesisTime
+                    ? moment(item.thesisTime).format('YYYY-MM-DD')
+                    : ''}
+                </Descriptions.Item>
+                {item.thesisType === '论文' ? (
+                  <>
+                    <Descriptions.Item label='发表期刊名称'>
+                      {item.thesisJournal}
+                    </Descriptions.Item>
+                    <Descriptions.Item label='期刊级别'>
+                      {item.thesisGrade}
+                    </Descriptions.Item>
+                    <Descriptions.Item label='论文索引号'>
+                      {item.thesisCode}
+                    </Descriptions.Item>
+                  </>
+                ) : null}
+                <Descriptions.Item label='第一作者'>
+                  {item.thesisFirstAuthor}
+                </Descriptions.Item>
+                <Descriptions.Item label='提交人作者次序'>
+                  {item.thesisAuthorSequence}
+                </Descriptions.Item>
+                <Descriptions.Item label='上传/查看附件'>
+                  <Button
+                    type='link'
+                    onClick={() => {
+                      showUploadThesisModal(item.uuid);
+                    }}
+                    className='link-button'
+                  >
+                    <Icon type='upload' />
+                    <span>上传/查看</span>
+                  </Button>
+                </Descriptions.Item>
+              </Descriptions>
+            ))
+          ) : (
+            <span>未填写论文/专著</span>
           )}
-        />
-      </Table>
+        </Skeleton>
+      </div>
     </div>
   );
 };

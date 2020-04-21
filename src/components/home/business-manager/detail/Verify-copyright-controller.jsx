@@ -1,12 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import { Table, Icon, Button, Modal, Input } from 'antd';
+// 请求
+import proxyFetch from '@/util/request';
+import { GET_VERIFY_COPYRIGHT_LIST } from '@/constants/api-constants';
+
+// redux
+import { useSelector, useDispatch } from 'react-redux';
+import userAction from '@/redux/action/user';
+
+import moment from 'moment';
+
+import { Icon, Button, Modal, Input, Descriptions, Skeleton } from 'antd';
 const { TextArea } = Input,
-  { confirm } = Modal,
-  { Column } = Table;
+  { confirm } = Modal;
 
-export default props => {
-  const [verifyVisible, setVerifyVisible] = useState(false);
+export default (props) => {
+  const [verifyVisible, setVerifyVisible] = useState(false),
+    { staffUuid, verifyCopyright } = useSelector((state) => state.userStore),
+    [verifyCopyrightList, setVerifyCopyrightList] = useState([]),
+    [verifyCopyrightLoading, setVerifyCopyrightLoading] = useState(false),
+    dispatch = useDispatch();
 
   const showVerifyModal = () => {
     setVerifyVisible(true);
@@ -15,22 +28,25 @@ export default props => {
   const hideVerifyModal = () => {
     setVerifyVisible(false);
   };
-  const leadCopyrightList = [
-    {
-      id: 1,
-      copyrightType: '原始取得',
-      copyrightName: '软件测试1',
-      copyrightCode: '101010101453243',
-      copyrightArrange: '专有许可'
-    },
-    {
-      id: 2,
-      copyrightType: '继受取得',
-      copyrightName: '软件测试1',
-      copyrightCode: '1010101013242432',
-      copyrightArrange: '专有许可'
-    }
-  ];
+  useEffect(() => {
+    (async () => {
+      setVerifyCopyrightLoading(true);
+
+      const verifyCopyrightList = await proxyFetch(
+        GET_VERIFY_COPYRIGHT_LIST,
+        { staffUuid },
+        'GET'
+      );
+
+      if (verifyCopyrightList) {
+        setVerifyVisible(false);
+        setVerifyCopyrightList(verifyCopyrightList);
+        dispatch(userAction.setVerifyCopyright(false));
+      }
+
+      setVerifyCopyrightLoading(false);
+    })();
+  }, [verifyCopyright, staffUuid, dispatch]);
 
   return (
     <div className='verify-item-detail-box'>
@@ -38,16 +54,6 @@ export default props => {
         <div className='title-left-box'>
           <Icon type='audit' className='icon' />
           <span>软件著作权</span>
-        </div>
-        <div className='title-right-box'>
-          <Button
-            type='link'
-            icon='edit'
-            className='opinion-button'
-            onClick={showVerifyModal}
-          >
-            核实
-          </Button>
         </div>
         <Modal
           title='请核实'
@@ -82,7 +88,7 @@ export default props => {
                   okText: '确认',
                   cancelText: '取消',
                   onOk() {},
-                  onCancel() {}
+                  onCancel() {},
                 });
               }}
             >
@@ -90,53 +96,63 @@ export default props => {
             </Button>
           </div>
           <TextArea
-            autoSize={{ minRows: 3, maxRows: 6 }}
+            rows={3}
             maxLength='100'
             placeholder='请输入核实意见及不通过理由'
             className='modal-textArea-box'
           />
         </Modal>
       </div>
-      <Table
-        dataSource={leadCopyrightList}
-        className='table'
-        rowKey={record => record.id}
-        scroll={{ x: 900 }}
-        rowSelection={{
-          type: 'radio',
-          columnWidth: '100px'
-        }}
-      >
-        <Column
-          align='center'
-          title='软件著作权名称'
-          dataIndex='copyrightName'
-          key=''
-          fixed='left'
-          width='150px'
-        />
-        <Column
-          align='center'
-          title='权利取得方式'
-          dataIndex='copyrightType'
-          key=''
-          width='100px'
-        />
-        <Column
-          align='center'
-          title='授权范围'
-          dataIndex='copyrightArrange'
-          key=''
-          width='100px'
-        />
-        <Column
-          align='center'
-          title='登记号'
-          dataIndex='copyrightCode'
-          key=''
-          width='200px'
-        />
-      </Table>
+      <div className='verify-description-box'>
+        <Skeleton loading={verifyCopyrightLoading}>
+          {verifyCopyrightList?.length ? (
+            verifyCopyrightList.map((item, index) => (
+              <Descriptions
+                key={item.uuid}
+                title={
+                  <div className='verify-description-title'>
+                    <div className='description-title-text'>
+                      <span>{`软件著作权${index + 1}:  ${
+                        item.copyrightName
+                      }`}</span>
+                      <span>{`状态: ${item.isVerify}`}</span>
+                      <span>{`最近填写/修改于: ${
+                        item.currentWriteTime
+                          ? moment(item.currentWriteTime).format(
+                              'YYYY-MM-DD h:mm:ss a'
+                            )
+                          : ''
+                      }`}</span>
+                    </div>
+                    <div className='description-title-button'>
+                      <Button
+                        type='link'
+                        icon='edit'
+                        className='opinion-button'
+                        onClick={showVerifyModal}
+                      >
+                        核实
+                      </Button>
+                    </div>
+                  </div>
+                }
+              >
+                <Descriptions.Item label='权利取得方式'>
+                  {item.copyrightType}
+                </Descriptions.Item>
+                <Descriptions.Item label='登记号'>
+                  {item.copyrightCode}
+                </Descriptions.Item>
+                <Descriptions.Item label='授权范围'>
+                  {item.copyrightArrange}
+                </Descriptions.Item>
+              </Descriptions>
+            ))
+          ) : (
+            <span>未填写软件著作权</span>
+          )}
+        </Skeleton>
+      </div>
     </div>
   );
 };
