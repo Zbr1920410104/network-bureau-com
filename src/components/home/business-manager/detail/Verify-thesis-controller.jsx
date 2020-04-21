@@ -196,7 +196,7 @@ export default (props) => {
                 <Descriptions.Item label='提交人作者次序'>
                   {item.thesisAuthorSequence}
                 </Descriptions.Item>
-                <Descriptions.Item label='上传/查看附件'>
+                <Descriptions.Item label='查看附件'>
                   <Button
                     type='link'
                     onClick={() => {
@@ -204,8 +204,8 @@ export default (props) => {
                     }}
                     className='link-button'
                   >
-                    <Icon type='upload' />
-                    <span>上传/查看</span>
+                    <Icon type='download' />
+                    <span>查看</span>
                   </Button>
                 </Descriptions.Item>
               </Descriptions>

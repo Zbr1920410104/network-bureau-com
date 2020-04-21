@@ -77,17 +77,24 @@ export default (props) => {
                   <div className='review-description-title'>
                     <div className='description-title-text'>
                       <span>{`项目${index + 1}:  ${item.name}`}</span>
-                      <span>{`状态: ${item.isReview}`}</span>
-                      <span>{`最近填写/修改于: ${
-                        item.currentWriteTime
-                          ? moment(item.currentWriteTime).format(
+                      <span>{`${
+                        item.score ? item.score : '未打'
+                      }分`}</span>
+                      <span>
+                        {item.verifyTime
+                          ? moment(item.verifyTime).format(
                               'YYYY-MM-DD h:mm:ss a'
                             )
                           : ''
-                      }`}</span>
+                        }
+                      </span>
                     </div>
                     <div className='description-title-button'>
-                      <Button type='link' onClick={showReviewProjectModal()}>
+                      <Button
+                        icon='radar-chart'
+                        type='link'
+                        onClick={showReviewProjectModal}
+                      >
                         打分
                       </Button>
                     </div>

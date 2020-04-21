@@ -1,14 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+// 请求
+import proxyFetch from '@/util/request';
+import { GET_REVIEW_PATENT_LIST } from '@/constants/api-constants';
+
+// redux
+import { useSelector, useDispatch } from 'react-redux';
+import userAction from '@/redux/action/user';
+
+import moment from 'moment';
 
 import ReviewPatentContent from '@/components/home/review-manager/patent/Review-patent-content-controller.jsx';
 
 // 样式
 import '@/style/home/review-manager/review-item-detail.styl';
-import { Table, Button, Modal, Icon } from 'antd';
-const { Column } = Table;
+import { Button, Modal, Icon, Skeleton, Descriptions } from 'antd';
 
-export default props => {
-  const [reviewPatentVisible, setReviewPatentVisible] = useState(false);
+export default (props) => {
+  const { staffUuid } = useSelector((state) => state.userStore),
+    [reviewPatentVisible, setReviewPatentVisible] = useState(false),
+    [reviewPatentList, setReviewPatentList] = useState([]),
+    [reviewPatentLoading, setReviewPatentLoading] = useState(false),
+    dispatch = useDispatch();
 
   const showReviewPatentModal = () => {
     setReviewPatentVisible(true);
@@ -17,22 +30,26 @@ export default props => {
   const hideReviewPatentModal = () => {
     setReviewPatentVisible(false);
   };
-  const leadPatentList = [
-    {
-      id: 1,
-      patentType: '发明',
-      patentName: '软件测试1',
-      patentCode: '101010101453243',
-      patentNation: '中国、美国、日本'
-    },
-    {
-      id: 2,
-      patentType: '发明',
-      patentName: '软件测试1',
-      patentCode: '1010101013242432',
-      patentNation: '中国、美国、日本'
-    }
-  ];
+
+  useEffect(() => {
+    (async () => {
+      setReviewPatentLoading(true);
+
+      const reviewPatentList = await proxyFetch(
+        GET_REVIEW_PATENT_LIST,
+        { staffUuid },
+        'GET'
+      );
+
+      if (reviewPatentList) {
+        setReviewPatentList(reviewPatentList);
+        setReviewPatentVisible(false);
+        dispatch(userAction.setReviewPatent(false));
+      }
+
+      setReviewPatentLoading(false);
+    })();
+  }, [staffUuid, dispatch]);
 
   return (
     <div className='review-item-detail-box'>
@@ -50,59 +67,53 @@ export default props => {
       >
         <ReviewPatentContent />
       </Modal>
-      <Table
-        dataSource={leadPatentList}
-        className='table'
-        rowKey={record => record.id}
-        scroll={{ x: 900 }}
-        rowSelection={{
-          type: 'radio',
-          columnWidth: '100px'
-        }}
-      >
-        <Column
-          align='center'
-          title='专利名称'
-          dataIndex='patentName'
-          key=''
-          fixed='left'
-          width='150px'
-        />
-        <Column
-          align='center'
-          title='专利类型'
-          dataIndex='patentType'
-          key=''
-          width='120px'
-        />
-        <Column
-          align='center'
-          title='授权国家和地区'
-          dataIndex='patentNation'
-          key=''
-          width='200px'
-        />
-        <Column
-          align='center'
-          title='授权号'
-          dataIndex='patentCode'
-          key=''
-          width='200px'
-        />
-        <Column
-          align='center'
-          title='打分'
-          dataIndex=''
-          fixed='right'
-          width='100px'
-          key=''
-          render={() => (
-            <Button type='link' onClick={showReviewPatentModal}>
-              打分
-            </Button>
+      <div className='review-description-box'>
+        <Skeleton loading={reviewPatentLoading}>
+          {reviewPatentList?.length ? (
+            reviewPatentList.map((item, index) => (
+              <Descriptions
+                key={item.uuid}
+                title={
+                  <div className='review-description-title'>
+                    <div className='description-title-text'>
+                      <span>{`专利${index + 1}:  ${item.patentName}`}</span>
+                      <span>{`${item.score ? item.score : '未打'}分`}</span>
+                      <span>
+                        {item.reviewTime
+                          ? moment(item.reviewTime).format(
+                              'YYYY-MM-DD h:mm:ss a'
+                            )
+                          : ''}
+                      </span>
+                    </div>
+                    <div className='description-title-button'>
+                      <Button
+                        icon='radar-chart'
+                        type='link'
+                        onClick={showReviewPatentModal}
+                      >
+                        打分
+                      </Button>
+                    </div>
+                  </div>
+                }
+              >
+                <Descriptions.Item label='专利类型'>
+                  {item.patentType}
+                </Descriptions.Item>
+                <Descriptions.Item label='授权号' span={2}>
+                  {item.patentCode}
+                </Descriptions.Item>
+                <Descriptions.Item label='授权国家和地区' span={3}>
+                  {item.patentNation}
+                </Descriptions.Item>
+              </Descriptions>
+            ))
+          ) : (
+            <span>未填写专利</span>
           )}
-        />
-      </Table>
+        </Skeleton>
+      </div>
     </div>
   );
 };

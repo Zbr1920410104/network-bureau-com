@@ -156,6 +156,37 @@ export default handleActions(
         verifyThesis: result,
       };
     },
+    // 评审员打分
+    setReviewProject(state, { payload: result }) {
+      return {
+        ...state,
+        reviewProject: result,
+      };
+    },
+    setReviewPatent(state, { payload: result }) {
+      return {
+        ...state,
+        reviewPatent: result,
+      };
+    },
+    setReviewCopyright(state, { payload: result }) {
+      return {
+        ...state,
+        reviewCopyright: result,
+      };
+    },
+    setReviewAward(state, { payload: result }) {
+      return {
+        ...state,
+        reviewAward: result,
+      };
+    },
+    setReviewThesis(state, { payload: result }) {
+      return {
+        ...state,
+        reviewThesis: result,
+      };
+    },
   },
   {
     loginLoading: false,
@@ -181,6 +212,12 @@ export default handleActions(
     verifyCopyright: false,
     verifyAward: false,
     verifyThesis: false,
+    // 评审员
+    reviewProject: false,
+    reviewPatent: false,
+    reviewCopyright: false,
+    reviewAward: false,
+    reviewThesis: false,
     userUuid: '',
     uuid: '',
     phone: '',
