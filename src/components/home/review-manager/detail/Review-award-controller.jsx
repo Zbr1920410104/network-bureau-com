@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 // 请求
 import proxyFetch from '@/util/request';
-import { GET_REVIEW_AWARD_LIST } from '@/constants/api-constants';
+import { GET_REVIEW_AWARD_LIST, GET_FILE_URL } from '@/constants/api-constants';
 
 // redux
 import { useSelector, useDispatch } from 'react-redux';
@@ -21,10 +21,14 @@ export default (props) => {
     [uploadAwardVisible, setUploadAwardVisible] = useState(false),
     [reviewAwardVisible, setReviewAwardVisible] = useState(false),
     [reviewAwardList, setReviewAwardList] = useState([]),
+    [reviewAwardUrl, setReviewAwardUrl] = useState(''),
+    [previewUrl, setPreviewUrl] = useState(''),
+    [getFileLoading, setGetFileLoading] = useState(true),
     [reviewAwardLoading, setReviewAwardLoading] = useState(false),
     dispatch = useDispatch();
 
-  const showUploadAwardModal = () => {
+  const showUploadAwardModal = (url) => {
+    setReviewAwardUrl(url);
     setUploadAwardVisible(true);
   };
 
@@ -61,6 +65,22 @@ export default (props) => {
     })();
   }, [staffUuid, dispatch]);
 
+  useEffect(() => {
+    if (reviewAwardUrl) {
+      (async () => {
+        setGetFileLoading(true);
+        const previewUrl = await proxyFetch(
+          GET_FILE_URL,
+          { fileUrl: reviewAwardUrl },
+          'GET'
+        );
+
+        setPreviewUrl(previewUrl);
+        setGetFileLoading(false);
+      })();
+    }
+  }, [reviewAwardUrl]);
+
   return (
     <div className='review-item-detail-box'>
       <div className='detail-title-box'>
@@ -76,14 +96,21 @@ export default (props) => {
         cancelText='取消'
       >
         <div className='download-button-box'>
-          <Button
-            icon='download'
-            size='large'
-            className='download-button'
-            type='primary'
-          >
-            获奖证明附件下载
-          </Button>
+          {reviewAwardUrl ? (
+            <a href={previewUrl}>
+              <Button
+                type='primary'
+                size='large'
+                className='download-button'
+                icon='download'
+                loading={getFileLoading}
+              >
+                下载附件
+              </Button>
+            </a>
+          ) : (
+            <Button disabled>员工未上传</Button>
+          )}
         </div>
       </Modal>
       <Modal
@@ -150,7 +177,7 @@ export default (props) => {
                   <Button
                     type='link'
                     onClick={() => {
-                      showUploadAwardModal(item.uuid);
+                      showUploadAwardModal(item.url);
                     }}
                     className='link-button'
                   >

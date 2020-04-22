@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 
 // 请求
 import proxyFetch from '@/util/request';
-import { GET_VERIFY_THESIS_LIST } from '@/constants/api-constants';
+import {
+  GET_VERIFY_THESIS_LIST,
+  GET_FILE_URL,
+} from '@/constants/api-constants';
 
 // redux
 import { useSelector, useDispatch } from 'react-redux';
@@ -21,6 +24,9 @@ export default (props) => {
     [verifyVisible, setVerifyVisible] = useState(false),
     [uploadThesisVisible, setUploadThesisVisible] = useState(false),
     [verifyThesisList, setVerifyThesisList] = useState([]),
+    [verifyThesisUrl, setVerifyThesisUrl] = useState(''),
+    [previewUrl, setPreviewUrl] = useState(''),
+    [getFileLoading, setGetFileLoading] = useState(true),
     [verifyThesisLoading, setVerifyThesisLoading] = useState(false),
     dispatch = useDispatch();
 
@@ -32,7 +38,8 @@ export default (props) => {
     setVerifyVisible(false);
   };
 
-  const showUploadThesisModal = () => {
+  const showUploadThesisModal = (url) => {
+    setVerifyThesisUrl(url);
     setUploadThesisVisible(true);
   };
 
@@ -60,6 +67,22 @@ export default (props) => {
       setVerifyThesisLoading(false);
     })();
   }, [verifyThesis, staffUuid, dispatch]);
+
+  useEffect(() => {
+    if (verifyThesisUrl) {
+      (async () => {
+        setGetFileLoading(true);
+        const previewUrl = await proxyFetch(
+          GET_FILE_URL,
+          { fileUrl: verifyThesisUrl },
+          'GET'
+        );
+
+        setPreviewUrl(previewUrl);
+        setGetFileLoading(false);
+      })();
+    }
+  }, [verifyThesisUrl]);
 
   return (
     <div className='verify-item-detail-box'>
@@ -119,20 +142,25 @@ export default (props) => {
       <Modal
         title='查看附件'
         visible={uploadThesisVisible}
-        onOk={hideUploadThesisModal}
         onCancel={hideUploadThesisModal}
-        okText='已下载'
-        cancelText='取消'
+        footer={null}
       >
         <div className='download-button-box'>
-          <Button
-            icon='download'
-            size='large'
-            className='download-button'
-            type='primary'
-          >
-            论文/专著证明附件下载
-          </Button>
+          {verifyThesisUrl ? (
+            <a href={previewUrl}>
+              <Button
+                type='primary'
+                size='large'
+                className='download-button'
+                icon='download'
+                loading={getFileLoading}
+              >
+                下载附件
+              </Button>
+            </a>
+          ) : (
+            <Button disabled>员工未上传</Button>
+          )}
         </div>
       </Modal>
       <div className='verify-description-box'>
@@ -200,7 +228,7 @@ export default (props) => {
                   <Button
                     type='link'
                     onClick={() => {
-                      showUploadThesisModal(item.uuid);
+                      showUploadThesisModal(item.url);
                     }}
                     className='link-button'
                   >

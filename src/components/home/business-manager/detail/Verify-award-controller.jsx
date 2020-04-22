@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 // 请求
 import proxyFetch from '@/util/request';
-import { GET_VERIFY_AWARD_LIST } from '@/constants/api-constants';
+import { GET_VERIFY_AWARD_LIST, GET_FILE_URL } from '@/constants/api-constants';
 
 // redux
 import { useSelector, useDispatch } from 'react-redux';
@@ -20,6 +20,9 @@ export default (props) => {
   const { staffUuid } = useSelector((state) => state.userStore),
     [verifyVisible, setVerifyVisible] = useState(false),
     [verifyAwardList, setVerifyAwardList] = useState([]),
+    [verifyAwardUrl, setVerifyAwardUrl] = useState(''),
+    [previewUrl, setPreviewUrl] = useState(''),
+    [getFileLoading, setGetFileLoading] = useState(true),
     [verifyAwardLoading, setVerifyAwardLoading] = useState(false),
     [uploadAwardVisible, setUploadAwardVisible] = useState(false),
     dispatch = useDispatch();
@@ -32,7 +35,8 @@ export default (props) => {
     setVerifyVisible(false);
   };
 
-  const showUploadAwardModal = () => {
+  const showUploadAwardModal = (url) => {
+    setVerifyAwardUrl(url);
     setUploadAwardVisible(true);
   };
 
@@ -60,6 +64,22 @@ export default (props) => {
       setVerifyAwardLoading(false);
     })();
   }, [staffUuid, dispatch]);
+
+  useEffect(() => {
+    if (verifyAwardUrl) {
+      (async () => {
+        setGetFileLoading(true);
+        const previewUrl = await proxyFetch(
+          GET_FILE_URL,
+          { fileUrl: verifyAwardUrl },
+          'GET'
+        );
+
+        setPreviewUrl(previewUrl);
+        setGetFileLoading(false);
+      })();
+    }
+  }, [verifyAwardUrl]);
 
   return (
     <div className='verify-item-detail-box'>
@@ -119,20 +139,25 @@ export default (props) => {
       <Modal
         title='下载附件'
         visible={uploadAwardVisible}
-        onOk={hideUploadAwardModal}
         onCancel={hideUploadAwardModal}
-        okText='已下载'
-        cancelText='取消'
+        footer={null}
       >
         <div className='download-button-box'>
-          <Button
-            icon='download'
-            size='large'
-            className='download-button'
-            type='primary'
-          >
-            获奖证明附件下载
-          </Button>
+          {verifyAwardUrl ? (
+            <a href={previewUrl}>
+              <Button
+                type='primary'
+                size='large'
+                className='download-button'
+                icon='download'
+                loading={getFileLoading}
+              >
+                下载附件
+              </Button>
+            </a>
+          ) : (
+            <Button disabled>员工未上传</Button>
+          )}
         </div>
       </Modal>
       <div className='verify-description-box'>
@@ -190,7 +215,7 @@ export default (props) => {
                   <Button
                     type='link'
                     onClick={() => {
-                      showUploadAwardModal(item.uuid);
+                      showUploadAwardModal(item.url);
                     }}
                     className='link-button'
                   >

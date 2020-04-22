@@ -108,8 +108,6 @@ export default (props) => {
           });
         }}
         footer={null}
-        okText='确定'
-        cancelText='取消'
       >
         <CreatePatentContent />
       </Modal>

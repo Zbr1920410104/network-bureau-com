@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 
 // 请求
 import proxyFetch from '@/util/request';
-import { GET_REVIEW_THESIS_LIST } from '@/constants/api-constants';
+import {
+  GET_REVIEW_THESIS_LIST,
+  GET_FILE_URL,
+} from '@/constants/api-constants';
 
 // redux
 import { useSelector, useDispatch } from 'react-redux';
@@ -21,6 +24,9 @@ export default (props) => {
     [reviewThesisVisible, setReviewThesisVisible] = useState(false),
     [uploadThesisVisible, setUploadThesisVisible] = useState(false),
     [reviewThesisList, setReviewThesisList] = useState([]),
+    [reviewThesisUrl, setReviewThesisUrl] = useState(''),
+    [previewUrl, setPreviewUrl] = useState(''),
+    [getFileLoading, setGetFileLoading] = useState(true),
     [reviewThesisLoading, setReviewThesisLoading] = useState(false),
     dispatch = useDispatch();
 
@@ -32,7 +38,8 @@ export default (props) => {
     setReviewThesisVisible(false);
   };
 
-  const showUploadThesisModal = () => {
+  const showUploadThesisModal = (url) => {
+    setReviewThesisUrl(url);
     setUploadThesisVisible(true);
   };
 
@@ -61,6 +68,22 @@ export default (props) => {
     })();
   }, [reviewThesis, staffUuid, dispatch]);
 
+  useEffect(() => {
+    if (reviewThesisUrl) {
+      (async () => {
+        setGetFileLoading(true);
+        const previewUrl = await proxyFetch(
+          GET_FILE_URL,
+          { fileUrl: reviewThesisUrl },
+          'GET'
+        );
+
+        setPreviewUrl(previewUrl);
+        setGetFileLoading(false);
+      })();
+    }
+  }, [reviewThesisUrl]);
+
   return (
     <div className='review-item-detail-box'>
       <div className='detail-title-box'>
@@ -80,20 +103,25 @@ export default (props) => {
       <Modal
         title='查看附件'
         visible={uploadThesisVisible}
-        onOk={hideUploadThesisModal}
         onCancel={hideUploadThesisModal}
-        okText='确定'
-        cancelText='取消'
+        footer={null}
       >
         <div className='download-button-box'>
-          <Button
-            icon='download'
-            size='large'
-            className='download-button'
-            type='primary'
-          >
-            论文/专著证明附件下载
-          </Button>
+          {reviewThesisUrl ? (
+            <a href={previewUrl}>
+              <Button
+                type='primary'
+                size='large'
+                className='download-button'
+                icon='download'
+                loading={getFileLoading}
+              >
+                下载附件
+              </Button>
+            </a>
+          ) : (
+            <Button disabled>员工未上传</Button>
+          )}
         </div>
       </Modal>
       <div className='review-description-box'>
@@ -160,7 +188,7 @@ export default (props) => {
                   <Button
                     type='link'
                     onClick={() => {
-                      showUploadThesisModal(item.uuid);
+                      showUploadThesisModal(item.url);
                     }}
                     className='link-button'
                   >
