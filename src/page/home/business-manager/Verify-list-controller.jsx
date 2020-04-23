@@ -44,6 +44,14 @@ export default (props) => {
     setExportAllVisible(false);
   };
 
+  const showError = () => {
+    Modal.error({
+      title: '无法核实',
+      content: '员工未填写完毕或已全部核实后通过无法再核实',
+      okText: '确认',
+    });
+  };
+
   useEffect(() => {
     (async () => {
       setStaffLoading(true);
@@ -152,12 +160,16 @@ export default (props) => {
                 <Button
                   type='link'
                   onClick={() => {
-                    localStorage.setItem(
-                      `${LOCAL_STORAGE}-staffUuid`,
-                      record.uuid
-                    );
-                    dispatch(userAction.setStaffUuid(record.uuid));
-                    history.push(HOME_VERIFY_DETAIL.path);
+                    if (record.verifyStatus === '待核实') {
+                      localStorage.setItem(
+                        `${LOCAL_STORAGE}-staffUuid`,
+                        record.uuid
+                      );
+                      dispatch(userAction.setStaffUuid(record.uuid));
+                      history.push(HOME_VERIFY_DETAIL.path);
+                    } else {
+                      showError();
+                    }
                   }}
                 >
                   核实

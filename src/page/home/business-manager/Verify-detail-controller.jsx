@@ -9,7 +9,7 @@ import VerifyThesisController from '@/components/home/business-manager/detail/Ve
 
 // 路由
 import { HOME_VERIFY_LIST } from '@/constants/route-constants';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import ExportOneContent from '@/components/home/public/Export-one-content-controller.jsx';
 
@@ -19,6 +19,10 @@ import { LOCAL_STORAGE } from '@/constants/app-constants';
 // redux
 import { useSelector, useDispatch } from 'react-redux';
 import userAction from '@/redux/action/user';
+
+// 请求
+import proxyFetch from '@/util/request';
+import { FINISH_BUSINESS_MANAGER_VERIFY } from '@/constants/api-constants';
 
 // 样式
 import { Icon, Button, Modal } from 'antd';
@@ -32,7 +36,8 @@ export default (props) => {
     { staffUuid } = useSelector((state) => state.userStore),
     [exportOneVisible, setExportOneVisible] = useState(false),
     [exportOneVerifyVisible, setExportOneVerifyVisible] = useState(false),
-    dispatch = useDispatch();
+    dispatch = useDispatch(),
+    history = useHistory();
 
   useEffect(() => {
     if (localStorageStaffUuid && !staffUuid) {
@@ -54,6 +59,23 @@ export default (props) => {
 
   const hideExportOneVerifyModal = () => {
     setExportOneVerifyVisible(false);
+  };
+
+  /**
+   * 提交事件
+   */
+  const handleSumbitSave = () => {
+    (async () => {
+      const res = await proxyFetch(FINISH_BUSINESS_MANAGER_VERIFY, {
+        uuid: staffUuid,
+      });
+
+      console.log('res=', res);
+
+      if (res) {
+        history.push(HOME_VERIFY_LIST.path);
+      }
+    })();
   };
 
   return (
@@ -89,7 +111,9 @@ export default (props) => {
                 ),
                 okText: '确认',
                 cancelText: '取消',
-                onOk() {},
+                onOk() {
+                  handleSumbitSave();
+                },
                 onCancel() {},
               });
             }}

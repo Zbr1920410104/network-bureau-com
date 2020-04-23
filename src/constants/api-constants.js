@@ -90,6 +90,7 @@ export const SET_VERIFY_AWARD_FAIL_STATUS = `${DominConfigs.DOMAIN}${DominConfig
 export const SET_VERIFY_AWARD_SUCCESS_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyAwardSuccessStatus`;
 export const SET_VERIFY_THESIS_FAIL_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyThesisFailStatus`;
 export const SET_VERIFY_THESIS_SUCCESS_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyThesisSuccessStatus`;
+export const FINISH_BUSINESS_MANAGER_VERIFY = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/finishBusinessManagerVerify`;
 
 /**
  * 评审管理员

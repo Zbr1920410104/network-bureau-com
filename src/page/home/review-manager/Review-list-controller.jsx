@@ -168,12 +168,6 @@ export default (props) => {
                 <Button
                   type='link'
                   onClick={() => {
-                    localStorage.setItem(
-                      `${LOCAL_STORAGE}-staffUuid`,
-                      record.uuid
-                    );
-                    dispatch(userAction.setStaffUuid(record.uuid));
-                    history.push(HOME_REVIEW_DETAIL.path);
                     if (record.verifyStatus === '核实通过') {
                       localStorage.setItem(
                         `${LOCAL_STORAGE}-staffUuid`,
