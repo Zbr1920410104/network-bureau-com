@@ -2,8 +2,14 @@ import React, { useState, useEffect } from 'react';
 
 // 请求
 import proxyFetch from '@/util/request';
-import { GET_BUSINESS_MANAGER_BASIC } from '@/constants/api-constants';
+import {
+  GET_BUSINESS_MANAGER_BASIC,
+  SET_VERIFY_BASIC_FAIL_STATUS,
+  SET_VERIFY_BASIC_SUCCESS_STATUS,
+} from '@/constants/api-constants';
 
+// 工具
+import verifyStatusToColor from '@/components/home/business-manager/detail/util/verify-status-to-color';
 import moment from 'moment';
 
 // redux
@@ -11,15 +17,27 @@ import { useSelector } from 'react-redux';
 
 // 样式
 import '@/style/home/business-manager/verify-item-detail.styl';
-import { Descriptions, Icon, Button, Modal, Input, Skeleton } from 'antd';
+import {
+  Descriptions,
+  Icon,
+  Button,
+  Modal,
+  Input,
+  Skeleton,
+  message,
+  Tag,
+} from 'antd';
 const { TextArea } = Input,
   { confirm } = Modal;
 
 export default (props) => {
   const { staffUuid } = useSelector((state) => state.userStore),
     [verifyVisible, setVerifyVisible] = useState(false),
+    [isNeedRefresh, setIsNeedRefresh] = useState(true),
     [basicLoading, setBasicLoading] = useState(false),
-    [staffBasic, setStaffBasic] = useState([]);
+    [staffBasic, setStaffBasic] = useState([]),
+    [statusLoading, setStatusLoading] = useState(false),
+    [verifyRemarks, setVerifyRemarks] = useState('');
 
   const showVerifyModal = () => {
     setVerifyVisible(true);
@@ -32,20 +50,60 @@ export default (props) => {
   // 将已有的数据回显
   useEffect(() => {
     (async () => {
-      setBasicLoading(true);
-      const staffBasic = await proxyFetch(
-        GET_BUSINESS_MANAGER_BASIC,
-        { staffUuid },
-        'GET'
-      );
+      if (isNeedRefresh) {
+        setBasicLoading(true);
+        const staffBasic = await proxyFetch(
+          GET_BUSINESS_MANAGER_BASIC,
+          { staffUuid },
+          'GET'
+        );
 
-      if (staffBasic) {
-        setStaffBasic(staffBasic);
+        if (staffBasic) {
+          setStaffBasic(staffBasic);
+        }
+
+        setIsNeedRefresh(false);
+        setBasicLoading(false);
       }
-
-      setBasicLoading(false);
     })();
-  }, [staffUuid]);
+  }, [staffUuid, isNeedRefresh]);
+
+  const handleSetFailStatus = () => {
+    if (verifyRemarks) {
+      (async () => {
+        setStatusLoading(true);
+
+        const res = await proxyFetch(SET_VERIFY_BASIC_FAIL_STATUS, {
+          userUuid: staffUuid,
+          verifyRemarks,
+        });
+
+        setStatusLoading(false);
+        if (res) {
+          setIsNeedRefresh(true);
+          setVerifyVisible(false);
+        }
+      })();
+    } else {
+      message.error('请输入未通过审核实理由!');
+    }
+  };
+
+  const handleSetSuccessStatus = () => {
+    (async () => {
+      setStatusLoading(true);
+
+      const res = await proxyFetch(SET_VERIFY_BASIC_SUCCESS_STATUS, {
+        userUuid: staffUuid,
+      });
+
+      setStatusLoading(false);
+      if (res) {
+        setIsNeedRefresh(true);
+        setVerifyVisible(false);
+      }
+    })();
+  };
 
   return (
     <div className='verify-item-detail-box'>
@@ -53,6 +111,12 @@ export default (props) => {
         <div className='title-left-box'>
           <Icon type='file-text' className='icon' />
           <span>基本信息</span>
+          <Tag
+            className='content-tag'
+            color={verifyStatusToColor(staffBasic.isVerify)}
+          >
+            {staffBasic.isVerify}
+          </Tag>
         </div>
         <div className='title-right-box'>
           <Button
@@ -67,22 +131,25 @@ export default (props) => {
         <Modal
           title='请核实'
           visible={verifyVisible}
-          onOk={hideVerifyModal}
           onCancel={hideVerifyModal}
-          okText='确定'
-          cancelText='取消'
+          footer={null}
         >
           <div className='button-box'>
             <Button
               type='primary'
-              className='fail-button'
-              onClick={hideVerifyModal}
+              className={staffBasic.isVerify !== '未核实' ? '' : 'fail-button'}
+              onClick={handleSetFailStatus}
+              loading={statusLoading}
+              disabled={staffBasic.isVerify !== '未核实'}
             >
               核实未通过
             </Button>
             <Button
               type='primary'
-              className='success-button'
+              className={
+                staffBasic.isVerify !== '未核实' ? '' : 'success-button'
+              }
+              disabled={staffBasic.isVerify !== '未核实'}
               onClick={() => {
                 confirm({
                   title: '确认核实通过?',
@@ -96,7 +163,9 @@ export default (props) => {
                   ),
                   okText: '确认',
                   cancelText: '取消',
-                  onOk() {},
+                  onOk() {
+                    handleSetSuccessStatus();
+                  },
                   onCancel() {},
                 });
               }}
@@ -109,6 +178,10 @@ export default (props) => {
             maxLength='100'
             placeholder='请输入核实意见及不通过理由'
             className='modal-textArea-box'
+            disabled={staffBasic.isVerify !== '未核实'}
+            onChange={(e) => {
+              setVerifyRemarks(e.target.value);
+            }}
           />
         </Modal>
       </div>

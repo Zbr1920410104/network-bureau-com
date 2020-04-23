@@ -187,6 +187,36 @@ export default handleActions(
         reviewThesis: result,
       };
     },
+    setStaffProjectVerifyStatus(state, { payload: result }) {
+      return {
+        ...state,
+        staffProjectVerifyStatus: result,
+      };
+    },
+    setStaffPatentVerifyStatus(state, { payload: result }) {
+      return {
+        ...state,
+        staffPatentVerifyStatus: result,
+      };
+    },
+    setStaffCopyrightVerifyStatus(state, { payload: result }) {
+      return {
+        ...state,
+        staffCopyrightVerifyStatus: result,
+      };
+    },
+    setStaffThesisVerifyStatus(state, { payload: result }) {
+      return {
+        ...state,
+        staffThesisVerifyStatus: result,
+      };
+    },
+    setStaffAwardVerifyStatus(state, { payload: result }) {
+      return {
+        ...state,
+        staffAwardVerifyStatus: result,
+      };
+    },
   },
   {
     loginLoading: false,
@@ -228,5 +258,10 @@ export default handleActions(
     role: 0,
     password: '',
     staffUuid: '',
+    staffProjectVerifyStatus: '',
+    staffPatentVerifyStatus: '',
+    staffCopyrightVerifyStatus: '',
+    staffThesisVerifyStatus: '',
+    staffAwardVerifyStatus: '',
   }
 );

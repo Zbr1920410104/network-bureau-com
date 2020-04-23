@@ -78,6 +78,18 @@ export const GET_VERIFY_PATENT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART
 export const GET_VERIFY_PROJECT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getVerifyProjectList`;
 export const GET_VERIFY_AWARD_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getVerifyAwardList`;
 export const GET_VERIFY_THESIS_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getVerifyThesisList`;
+export const SET_VERIFY_BASIC_FAIL_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyBasicFailStatus`;
+export const SET_VERIFY_BASIC_SUCCESS_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyBasicSuccessStatus`;
+export const SET_VERIFY_PROJECT_FAIL_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyProjectFailStatus`;
+export const SET_VERIFY_PROJECT_SUCCESS_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyProjectSuccessStatus`;
+export const SET_VERIFY_PATENT_FAIL_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyPatentFailStatus`;
+export const SET_VERIFY_PATENT_SUCCESS_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyPatentSuccessStatus`;
+export const SET_VERIFY_COPYRIGHT_FAIL_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyCopyrightFailStatus`;
+export const SET_VERIFY_COPYRIGHT_SUCCESS_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyCopyrightSuccessStatus`;
+export const SET_VERIFY_AWARD_FAIL_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyAwardFailStatus`;
+export const SET_VERIFY_AWARD_SUCCESS_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyAwardSuccessStatus`;
+export const SET_VERIFY_THESIS_FAIL_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyThesisFailStatus`;
+export const SET_VERIFY_THESIS_SUCCESS_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyThesisSuccessStatus`;
 
 /**
  * 评审管理员

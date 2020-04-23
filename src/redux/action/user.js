@@ -22,17 +22,16 @@ export default {
   setStaffAwardUuid: createAction('setStaffAwardUuid'),
   setChangeThesis: createAction('setChangeThesis'),
   setStaffThesisUuid: createAction('setStaffThesisUuid'),
-  // 统计员核实
-  setVerifyBasic: createAction('setVerifyBasic'),
-  setVerifyProject: createAction('setVerifyProject'),
-  setVerifyPatent: createAction('setVerifyPatent'),
-  setVerifyCopyright: createAction('setVerifyCopyright'),
-  setVerifyAward: createAction('setVerifyAward'),
-  setVerifyThesis: createAction('setVerifyThesis'),
   // 评审员打分
   setReviewProject: createAction('setReviewProject'),
   setReviewPatent: createAction('setReviewPatent'),
   setReviewCopyright: createAction('setReviewCopyright'),
   setReviewAward: createAction('setReviewAward'),
   setReviewThesis: createAction('setReviewThesis'),
+    // 统计员核实
+  setStaffProjectVerifyStatus: createAction('setStaffProjectVerifyStatus'),
+  setStaffPatentVerifyStatus: createAction('setStaffPatentVerifyStatus'),
+  setStaffCopyrightVerifyStatus: createAction('setStaffCopyrightVerifyStatus'),
+  setStaffAwardVerifyStatus: createAction('setStaffAwardVerifyStatus'),
+  setStaffThesisVerifyStatus: createAction('setStaffThesisVerifyStatus'),
 };
