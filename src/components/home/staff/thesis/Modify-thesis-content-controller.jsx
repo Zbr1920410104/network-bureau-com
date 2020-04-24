@@ -62,7 +62,6 @@ export default Form.create({ name: 'modifyThesis' })(({ form }) => {
 
         if (res) {
           dispatch(userAction.setChangeThesis(true));
-          dispatch(userAction.setStaffThesisUuid(''));
         }
       }
     });

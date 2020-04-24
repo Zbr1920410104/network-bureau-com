@@ -70,8 +70,6 @@ export default (props) => {
         uuid: staffUuid,
       });
 
-      console.log('res=', res);
-
       if (res) {
         history.push(HOME_VERIFY_LIST.path);
       }

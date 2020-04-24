@@ -1,28 +1,82 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+
+// redux
+import { useSelector, useDispatch } from 'react-redux';
+import userAction from '@/redux/action/user';
+
+// 请求
+import proxyFetch from '@/util/request';
+import {
+  SET_COPYRIGHT_SCORE,
+  GET_COPYRIGHT_SCORE,
+} from '@/constants/api-constants';
 
 // 样式
 import '@/style/home/review-manager/review-detail.styl';
-import { Descriptions, Input, Form, Button } from 'antd';
+import { Input, Form, Button } from 'antd';
+const { TextArea } = Input;
 
 export default Form.create({ name: 'copyrightReview' })(({ form }) => {
-  const { getFieldDecorator } = form,
-    { TextArea } = Input;
+  const { getFieldDecorator, setFieldsValue } = form,
+    { staffCopyrightUuid } = useSelector((state) => state.userStore),
+    [saveDataLoading, setSaveDataLoading] = useState(false),
+    dispatch = useDispatch();
+
+  useEffect(() => {
+    (async () => {
+      const staffCopyright = await proxyFetch(
+        GET_COPYRIGHT_SCORE,
+        { staffCopyrightUuid },
+        'GET'
+      );
+
+      if (staffCopyright) {
+        // 时间处理
+
+        setFieldsValue(staffCopyright);
+      }
+    })();
+  }, [setFieldsValue, staffCopyrightUuid]);
+
+  /**
+   * 提交事件
+   */
+  const handleSumbitSave = (e) => {
+    e.preventDefault();
+
+    // 表单判断
+    form.validateFields(async (err, value) => {
+      if (!err) {
+        setSaveDataLoading(true);
+
+        value.uuid = staffCopyrightUuid;
+        const res = await proxyFetch(SET_COPYRIGHT_SCORE, value);
+
+        setSaveDataLoading(false);
+
+        if (res) {
+          dispatch(userAction.setReviewCopyright(true));
+        }
+      }
+    });
+  };
+
   return (
     <div className='review-modal-box'>
-      <Descriptions className='description-box' layout='vertical'>
-        <Descriptions.Item label='软件著作权名称'>软件测试1</Descriptions.Item>
-        <Descriptions.Item label='权利取得方式'>原始取得</Descriptions.Item>
-        <Descriptions.Item label='授权范围'>专有许可</Descriptions.Item>
-        <Descriptions.Item label='登记号'>101010101453243</Descriptions.Item>
-      </Descriptions>
       <Form style={{ width: '100%' }}>
         <Form.Item
           label='打分'
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 12 }}
         >
-          {getFieldDecorator('copyrightMark', {
-            rules: [{ required: true, message: '请输入分数!' }]
+          {getFieldDecorator('score', {
+            rules: [
+              { required: true, message: '请输入分数!' },
+              {
+                pattern: /^\d+(\.\d{0,2})?$/,
+                message: '请输入正确的分数,最多保留2位小数',
+              },
+            ],
           })(<Input placeholder='请输入分数' />)}
         </Form.Item>
 
@@ -31,12 +85,18 @@ export default Form.create({ name: 'copyrightReview' })(({ form }) => {
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 18 }}
         >
-          {getFieldDecorator('copyrightSuggestion', {
-            rules: [{ required: true, message: '请输入备注建议!' }]
-          })(<TextArea placeholder='请输入备注建议' />)}
+          {getFieldDecorator('reviewRemarks')(
+            <TextArea placeholder='请输入备注建议' />
+          )}
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 6 }}>
-          <Button type='primary' className='save-button' size='large'>
+          <Button
+            type='primary'
+            className='save-button'
+            size='large'
+            onClick={handleSumbitSave}
+            loading={saveDataLoading}
+          >
             保存
           </Button>
         </Form.Item>

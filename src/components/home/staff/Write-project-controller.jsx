@@ -14,11 +14,13 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import userAction from '@/redux/action/user';
 
+// 工具
+import verifyStatusToColor from '@/components/home/staff/util/verify-status-to-color';
 import moment from 'moment';
 
 // 样式
 import '@/style/home/staff/write-item.styl';
-import { Button, Modal, Icon, Descriptions, Skeleton } from 'antd';
+import { Button, Modal, Icon, Descriptions, Skeleton, Tag } from 'antd';
 const { confirm } = Modal;
 
 export default (props) => {
@@ -26,6 +28,7 @@ export default (props) => {
     { changeProject } = useSelector((state) => state.userStore),
     [modifyProjectVisible, setModifyProjectVisible] = useState(false),
     [writeProjectList, setWriteProjectList] = useState([]),
+    [isNeedRefresh, setIsNeedRefresh] = useState(true),
     [writeProjectLoading, setWriteProjectLoading] = useState(false),
     dispatch = useDispatch();
 
@@ -55,23 +58,33 @@ export default (props) => {
 
   useEffect(() => {
     (async () => {
-      setWriteProjectLoading(true);
+      if (isNeedRefresh) {
+        setWriteProjectLoading(true);
 
-      const writeProjectList = await proxyFetch(
-        GET_WRITE_PROJECT_LIST,
-        {},
-        'GET'
-      );
+        const writeProjectList = await proxyFetch(
+          GET_WRITE_PROJECT_LIST,
+          {},
+          'GET'
+        );
 
-      if (writeProjectList) {
-        setWriteProjectList(writeProjectList);
-        setNewProjectVisible(false);
-        setModifyProjectVisible(false);
-        dispatch(userAction.setChangeProject(false));
+        if (writeProjectList) {
+          setWriteProjectList(writeProjectList);
+          setNewProjectVisible(false);
+          setModifyProjectVisible(false);
+          dispatch(userAction.setChangeProject(false));
+        }
+
+        setIsNeedRefresh(false);
+        setWriteProjectLoading(false);
       }
-
-      setWriteProjectLoading(false);
     })();
+  }, [isNeedRefresh, dispatch]);
+
+  useEffect(() => {
+    if (changeProject) {
+      setIsNeedRefresh(true);
+      dispatch(userAction.setChangeProject(false));
+    }
   }, [changeProject, dispatch]);
 
   return (
@@ -145,14 +158,19 @@ export default (props) => {
                   <div className='write-description-title'>
                     <div className='description-title-text'>
                       <span>{`项目${index + 1}:  ${item.name}`}</span>
-                      <span>{`状态: ${item.isVerify}`}</span>
-                      <span>{`最近填写/修改于: ${
+                      <Tag
+                        className='content-tag'
+                        color={verifyStatusToColor(item.isVerify)}
+                      >
+                        {item.isVerify}
+                      </Tag>
+                      {/* <span>{`最近填写/修改于: ${
                         item.currentWriteTime
                           ? moment(item.currentWriteTime).format(
                               'YYYY-MM-DD h:mm:ss a'
                             )
                           : ''
-                      }`}</span>
+                      }`}</span> */}
                     </div>
                     <div className='description-title-button'>
                       <Button

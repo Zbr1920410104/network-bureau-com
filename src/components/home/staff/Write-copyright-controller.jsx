@@ -14,11 +14,13 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import userAction from '@/redux/action/user';
 
-import moment from 'moment';
+// 工具
+import verifyStatusToColor from '@/components/home/staff/util/verify-status-to-color';
+// import moment from 'moment';
 
 // 样式
 import '@/style/home/staff/write-detail.styl';
-import { Button, Modal, Icon, Descriptions, Skeleton } from 'antd';
+import { Button, Modal, Icon, Descriptions, Skeleton, Tag } from 'antd';
 const { confirm } = Modal;
 
 export default (props) => {
@@ -27,6 +29,7 @@ export default (props) => {
     { changeCopyright } = useSelector((state) => state.userStore),
     [writeCopyrightList, setWriteCopyrightList] = useState([]),
     [writeCopyrightLoading, setWriteCopyrightLoading] = useState(false),
+    [isNeedRefresh, setIsNeedRefresh] = useState(true),
     dispatch = useDispatch();
 
   const showNewCopyrightModal = () => {
@@ -55,23 +58,33 @@ export default (props) => {
 
   useEffect(() => {
     (async () => {
-      setWriteCopyrightLoading(true);
+      if (isNeedRefresh) {
+        setWriteCopyrightLoading(true);
 
-      const writeCopyrightList = await proxyFetch(
-        GET_WRITE_COPYRIGHT_LIST,
-        {},
-        'GET'
-      );
+        const writeCopyrightList = await proxyFetch(
+          GET_WRITE_COPYRIGHT_LIST,
+          {},
+          'GET'
+        );
 
-      if (writeCopyrightList) {
-        setNewCopyrightVisible(false);
-        setModifyCopyrightVisible(false);
-        setWriteCopyrightList(writeCopyrightList);
-        dispatch(userAction.setChangeCopyright(false));
+        if (writeCopyrightList) {
+          setNewCopyrightVisible(false);
+          setModifyCopyrightVisible(false);
+          setWriteCopyrightList(writeCopyrightList);
+          dispatch(userAction.setChangeCopyright(false));
+        }
+
+        setIsNeedRefresh(false);
+        setWriteCopyrightLoading(false);
       }
-
-      setWriteCopyrightLoading(false);
     })();
+  }, [isNeedRefresh, dispatch]);
+
+  useEffect(() => {
+    if (changeCopyright) {
+      setIsNeedRefresh(true);
+      dispatch(userAction.setChangeCopyright(false));
+    }
   }, [changeCopyright, dispatch]);
 
   return (
@@ -146,14 +159,19 @@ export default (props) => {
                       <span>{`软件著作权${index + 1}:  ${
                         item.copyrightName
                       }`}</span>
-                      <span>{`状态: ${item.isVerify}`}</span>
-                      <span>{`最近填写/修改于: ${
+                      <Tag
+                        className='content-tag'
+                        color={verifyStatusToColor(item.isVerify)}
+                      >
+                        {item.isVerify}
+                      </Tag>
+                      {/* <span>{`最近填写/修改于: ${
                         item.currentWriteTime
                           ? moment(item.currentWriteTime).format(
                               'YYYY-MM-DD h:mm:ss a'
                             )
                           : ''
-                      }`}</span>
+                      }`}</span> */}
                     </div>
                     <div className='description-title-button'>
                       <Button

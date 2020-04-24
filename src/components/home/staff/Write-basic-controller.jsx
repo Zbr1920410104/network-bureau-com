@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 import ModifyBasicContent from '@/components/home/staff/basic/Modify-basic-content-controller.jsx';
 
+// 工具
+import verifyStatusToColor from '@/components/home/staff/util/verify-status-to-color';
 import moment from 'moment';
 
 // redux
@@ -30,6 +32,7 @@ import {
   Descriptions,
   Skeleton,
   Modal,
+  Tag,
 } from 'antd';
 const { Option } = Select,
   { TextArea } = Input,
@@ -42,6 +45,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
     [modifyBasicVisible, setModifyBasicVisible] = useState(false),
     [staffBasic, setStaffBasic] = useState([]),
     { modifyBasic } = useSelector((state) => state.userStore),
+    [isNeedRefresh, setIsNeedRefresh] = useState(true),
     dispatch = useDispatch(),
     [basicLoading, setBasicLoading] = useState(false);
 
@@ -74,19 +78,29 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
   // 将已有的数据回显
   useEffect(() => {
     (async () => {
-      setBasicLoading(true);
-      const staffBasic = await proxyFetch(GET_STAFF_BASIC, {}, 'GET');
+      if (isNeedRefresh) {
+        setBasicLoading(true);
+        const staffBasic = await proxyFetch(GET_STAFF_BASIC, {}, 'GET');
 
-      if (staffBasic) {
-        setIswritten(true);
-        setStaffBasic(staffBasic);
-        dispatch(userAction.setModifyBasic(false));
-        setModifyBasicVisible(false);
+        if (staffBasic) {
+          setIswritten(true);
+          setStaffBasic(staffBasic);
+          dispatch(userAction.setModifyBasic(false));
+          setModifyBasicVisible(false);
+        }
+
+        setIsNeedRefresh(false);
+        setBasicLoading(false);
       }
-
-      setBasicLoading(false);
     })();
-  }, [isWritten, modifyBasic, dispatch]);
+  }, [isNeedRefresh, dispatch]);
+
+  useEffect(() => {
+    if (modifyBasic) {
+      setIsNeedRefresh(true);
+      dispatch(userAction.setModifyBasic(false));
+    }
+  }, [modifyBasic, dispatch]);
 
   const showModifyBasic = () => {
     setModifyBasicVisible(true);
@@ -102,6 +116,12 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
         <div className='title-left-box'>
           <Icon type='file-text' className='icon' />
           <span>基本信息</span>
+          <Tag
+            className='content-tag'
+            color={verifyStatusToColor(staffBasic.isVerify)}
+          >
+            {staffBasic.isVerify}
+          </Tag>
         </div>
         <div className='title-right-box'>
           {isWritten ? (

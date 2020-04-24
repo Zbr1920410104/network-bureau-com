@@ -11,6 +11,8 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import userAction from '@/redux/action/user';
 
+// 工具
+import verifyStatusToColor from '@/components/home/staff/util/verify-status-to-color';
 import moment from 'moment';
 
 import ModifyThesisContent from '@/components/home/staff/thesis/Modify-thesis-content-controller.jsx';
@@ -19,7 +21,7 @@ import UploadThesisContent from '@/components/home/staff/thesis/Upload-thesis-co
 
 // 样式
 import '@/style/home/staff/write-detail.styl';
-import { Button, Modal, Icon, Descriptions, Skeleton } from 'antd';
+import { Button, Modal, Icon, Descriptions, Skeleton, Tag } from 'antd';
 const { confirm } = Modal;
 
 export default (props) => {
@@ -29,6 +31,7 @@ export default (props) => {
     dispatch = useDispatch(),
     [newThesisVisible, setNewThesisVisible] = useState(false),
     [modifyThesisVisible, setModifyThesisVisible] = useState(false),
+    [isNeedRefresh, setIsNeedRefresh] = useState(true),
     [uploadThesisVisible, setUploadThesisVisible] = useState(false);
 
   const showNewThesisModal = () => {
@@ -66,24 +69,34 @@ export default (props) => {
 
   useEffect(() => {
     (async () => {
-      setWriteThesisLoading(true);
+      if (isNeedRefresh) {
+        setWriteThesisLoading(true);
 
-      const writeThesisList = await proxyFetch(
-        GET_WRITE_THESIS_LIST,
-        {},
-        'GET'
-      );
+        const writeThesisList = await proxyFetch(
+          GET_WRITE_THESIS_LIST,
+          {},
+          'GET'
+        );
 
-      if (writeThesisList) {
-        setWriteThesisList(writeThesisList);
-        setNewThesisVisible(false);
-        setModifyThesisVisible(false);
-        setUploadThesisVisible(false);
-        dispatch(userAction.setChangeThesis(false));
+        if (writeThesisList) {
+          setWriteThesisList(writeThesisList);
+          setNewThesisVisible(false);
+          setModifyThesisVisible(false);
+          setUploadThesisVisible(false);
+          dispatch(userAction.setChangeThesis(false));
+        }
+
+        setIsNeedRefresh(false);
+        setWriteThesisLoading(false);
       }
-
-      setWriteThesisLoading(false);
     })();
+  }, [isNeedRefresh, dispatch]);
+
+  useEffect(() => {
+    if (changeThesis) {
+      setIsNeedRefresh(true);
+      dispatch(userAction.setChangeThesis(false));
+    }
   }, [changeThesis, dispatch]);
 
   return (
@@ -180,14 +193,19 @@ export default (props) => {
                       <span>{`论文/专著${index + 1}:  ${
                         item.thesisTitle
                       }`}</span>
-                      <span>{`状态: ${item.isVerify}`}</span>
-                      <span>{`最近填写/修改于: ${
+                      <Tag
+                        className='content-tag'
+                        color={verifyStatusToColor(item.isVerify)}
+                      >
+                        {item.isVerify}
+                      </Tag>
+                      {/* <span>{`最近填写/修改于: ${
                         item.currentWriteTime
                           ? moment(item.currentWriteTime).format(
                               'YYYY-MM-DD h:mm:ss a'
                             )
                           : ''
-                      }`}</span>
+                      }`}</span> */}
                     </div>
                     <div className='description-title-button'>
                       <Button

@@ -119,43 +119,6 @@ export default handleActions(
         staffThesisUuid: result,
       };
     },
-    // 统计员核实
-    setVerifyBasic(state, { payload: result }) {
-      return {
-        ...state,
-        verifyBasic: result,
-      };
-    },
-    setVerifyProject(state, { payload: result }) {
-      return {
-        ...state,
-        verifyProject: result,
-      };
-    },
-    setVerifyPatent(state, { payload: result }) {
-      return {
-        ...state,
-        verifyPatent: result,
-      };
-    },
-    setVerifyCopyright(state, { payload: result }) {
-      return {
-        ...state,
-        verifyCopyright: result,
-      };
-    },
-    setVerifyAward(state, { payload: result }) {
-      return {
-        ...state,
-        verifyAward: result,
-      };
-    },
-    setVerifyThesis(state, { payload: result }) {
-      return {
-        ...state,
-        verifyThesis: result,
-      };
-    },
     // 评审员打分
     setReviewProject(state, { payload: result }) {
       return {
@@ -187,6 +150,7 @@ export default handleActions(
         reviewThesis: result,
       };
     },
+    // 统计员核实
     setStaffProjectVerifyStatus(state, { payload: result }) {
       return {
         ...state,
@@ -236,12 +200,11 @@ export default handleActions(
     staffAwardUuid: '',
     staffThesisUuid: '',
     // 统计员
-    verifyBasic: false,
-    verifyProject: false,
-    verifyPatent: false,
-    verifyCopyright: false,
-    verifyAward: false,
-    verifyThesis: false,
+    staffProjectVerifyStatus: '',
+    staffPatentVerifyStatus: '',
+    staffCopyrightVerifyStatus: '',
+    staffThesisVerifyStatus: '',
+    staffAwardVerifyStatus: '',
     // 评审员
     reviewProject: false,
     reviewPatent: false,
@@ -258,10 +221,5 @@ export default handleActions(
     role: 0,
     password: '',
     staffUuid: '',
-    staffProjectVerifyStatus: '',
-    staffPatentVerifyStatus: '',
-    staffCopyrightVerifyStatus: '',
-    staffThesisVerifyStatus: '',
-    staffAwardVerifyStatus: '',
   }
 );

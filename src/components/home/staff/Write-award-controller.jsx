@@ -8,6 +8,8 @@ import { GET_WRITE_AWARD_LIST, DELETE_AWARD } from '@/constants/api-constants';
 import { useSelector, useDispatch } from 'react-redux';
 import userAction from '@/redux/action/user';
 
+// 工具
+import verifyStatusToColor from '@/components/home/staff/util/verify-status-to-color';
 import moment from 'moment';
 
 import ModifyAwardContent from '@/components/home/staff/award/Modify-award-content-controller.jsx';
@@ -16,7 +18,7 @@ import UploadAwardContent from '@/components/home/staff/award/Upload-award-conte
 
 // 样式
 import '@/style/home/staff/write-detail.styl';
-import { Button, Modal, Icon, Descriptions, Skeleton } from 'antd';
+import { Button, Modal, Icon, Descriptions, Skeleton, Tag } from 'antd';
 const { confirm } = Modal;
 
 export default (props) => {
@@ -24,6 +26,7 @@ export default (props) => {
     [writeAwardList, setWriteAwardList] = useState([]),
     [writeAwardLoading, setWriteAwardLoading] = useState(false),
     dispatch = useDispatch(),
+    [isNeedRefresh, setIsNeedRefresh] = useState(true),
     [newAwardVisible, setNewAwardVisible] = useState(false),
     [modifyAwardVisible, setModifyAwardVisible] = useState(false),
     [uploadAwardVisible, setUploadAwardVisible] = useState(false);
@@ -63,20 +66,34 @@ export default (props) => {
 
   useEffect(() => {
     (async () => {
-      setWriteAwardLoading(true);
+      if (isNeedRefresh) {
+        setWriteAwardLoading(true);
 
-      const writeAwardList = await proxyFetch(GET_WRITE_AWARD_LIST, {}, 'GET');
+        const writeAwardList = await proxyFetch(
+          GET_WRITE_AWARD_LIST,
+          {},
+          'GET'
+        );
 
-      if (writeAwardList) {
-        setWriteAwardList(writeAwardList);
-        setUploadAwardVisible(false);
-        setNewAwardVisible(false);
-        setModifyAwardVisible(false);
-        dispatch(userAction.setChangeAward(false));
+        if (writeAwardList) {
+          setWriteAwardList(writeAwardList);
+          setUploadAwardVisible(false);
+          setNewAwardVisible(false);
+          setModifyAwardVisible(false);
+          dispatch(userAction.setChangeAward(false));
+        }
+
+        setIsNeedRefresh(false);
+        setWriteAwardLoading(false);
       }
-
-      setWriteAwardLoading(false);
     })();
+  }, [isNeedRefresh, dispatch]);
+
+  useEffect(() => {
+    if (changeAward) {
+      setIsNeedRefresh(true);
+      dispatch(userAction.setChangeAward(false));
+    }
   }, [changeAward, dispatch]);
 
   return (
@@ -171,14 +188,19 @@ export default (props) => {
                   <div className='write-description-title'>
                     <div className='description-title-text'>
                       <span>{`奖项${index + 1}:  ${item.awardName}`}</span>
-                      <span>{`状态: ${item.isVerify}`}</span>
-                      <span>{`最近填写/修改于: ${
+                      <Tag
+                        className='content-tag'
+                        color={verifyStatusToColor(item.isVerify)}
+                      >
+                        {item.isVerify}
+                      </Tag>
+                      {/* <span>{`最近填写/修改于: ${
                         item.currentWriteTime
                           ? moment(item.currentWriteTime).format(
                               'YYYY-MM-DD h:mm:ss a'
                             )
                           : ''
-                      }`}</span>
+                      }`}</span> */}
                     </div>
                     <div className='description-title-button'>
                       <Button

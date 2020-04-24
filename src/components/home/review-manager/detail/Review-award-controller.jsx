@@ -8,16 +8,19 @@ import { GET_REVIEW_AWARD_LIST, GET_FILE_URL } from '@/constants/api-constants';
 import { useSelector, useDispatch } from 'react-redux';
 import userAction from '@/redux/action/user';
 
+// 工具
+import scoreToColor from '@/components/home/review-manager/detail/util/score-to-color';
 import moment from 'moment';
 
 import ReviewAwardContent from '@/components/home/review-manager/award/Review-award-content-controller.jsx';
 
 // 样式
 import '@/style/home/review-manager/review-item-detail.styl';
-import { Button, Modal, Icon, Skeleton, Descriptions } from 'antd';
+import { Button, Modal, Icon, Skeleton, Descriptions, Tag } from 'antd';
+const { confirm } = Modal;
 
 export default (props) => {
-  const { staffUuid } = useSelector((state) => state.userStore),
+  const { staffUuid, reviewAward } = useSelector((state) => state.userStore),
     [uploadAwardVisible, setUploadAwardVisible] = useState(false),
     [reviewAwardVisible, setReviewAwardVisible] = useState(false),
     [reviewAwardList, setReviewAwardList] = useState([]),
@@ -25,6 +28,8 @@ export default (props) => {
     [previewUrl, setPreviewUrl] = useState(''),
     [getFileLoading, setGetFileLoading] = useState(true),
     [reviewAwardLoading, setReviewAwardLoading] = useState(false),
+    [score, setScore] = useState(0),
+    [isNeedRefresh, setIsNeedRefresh] = useState(true),
     dispatch = useDispatch();
 
   const showUploadAwardModal = (url) => {
@@ -36,7 +41,8 @@ export default (props) => {
     setUploadAwardVisible(false);
   };
 
-  const showReviewAwardModal = () => {
+  const showReviewAwardModal = (uuid) => {
+    dispatch(userAction.setStaffAwardUuid(uuid));
     setReviewAwardVisible(true);
   };
 
@@ -46,24 +52,39 @@ export default (props) => {
 
   useEffect(() => {
     (async () => {
-      setReviewAwardLoading(true);
+      if (isNeedRefresh) {
+        setReviewAwardLoading(true);
 
-      const reviewAwardList = await proxyFetch(
-        GET_REVIEW_AWARD_LIST,
-        { staffUuid },
-        'GET'
-      );
+        const reviewAwardList = await proxyFetch(
+          GET_REVIEW_AWARD_LIST,
+          { staffUuid },
+          'GET'
+        );
 
-      if (reviewAwardList) {
-        setReviewAwardList(reviewAwardList);
-        setReviewAwardVisible(false);
-        setUploadAwardVisible(false);
-        dispatch(userAction.setReviewAward(false));
+        if (reviewAwardList) {
+          setReviewAwardList(reviewAwardList);
+          setReviewAwardVisible(false);
+          setUploadAwardVisible(false);
+        }
+
+        let tempScore = 0;
+        const sum = reviewAwardList.reduce((accumulator, currentValue) => {
+          return accumulator + currentValue.score;
+        }, tempScore);
+        setScore(sum.toFixed(2));
+
+        setIsNeedRefresh(false);
+        setReviewAwardLoading(false);
       }
-
-      setReviewAwardLoading(false);
     })();
-  }, [staffUuid, dispatch]);
+  }, [isNeedRefresh, staffUuid, dispatch]);
+
+  useEffect(() => {
+    if (reviewAward) {
+      setIsNeedRefresh(true);
+      dispatch(userAction.setReviewAward(false));
+    }
+  }, [reviewAward, dispatch]);
 
   useEffect(() => {
     if (reviewAwardUrl) {
@@ -86,6 +107,9 @@ export default (props) => {
       <div className='detail-title-box'>
         <Icon type='trophy' className='icon' />
         <span>获奖情况</span>
+        <Tag className='content-tag' color={scoreToColor(score)}>
+          {score || score === 0 ? `总评分:${score}` : '未评分'}
+        </Tag>
       </div>
       <Modal
         title='下载附件'
@@ -114,12 +138,22 @@ export default (props) => {
         </div>
       </Modal>
       <Modal
-        title='打分'
+        title='评分'
         visible={reviewAwardVisible}
-        onOk={hideReviewAwardModal}
-        onCancel={hideReviewAwardModal}
-        okText='确定'
-        cancelText='取消'
+        onCancel={() => {
+          confirm({
+            title: '确认离开?',
+            okType: 'primary',
+            content: '离开填写内容将不会保存!',
+            okText: '确认',
+            cancelText: '取消',
+            onOk() {
+              hideReviewAwardModal();
+            },
+            onCancel() {},
+          });
+        }}
+        footer={null}
       >
         <ReviewAwardContent />
       </Modal>
@@ -133,7 +167,14 @@ export default (props) => {
                   <div className='review-description-title'>
                     <div className='description-title-text'>
                       <span>{`奖项${index + 1}:  ${item.awardName}`}</span>
-                      <span>{`${item.score ? item.score : '未打'}分`}</span>
+                      <Tag
+                        className='content-tag'
+                        color={scoreToColor(item.score)}
+                      >
+                        {item.score || item.score === 0
+                          ? `评分:${item.score}`
+                          : '未评分'}
+                      </Tag>
                       <span>
                         {item.reviewTime
                           ? moment(item.reviewTime).format(
@@ -146,9 +187,11 @@ export default (props) => {
                       <Button
                         icon='radar-chart'
                         type='link'
-                        onClick={showReviewAwardModal}
+                        onClick={() => {
+                          showReviewAwardModal(item.uuid);
+                        }}
                       >
-                        打分
+                        评分
                       </Button>
                     </div>
                   </div>

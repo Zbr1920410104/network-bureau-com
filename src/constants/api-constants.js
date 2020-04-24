@@ -102,6 +102,16 @@ export const GET_REVIEW_PATENT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART
 export const GET_REVIEW_PROJECT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getReviewProjectList`;
 export const GET_REVIEW_AWARD_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getReviewAwardList`;
 export const GET_REVIEW_THESIS_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getReviewThesisList`;
+export const GET_PROJECT_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getProjectScore`;
+export const SET_PROJECT_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/setProjectScore`;
+export const GET_PATENT_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getPatentScore`;
+export const SET_PATENT_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/setPatentScore`;
+export const GET_COPYRIGHT_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getCopyrightScore`;
+export const SET_COPYRIGHT_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/setCopyrightScore`;
+export const GET_AWARD_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getAwardScore`;
+export const SET_AWARD_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/setAwardScore`;
+export const GET_THESIS_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getThesisScore`;
+export const SET_THESIS_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/setThesisScore`;
 
 /**
  * 文件

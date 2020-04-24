@@ -11,13 +11,16 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import userAction from '@/redux/action/user';
 
+// 工具
+import scoreToColor from '@/components/home/review-manager/detail/util/score-to-color';
 import moment from 'moment';
 
 import ReviewThesisContent from '@/components/home/review-manager/thesis/Review-thesis-content-controller.jsx';
 
 // 样式
 import '@/style/home/review-manager/review-item-detail.styl';
-import { Icon, Button, Modal, Descriptions, Skeleton } from 'antd';
+import { Icon, Button, Modal, Descriptions, Skeleton, Tag } from 'antd';
+const { confirm } = Modal;
 
 export default (props) => {
   const { staffUuid, reviewThesis } = useSelector((state) => state.userStore),
@@ -28,9 +31,12 @@ export default (props) => {
     [previewUrl, setPreviewUrl] = useState(''),
     [getFileLoading, setGetFileLoading] = useState(true),
     [reviewThesisLoading, setReviewThesisLoading] = useState(false),
+    [score, setScore] = useState(0),
+    [isNeedRefresh, setIsNeedRefresh] = useState(true),
     dispatch = useDispatch();
 
-  const showReviewThesisModal = () => {
+  const showReviewThesisModal = (uuid) => {
+    dispatch(userAction.setStaffThesisUuid(uuid));
     setReviewThesisVisible(true);
   };
 
@@ -49,24 +55,40 @@ export default (props) => {
 
   useEffect(() => {
     (async () => {
-      setReviewThesisLoading(true);
+      if (isNeedRefresh) {
+        setReviewThesisLoading(true);
 
-      const reviewThesisList = await proxyFetch(
-        GET_REVIEW_THESIS_LIST,
-        { staffUuid },
-        'GET'
-      );
+        const reviewThesisList = await proxyFetch(
+          GET_REVIEW_THESIS_LIST,
+          { staffUuid },
+          'GET'
+        );
 
-      if (reviewThesisList) {
-        setReviewThesisList(reviewThesisList);
-        setUploadThesisVisible(false);
-        setReviewThesisVisible(false);
-        dispatch(userAction.setReviewThesis(false));
+        if (reviewThesisList) {
+          setReviewThesisList(reviewThesisList);
+          setUploadThesisVisible(false);
+          setReviewThesisVisible(false);
+          dispatch(userAction.setReviewThesis(false));
+        }
+
+        let tempScore = 0;
+        const sum = reviewThesisList.reduce((accumulator, currentValue) => {
+          return accumulator + currentValue.score;
+        }, tempScore);
+        setScore(sum.toFixed(2));
+
+        setIsNeedRefresh(false);
+        setReviewThesisLoading(false);
       }
-
-      setReviewThesisLoading(false);
     })();
-  }, [reviewThesis, staffUuid, dispatch]);
+  }, [isNeedRefresh, staffUuid, dispatch]);
+
+  useEffect(() => {
+    if (reviewThesis) {
+      setIsNeedRefresh(true);
+      dispatch(userAction.setReviewThesis(false));
+    }
+  }, [reviewThesis, dispatch]);
 
   useEffect(() => {
     if (reviewThesisUrl) {
@@ -89,14 +111,27 @@ export default (props) => {
       <div className='detail-title-box'>
         <Icon type='book' className='icon' />
         <span>论文/专著</span>
+        <Tag className='content-tag' color={scoreToColor(score)}>
+          {score || score === 0 ? `总评分:${score}` : '未评分'}
+        </Tag>
       </div>
       <Modal
-        title='打分'
+        title='评分'
         visible={reviewThesisVisible}
-        onOk={hideReviewThesisModal}
-        onCancel={hideReviewThesisModal}
-        okText='确定'
-        cancelText='取消'
+        onCancel={() => {
+          confirm({
+            title: '确认离开?',
+            okType: 'primary',
+            content: '离开填写内容将不会保存!',
+            okText: '确认',
+            cancelText: '取消',
+            onOk() {
+              hideReviewThesisModal();
+            },
+            onCancel() {},
+          });
+        }}
+        footer={null}
       >
         <ReviewThesisContent />
       </Modal>
@@ -136,7 +171,14 @@ export default (props) => {
                       <span>{`论文/专著${index + 1}:  ${
                         item.thesisTitle
                       }`}</span>
-                      <span>{`${item.score ? item.score : '未打'}分`}</span>
+                      <Tag
+                        className='content-tag'
+                        color={scoreToColor(item.score)}
+                      >
+                        {item.score || item.score === 0
+                          ? `评分:${item.score}`
+                          : '未评分'}
+                      </Tag>
                       <span>
                         {item.reviewTime
                           ? moment(item.reviewTime).format(
@@ -149,9 +191,11 @@ export default (props) => {
                       <Button
                         icon='radar-chart'
                         type='link'
-                        onClick={showReviewThesisModal}
+                        onClick={() => {
+                          showReviewThesisModal(item.uuid);
+                        }}
                       >
-                        打分
+                        评分
                       </Button>
                     </div>
                   </div>

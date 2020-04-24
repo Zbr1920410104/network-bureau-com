@@ -8,22 +8,28 @@ import { GET_REVIEW_COPYRIGHT_LIST } from '@/constants/api-constants';
 import { useSelector, useDispatch } from 'react-redux';
 import userAction from '@/redux/action/user';
 
-import moment from 'moment';
+// 工具
+import scoreToColor from '@/components/home/review-manager/detail/util/score-to-color';
+// import moment from 'moment';
 
 import ReviewCopyrightContent from '@/components/home/review-manager/copyright/Review-copyright-content-controller.jsx';
 
 // 样式
 import '@/style/home/review-manager/review-item-detail.styl';
-import { Modal, Button, Icon, Descriptions, Skeleton } from 'antd';
+import { Modal, Button, Icon, Descriptions, Skeleton, Tag } from 'antd';
+const { confirm } = Modal;
 
 export default (props) => {
   const [reviewCopyrightVisible, setReviewCopyrightVisible] = useState(false),
     { staffUuid, reviewCopyright } = useSelector((state) => state.userStore),
     [reviewCopyrightList, setReviewCopyrightList] = useState([]),
     [reviewCopyrightLoading, setReviewCopyrightLoading] = useState(false),
+    [score, setScore] = useState(0),
+    [isNeedRefresh, setIsNeedRefresh] = useState(true),
     dispatch = useDispatch();
 
-  const showReviewCopyrightModal = () => {
+  const showReviewCopyrightModal = (uuid) => {
+    dispatch(userAction.setStaffCopyrightUuid(uuid));
     setReviewCopyrightVisible(true);
   };
 
@@ -33,37 +39,66 @@ export default (props) => {
 
   useEffect(() => {
     (async () => {
-      setReviewCopyrightLoading(true);
+      if (isNeedRefresh) {
+        setReviewCopyrightLoading(true);
 
-      const reviewCopyrightList = await proxyFetch(
-        GET_REVIEW_COPYRIGHT_LIST,
-        { staffUuid },
-        'GET'
-      );
+        const reviewCopyrightList = await proxyFetch(
+          GET_REVIEW_COPYRIGHT_LIST,
+          { staffUuid },
+          'GET'
+        );
 
-      if (reviewCopyrightList) {
-        setReviewCopyrightVisible(false);
-        setReviewCopyrightList(reviewCopyrightList);
-        dispatch(userAction.setReviewCopyright(false));
+        if (reviewCopyrightList) {
+          setReviewCopyrightVisible(false);
+          setReviewCopyrightList(reviewCopyrightList);
+          dispatch(userAction.setReviewCopyright(false));
+        }
+
+        let tempScore = 0;
+        const sum = reviewCopyrightList.reduce((accumulator, currentValue) => {
+          return accumulator + currentValue.score;
+        }, tempScore);
+        setScore(sum.toFixed(2));
+
+        setIsNeedRefresh(false);
+        setReviewCopyrightLoading(false);
       }
-
-      setReviewCopyrightLoading(false);
     })();
-  }, [reviewCopyright, staffUuid, dispatch]);
+  }, [isNeedRefresh, staffUuid, dispatch]);
+
+  useEffect(() => {
+    if (reviewCopyright) {
+      setIsNeedRefresh(true);
+      dispatch(userAction.setReviewAward(false));
+    }
+  }, [reviewCopyright, dispatch]);
 
   return (
     <div className='review-item-detail-box'>
       <div className='detail-title-box'>
         <Icon type='audit' className='icon' />
         <span>软件著作权</span>
+        <Tag className='content-tag' color={scoreToColor(score)}>
+          {score || score === 0 ? `总评分:${score}` : '未评分'}
+        </Tag>
       </div>
       <Modal
-        title='打分'
+        title='评分'
         visible={reviewCopyrightVisible}
-        onOk={hideReviewCopyrightModal}
-        onCancel={hideReviewCopyrightModal}
-        okText='确定'
-        cancelText='取消'
+        onCancel={() => {
+          confirm({
+            title: '确认离开?',
+            okType: 'primary',
+            content: '离开填写内容将不会保存!',
+            okText: '确认',
+            cancelText: '取消',
+            onOk() {
+              hideReviewCopyrightModal();
+            },
+            onCancel() {},
+          });
+        }}
+        footer={null}
       >
         <ReviewCopyrightContent />
       </Modal>
@@ -79,22 +114,31 @@ export default (props) => {
                       <span>{`软件著作权${index + 1}:  ${
                         item.copyrightName
                       }`}</span>
-                      <span>{`${item.score ? item.score : '未打'}分`}</span>
-                      <span>
+                      <Tag
+                        className='content-tag'
+                        color={scoreToColor(item.score)}
+                      >
+                        {item.score || item.score === 0
+                          ? `评分:${item.score}`
+                          : '未评分'}
+                      </Tag>
+                      {/* <span>
                         {item.reviewTime
                           ? moment(item.reviewTime).format(
                               'YYYY-MM-DD h:mm:ss a'
                             )
                           : ''}
-                      </span>
+                      </span> */}
                     </div>
                     <div className='description-title-button'>
                       <Button
                         icon='radar-chart'
                         type='link'
-                        onClick={showReviewCopyrightModal}
+                        onClick={() => {
+                          showReviewCopyrightModal(item.uuid);
+                        }}
                       >
-                        打分
+                        评分
                       </Button>
                     </div>
                   </div>

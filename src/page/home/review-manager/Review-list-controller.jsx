@@ -54,19 +54,21 @@ export default (props) => {
   };
 
   useEffect(() => {
-    (async () => {
-      setStaffLoading(true);
+    if (isNeedRefresh) {
+      (async () => {
+        setStaffLoading(true);
 
-      const staffReviewInfo = await proxyFetch(
-        GET_STAFF_REVIEW_INFO,
-        { reviewStatus, name },
-        'GET'
-      );
+        const staffReviewInfo = await proxyFetch(
+          GET_STAFF_REVIEW_INFO,
+          { reviewStatus, name },
+          'GET'
+        );
 
-      setStaffReviewInfo(staffReviewInfo);
-      setStaffLoading(false);
-      setIsNeedRefresh(false);
-    })();
+        setStaffReviewInfo(staffReviewInfo);
+        setStaffLoading(false);
+        setIsNeedRefresh(false);
+      })();
+    }
   }, [isNeedRefresh, reviewStatus, name]);
 
   return (
@@ -158,6 +160,9 @@ export default (props) => {
               title='总得分'
               dataIndex='totalScore'
               key=''
+              render={(text, record) => (
+                <span>{record.totalScore ? record.totalScore : '未评分'}</span>
+              )}
             />
             <Column
               align='center'

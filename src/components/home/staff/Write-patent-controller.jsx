@@ -14,11 +14,13 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import userAction from '@/redux/action/user';
 
-import moment from 'moment';
+// 工具
+import verifyStatusToColor from '@/components/home/staff/util/verify-status-to-color';
+// import moment from 'moment';
 
 // 样式
 import '@/style/home/staff/write-item.styl';
-import { Button, Modal, Icon, Descriptions, Skeleton } from 'antd';
+import { Button, Modal, Icon, Descriptions, Skeleton, Tag } from 'antd';
 const { confirm } = Modal;
 
 export default (props) => {
@@ -27,6 +29,7 @@ export default (props) => {
     { changePatent } = useSelector((state) => state.userStore),
     [writePatentList, setWritePatentList] = useState([]),
     [writePatentLoading, setWritePatentLoading] = useState(false),
+    [isNeedRefresh, setIsNeedRefresh] = useState(true),
     dispatch = useDispatch();
 
   const showNewPatentModal = () => {
@@ -55,23 +58,33 @@ export default (props) => {
 
   useEffect(() => {
     (async () => {
-      setWritePatentLoading(true);
+      if (isNeedRefresh) {
+        setWritePatentLoading(true);
 
-      const writePatentList = await proxyFetch(
-        GET_WRITE_PATENT_LIST,
-        {},
-        'GET'
-      );
+        const writePatentList = await proxyFetch(
+          GET_WRITE_PATENT_LIST,
+          {},
+          'GET'
+        );
 
-      if (writePatentList) {
-        setWritePatentList(writePatentList);
-        setNewPatentVisible(false);
-        setModifyPatentVisible(false);
-        dispatch(userAction.setChangePatent(false));
+        if (writePatentList) {
+          setWritePatentList(writePatentList);
+          setNewPatentVisible(false);
+          setModifyPatentVisible(false);
+          dispatch(userAction.setChangePatent(false));
+        }
+
+        setIsNeedRefresh(false);
+        setWritePatentLoading(false);
       }
-
-      setWritePatentLoading(false);
     })();
+  }, [isNeedRefresh, dispatch]);
+
+  useEffect(() => {
+    if (changePatent) {
+      setIsNeedRefresh(true);
+      dispatch(userAction.setChangePatent(false));
+    }
   }, [changePatent, dispatch]);
 
   return (
@@ -143,14 +156,19 @@ export default (props) => {
                   <div className='write-description-title'>
                     <div className='description-title-text'>
                       <span>{`专利${index + 1}:  ${item.patentName}`}</span>
-                      <span>{`状态: ${item.isVerify}`}</span>
-                      <span>{`最近填写/修改于: ${
+                      <Tag
+                        className='content-tag'
+                        color={verifyStatusToColor(item.isVerify)}
+                      >
+                        {item.isVerify}
+                      </Tag>
+                      {/* <span>{`最近填写/修改于: ${
                         item.currentWriteTime
                           ? moment(item.currentWriteTime).format(
                               'YYYY-MM-DD h:mm:ss a'
                             )
                           : ''
-                      }`}</span>
+                      }`}</span> */}
                     </div>
                     <div className='description-title-button'>
                       <Button

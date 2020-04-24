@@ -8,22 +8,28 @@ import { GET_REVIEW_PATENT_LIST } from '@/constants/api-constants';
 import { useSelector, useDispatch } from 'react-redux';
 import userAction from '@/redux/action/user';
 
-import moment from 'moment';
+// 工具
+import scoreToColor from '@/components/home/review-manager/detail/util/score-to-color';
+// import moment from 'moment';
 
 import ReviewPatentContent from '@/components/home/review-manager/patent/Review-patent-content-controller.jsx';
 
 // 样式
 import '@/style/home/review-manager/review-item-detail.styl';
-import { Button, Modal, Icon, Skeleton, Descriptions } from 'antd';
+import { Button, Modal, Icon, Skeleton, Descriptions, Tag } from 'antd';
+const { confirm } = Modal;
 
 export default (props) => {
-  const { staffUuid } = useSelector((state) => state.userStore),
+  const { staffUuid, reviewPatent } = useSelector((state) => state.userStore),
     [reviewPatentVisible, setReviewPatentVisible] = useState(false),
     [reviewPatentList, setReviewPatentList] = useState([]),
     [reviewPatentLoading, setReviewPatentLoading] = useState(false),
+    [score, setScore] = useState(0),
+    [isNeedRefresh, setIsNeedRefresh] = useState(true),
     dispatch = useDispatch();
 
-  const showReviewPatentModal = () => {
+  const showReviewPatentModal = (uuid) => {
+    dispatch(userAction.setStaffPatentUuid(uuid));
     setReviewPatentVisible(true);
   };
 
@@ -33,37 +39,66 @@ export default (props) => {
 
   useEffect(() => {
     (async () => {
-      setReviewPatentLoading(true);
+      if (isNeedRefresh) {
+        setReviewPatentLoading(true);
 
-      const reviewPatentList = await proxyFetch(
-        GET_REVIEW_PATENT_LIST,
-        { staffUuid },
-        'GET'
-      );
+        const reviewPatentList = await proxyFetch(
+          GET_REVIEW_PATENT_LIST,
+          { staffUuid },
+          'GET'
+        );
 
-      if (reviewPatentList) {
-        setReviewPatentList(reviewPatentList);
-        setReviewPatentVisible(false);
-        dispatch(userAction.setReviewPatent(false));
+        if (reviewPatentList) {
+          setReviewPatentList(reviewPatentList);
+          setReviewPatentVisible(false);
+          dispatch(userAction.setReviewPatent(false));
+        }
+
+        let tempScore = 0;
+        const sum = reviewPatentList.reduce((accumulator, currentValue) => {
+          return accumulator + currentValue.score;
+        }, tempScore);
+        setScore(sum.toFixed(2));
+
+        setIsNeedRefresh(false);
+        setReviewPatentLoading(false);
       }
-
-      setReviewPatentLoading(false);
     })();
-  }, [staffUuid, dispatch]);
+  }, [isNeedRefresh, staffUuid, dispatch]);
+
+  useEffect(() => {
+    if (reviewPatent) {
+      setIsNeedRefresh(true);
+      dispatch(userAction.setReviewAward(false));
+    }
+  }, [reviewPatent, dispatch]);
 
   return (
     <div className='review-item-detail-box'>
       <div className='detail-title-box'>
         <Icon type='tool' className='icon' />
         <span>专利</span>
+        <Tag className='content-tag' color={scoreToColor(score)}>
+          {score || score === 0 ? `总评分:${score}` : '未评分'}
+        </Tag>
       </div>
       <Modal
-        title='打分'
+        title='评分'
         visible={reviewPatentVisible}
-        onOk={hideReviewPatentModal}
-        onCancel={hideReviewPatentModal}
-        okText='确定'
-        cancelText='取消'
+        onCancel={() => {
+          confirm({
+            title: '确认离开?',
+            okType: 'primary',
+            content: '离开填写内容将不会保存!',
+            okText: '确认',
+            cancelText: '取消',
+            onOk() {
+              hideReviewPatentModal();
+            },
+            onCancel() {},
+          });
+        }}
+        footer={null}
       >
         <ReviewPatentContent />
       </Modal>
@@ -77,22 +112,31 @@ export default (props) => {
                   <div className='review-description-title'>
                     <div className='description-title-text'>
                       <span>{`专利${index + 1}:  ${item.patentName}`}</span>
-                      <span>{`${item.score ? item.score : '未打'}分`}</span>
-                      <span>
+                      <Tag
+                        className='content-tag'
+                        color={scoreToColor(item.score)}
+                      >
+                        {item.score || item.score === 0
+                          ? `评分:${item.score}`
+                          : '未评分'}
+                      </Tag>
+                      {/* <span>
                         {item.reviewTime
                           ? moment(item.reviewTime).format(
                               'YYYY-MM-DD h:mm:ss a'
                             )
                           : ''}
-                      </span>
+                      </span> */}
                     </div>
                     <div className='description-title-button'>
                       <Button
                         icon='radar-chart'
                         type='link'
-                        onClick={showReviewPatentModal}
+                        onClick={() => {
+                          showReviewPatentModal(item.uuid);
+                        }}
                       >
-                        打分
+                        评分
                       </Button>
                     </div>
                   </div>
