@@ -109,10 +109,8 @@ export default (porps) => {
     const datas = accountList ? accountList : ''; //表格数据
     var option = {};
     let dataTable = []; //新建数组放数据
-    console.log(datas);
     if (datas) {
       for (const data of datas) {
-        console.log(data);
         if (data) {
           let obj = {
             name: data.name,
@@ -126,7 +124,7 @@ export default (porps) => {
         }
       }
     }
-    console.log(dataTable);
+
     option.fileName = '用户信息'; //文件名
     option.datas = [
       {

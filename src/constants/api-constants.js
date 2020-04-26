@@ -112,10 +112,11 @@ export const GET_AWARD_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_RE
 export const SET_AWARD_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/setAwardScore`;
 export const GET_THESIS_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getThesisScore`;
 export const SET_THESIS_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/setThesisScore`;
+export const FINISH_REVIEW_MANAGER_REVIEW = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/finishReviewManagerReview`;
 
 /**
  * 文件
  */
-export const UPLOAD_JPG_FILE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_FILE}/uploadJpgFile`; // 上传word,pdf文件
+export const UPLOAD_JPG_FILE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_FILE}/uploadJpgFile`; // 上传jpg,png,jpeg文件
 export const UPLOAD_ZIP_FILE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_FILE}/uploadZipFile`; // 上传word,pdf文件
 export const GET_FILE_URL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_FILE}/getFileUrl`; // 获取文件url

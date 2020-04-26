@@ -9,7 +9,7 @@ import ReviewThesisController from '@/components/home/review-manager/detail/Revi
 
 // 路由
 import { HOME_REVIEW_LIST } from '@/constants/route-constants';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import ExportOneContent from '@/components/home/public/Export-one-content-controller.jsx';
 
@@ -19,6 +19,10 @@ import { LOCAL_STORAGE } from '@/constants/app-constants';
 // redux
 import { useSelector, useDispatch } from 'react-redux';
 import userAction from '@/redux/action/user';
+
+// 请求
+import proxyFetch from '@/util/request';
+import { FINISH_REVIEW_MANAGER_REVIEW } from '@/constants/api-constants';
 
 // 样式
 import { Icon, Button, Modal } from 'antd';
@@ -31,7 +35,8 @@ export default (props) => {
     ),
     { staffUuid } = useSelector((state) => state.userStore),
     [exportOneVisible, setExportOneVisible] = useState(false),
-    dispatch = useDispatch();
+    dispatch = useDispatch(),
+    history = useHistory();
 
   useEffect(() => {
     if (localStorageStaffUuid && !staffUuid) {
@@ -45,6 +50,21 @@ export default (props) => {
 
   const hideExportOneModal = () => {
     setExportOneVisible(false);
+  };
+
+  /**
+   * 提交事件
+   */
+  const handleSumbitSave = () => {
+    (async () => {
+      const res = await proxyFetch(FINISH_REVIEW_MANAGER_REVIEW, {
+        uuid: staffUuid,
+      });
+
+      if (res) {
+        history.push(HOME_REVIEW_LIST.path);
+      }
+    })();
   };
 
   return (
@@ -80,7 +100,9 @@ export default (props) => {
                 ),
                 okText: '确认',
                 cancelText: '取消',
-                onOk() {},
+                onOk() {
+                  handleSumbitSave();
+                },
                 onCancel() {},
               });
             }}
