@@ -35,6 +35,9 @@ export default (props) => {
     [name, setName] = useState(''),
     [isNeedRefresh, setIsNeedRefresh] = useState(true),
     [exportAllVisible, setExportAllVisible] = useState(false),
+    [scoreLimit, setScoreLimit] = useState('等于'),
+    [staffItem, setStaffItem] = useState('total'),
+    [score, setScore] = useState(''),
     dispatch = useDispatch();
 
   const showExportAllModal = () => {
@@ -60,7 +63,7 @@ export default (props) => {
 
         const staffReviewInfo = await proxyFetch(
           GET_STAFF_REVIEW_INFO,
-          { reviewStatus, name },
+          { reviewStatus, name, staffItem, scoreLimit, score },
           'GET'
         );
 
@@ -69,7 +72,27 @@ export default (props) => {
         setIsNeedRefresh(false);
       })();
     }
-  }, [isNeedRefresh, reviewStatus, name]);
+  }, [isNeedRefresh, reviewStatus, name, staffItem, scoreLimit, score]);
+
+  const handleChangeScoreLimit = (e) => {
+    setScoreLimit(e);
+  };
+
+  const handleChangeItemScore = (e) => {
+    setStaffItem(e);
+  };
+
+  const expandedRowRender = (record) => {
+    return (
+      <div className='table-inner-info-box'>
+        <span>{`项目得分:${record.projectScoreSum}`}</span>
+        <span>{`专利得分:${record.patentScoreSum}`}</span>
+        <span>{`软件著作权得分:${record.copyrightScoreSum}`}</span>
+        <span>{`奖项得分:${record.awardScoreSum}`}</span>
+        <span>{`论文/专著得分:${record.thesisScoreSum}`}</span>
+      </div>
+    );
+  };
 
   return (
     <div className='review-list-box'>
@@ -81,55 +104,102 @@ export default (props) => {
       </div>
       <div className='list-content-box'>
         <div className='list-title-box'>
+          <div>
+            <Select
+              placeholder='分类查看'
+              className='list-select'
+              defaultValue='0'
+              onChange={(e) => {
+                setReviewStatus(e);
+                setName('');
+                setScore('');
+                setIsNeedRefresh(true);
+              }}
+            >
+              <Option value='0'>全部</Option>
+              <Option value='已评分'>已评分</Option>
+              <Option value='未评分'>未评分</Option>
+            </Select>
+            <Search
+              className='search'
+              placeholder='请输入姓名'
+              onSearch={(e) => {
+                setName(e);
+                setIsNeedRefresh(true);
+              }}
+              enterButton
+            />
+          </div>
+          <div>
+            <Button
+              type='primary'
+              className='export-all-button'
+              onClick={showExportAllModal}
+            >
+              批量导出信息
+            </Button>
+            <Button type='primary' className='export-all-button'>
+              导出所有人得分表
+            </Button>
+            <Modal
+              title='导出所有人信息'
+              visible={exportAllVisible}
+              onOk={hideExportAllModal}
+              onCancel={hideExportAllModal}
+              okText='确定'
+              cancelText='取消'
+            >
+              <ExportAllContent />
+            </Modal>
+          </div>
+        </div>
+        <div className='search-score-box'>
           <Select
-            placeholder='分类查看'
-            className='list-select'
-            defaultValue='0'
-            onChange={(e) => {
-              setReviewStatus(e);
-              setName('');
-              setIsNeedRefresh(true);
-            }}
+            className='select'
+            defaultValue='总得分'
+            value={staffItem}
+            style={{ width: 120 }}
+            onChange={handleChangeItemScore}
           >
-            <Option value='0'>全部</Option>
-            <Option value='已评分'>已评分</Option>
-            <Option value='未评分'>未评分</Option>
+            <Option value='total'>总得分</Option>
+            <Option value='project'>项目</Option>
+            <Option value='patent'>专利</Option>
+            <Option value='copyright'>软件著作权</Option>
+            <Option value='award'>奖项</Option>
+            <Option value='thesis'>论文/专著</Option>
+          </Select>
+          <Select
+            className='select'
+            defaultValue='等于'
+            value={scoreLimit}
+            style={{ width: 120 }}
+            onChange={handleChangeScoreLimit}
+          >
+            <Option value='等于'>等于</Option>
+            <Option value='大于等于'>大于等于</Option>
+            <Option value='小于'>小于</Option>
           </Select>
           <Search
-            className='search'
-            placeholder='请输入姓名'
+            style={{ width: 150 }}
+            className='search-score'
+            placeholder='请输入得分'
+            value={score}
+            onChange={(e) => {
+              setScore(e.target.value);
+            }}
             onSearch={(e) => {
-              setName(e);
+              setScore(e);
               setIsNeedRefresh(true);
             }}
             enterButton
           />
-          <Button
-            type='primary'
-            className='export-all-button'
-            onClick={showExportAllModal}
-          >
-            批量导出信息
-          </Button>
-          <Button type='primary' className='export-all-button'>
-            导出所有人得分表
-          </Button>
-          <Modal
-            title='导出所有人信息'
-            visible={exportAllVisible}
-            onOk={hideExportAllModal}
-            onCancel={hideExportAllModal}
-            okText='确定'
-            cancelText='取消'
-          >
-            <ExportAllContent />
-          </Modal>
         </div>
         <Skeleton loading={staffLoading}>
           <Table
             dataSource={staffReviewInfo}
             className='table'
             rowKey={(record) => record.uuid}
+            expandedRowRender={(record) => expandedRowRender(record)}
           >
             <Column align='center' title='姓名' dataIndex='name' key='' />
             <Column align='center' title='科室' dataIndex='department' key='' />

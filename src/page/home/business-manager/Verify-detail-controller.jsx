@@ -33,7 +33,10 @@ export default (props) => {
   const localStorageStaffUuid = localStorage.getItem(
       `${LOCAL_STORAGE}-staffUuid`
     ),
-    { staffUuid } = useSelector((state) => state.userStore),
+    localStorageVerifyItem = localStorage.getItem(
+      `${LOCAL_STORAGE}-verifyItem`
+    ),
+    { staffUuid, verifyItem } = useSelector((state) => state.userStore),
     [exportOneVisible, setExportOneVisible] = useState(false),
     [exportOneVerifyVisible, setExportOneVerifyVisible] = useState(false),
     dispatch = useDispatch(),
@@ -44,6 +47,12 @@ export default (props) => {
       dispatch(userAction.setStaffUuid(localStorageStaffUuid));
     }
   }, [localStorageStaffUuid, staffUuid, dispatch]);
+
+  useEffect(() => {
+    if (localStorageVerifyItem && !verifyItem.length) {
+      dispatch(userAction.setVerifyItem(localStorageVerifyItem));
+    }
+  }, [localStorageVerifyItem, verifyItem, dispatch]);
 
   const showExportOneModal = () => {
     setExportOneVisible(true);
@@ -155,12 +164,24 @@ export default (props) => {
         </div>
         {staffUuid ? (
           <div className='verify-form-box'>
-            <VerifyBasicController />
-            <VerifyProjectController />
-            <VerifyPatentController />
-            <VerifyCopyrightController />
-            <VerifyAwardController />
-            <VerifyThesisController />
+            {verifyItem.indexOf('basic') !== -1 ? (
+              <VerifyBasicController />
+            ) : null}
+            {verifyItem.indexOf('project') !== -1 ? (
+              <VerifyProjectController />
+            ) : null}
+            {verifyItem.indexOf('patent') !== -1 ? (
+              <VerifyPatentController />
+            ) : null}
+            {verifyItem.indexOf('copyright') !== -1 ? (
+              <VerifyCopyrightController />
+            ) : null}
+            {verifyItem.indexOf('award') !== -1 ? (
+              <VerifyAwardController />
+            ) : null}
+            {verifyItem.indexOf('thesis') !== -1 ? (
+              <VerifyThesisController />
+            ) : null}
           </div>
         ) : null}
       </div>

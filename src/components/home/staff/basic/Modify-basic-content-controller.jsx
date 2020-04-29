@@ -51,6 +51,8 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
           staffBasic.getTime = moment(staffBasic.getTime);
         }
 
+        delete staffBasic.isVerify;
+
         setFieldsValue(staffBasic);
       }
     })();

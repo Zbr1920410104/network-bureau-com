@@ -59,6 +59,12 @@ export default handleActions(
         staffUuid: result,
       };
     },
+    setVerifyItem(state, { payload: result }) {
+      return {
+        ...state,
+        verifyItem: result,
+      };
+    },
     setChangeProject(state, { payload: result }) {
       return {
         ...state,
@@ -221,5 +227,6 @@ export default handleActions(
     role: 0,
     password: '',
     staffUuid: '',
+    verifyItem: [],
   }
 );

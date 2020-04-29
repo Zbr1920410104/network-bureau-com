@@ -62,6 +62,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
 
         if (res) {
           setIswritten(true);
+          setIsNeedRefresh(true);
         }
       }
     });
@@ -120,7 +121,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
             className='content-tag'
             color={verifyStatusToColor(staffBasic.isVerify)}
           >
-            {staffBasic.isVerify}
+            {staffBasic.isVerify ? staffBasic.isVerify : '未填写'}
           </Tag>
         </div>
         <div className='title-right-box'>
