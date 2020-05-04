@@ -10,9 +10,8 @@ import {
   QUARY_ACCOUNT,
   RESET_PASSWORD,
   ACCOUNT_CANCEL,
+  ACCOUNT_EXPORT_ALL_STAFF_INFO_EXCEL,
 } from '@/constants/api-constants';
-
-import ExportJsonExcel from 'js-export-excel';
 
 import AccountFormController from '@/components/home/admin/Account-form-controller.jsx';
 import ModifyAccountContent from '@/components/home/admin/Modify-account-content-controller.jsx';
@@ -89,53 +88,12 @@ export default (porps) => {
     }
   };
 
-  const roleToText = (role) => {
-    switch (role) {
-      case 1:
-        return '超级管理员';
-      case 5:
-        return '评审员';
-      case 10:
-        return '统计员';
-      case 15:
-        return '普通员工';
-      default:
-        return '未知';
-    }
-  };
-
-  const downloadExcel = async () => {
-    const accountList = await proxyFetch(QUARY_ACCOUNT, { role, name }, 'GET');
-    const datas = accountList ? accountList : ''; //表格数据
-    var option = {};
-    let dataTable = []; //新建数组放数据
-    if (datas) {
-      for (const data of datas) {
-        if (data) {
-          let obj = {
-            name: data.name,
-            userName: data.userName,
-            role: roleToText(data.role),
-            isCancel: data.isCancel,
-            phone: data.phone,
-            department: data.department,
-          };
-          dataTable.push(obj);
-        }
-      }
-    }
-
-    option.fileName = '用户信息'; //文件名
-    option.datas = [
-      {
-        sheetData: dataTable, //数据
-        sheetName: '用户信息', //sheet名字
-        sheetHeader: ['姓名', '用户名', '权限', '注销状态', '电话', '部门'], //// 第一行
-      },
-    ];
-
-    var toExcel = new ExportJsonExcel(option);
-    toExcel.saveExcel(); //保存
+  const handleExport = async () => {
+    const tempUrl = await proxyFetch(ACCOUNT_EXPORT_ALL_STAFF_INFO_EXCEL, {});
+    const url = `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
+      tempUrl
+    )}`;
+    window.open(url);
   };
 
   return (
@@ -181,13 +139,13 @@ export default (porps) => {
             type='primary'
             onClick={() => {
               confirm({
-                title: '导出当前所有账号信息',
+                title: '导出所有账号信息',
                 okType: 'primary',
-                content: '确认要导出当前所有账号信息?',
+                content: '确认要导出所有账号信息?',
                 okText: '确认',
                 cancelText: '取消',
                 onOk() {
-                  downloadExcel();
+                  handleExport();
                 },
                 onCancel() {},
               });
@@ -236,117 +194,112 @@ export default (porps) => {
             <AccountFormController />
           </Modal>
         </div>
-          <Table
-            dataSource={accountList}
-            className='table'
-            loading={accountLoading}
-            rowKey={(record) => record.uuid}
-            scroll={{ x: 1200 }}
-          >
-            <Column
-              align='center'
-              title='姓名'
-              dataIndex='name'
-              key=''
-              fixed='left'
-            />
-            <Column align='center' title='账号' dataIndex='userName' key='' />
-            <Column align='center' title='电话号码' dataIndex='phone' key='' />
-            <Column
-              align='center'
-              title='权限'
-              dataIndex='role'
-              key=''
-              render={(text, record) => {
-                if (record.role === 15) return '普通员工';
-                else if (record.role === 10) return '统计管理员';
-                else if (record.role === 5) return '评审管理员';
-                else if (record.role === 1) return '超级管理员';
-              }}
-            />
-            <Column align='center' title='科室' dataIndex='department' key='' />
-            <Column
-              align='center'
-              title='注销状态'
-              dataIndex='isCancel'
-              key=''
-            />
-            <Column
-              align='center'
-              title='重置密码'
-              fixed='right'
-              width='100px'
-              dataIndex=''
-              key=''
-              render={(text, record) => (
-                <Button
-                  type='link'
-                  onClick={() => {
-                    confirm({
-                      title: '重置密码?',
-                      okType: 'primary',
-                      content: '确认要重置密码?',
-                      okText: '确认',
-                      cancelText: '取消',
-                      onOk() {
-                        handleReset(record.uuid);
-                      },
-                      onCancel() {},
-                    });
-                  }}
-                >
-                  重置密码
-                </Button>
-              )}
-            />
-            <Column
-              align='center'
-              title='注销'
-              fixed='right'
-              width='100px'
-              dataIndex=''
-              key=''
-              render={(text, record) => (
-                <Button
-                  type='link'
-                  onClick={() => {
-                    confirm({
-                      title: '注销账号?',
-                      okType: 'primary',
-                      content: '确认要注销账号(注销后账号将无法登录)?',
-                      okText: '确认',
-                      cancelText: '取消',
-                      onOk() {
-                        handleCancellation(record.uuid);
-                      },
-                      onCancel() {},
-                    });
-                  }}
-                >
-                  注销
-                </Button>
-              )}
-            />
-            <Column
-              align='center'
-              title='修改'
-              dataIndex=''
-              fixed='right'
-              width='100px'
-              key=''
-              render={(text, record) => (
-                <Button
-                  type='link'
-                  onClick={() => {
-                    dispatch(userAction.setUserUuid(record.uuid));
-                    showModifyAccountModal();
-                  }}
-                >
-                  修改账号信息
-                </Button>
-              )}
-            />
-          </Table>
+        <Table
+          dataSource={accountList}
+          className='table'
+          loading={accountLoading}
+          rowKey={(record) => record.uuid}
+          scroll={{ x: 1200 }}
+        >
+          <Column
+            align='center'
+            title='姓名'
+            dataIndex='name'
+            key=''
+            fixed='left'
+          />
+          <Column align='center' title='账号' dataIndex='userName' key='' />
+          <Column align='center' title='电话号码' dataIndex='phone' key='' />
+          <Column
+            align='center'
+            title='权限'
+            dataIndex='role'
+            key=''
+            render={(text, record) => {
+              if (record.role === 15) return '普通员工';
+              else if (record.role === 10) return '统计管理员';
+              else if (record.role === 5) return '评审管理员';
+              else if (record.role === 1) return '超级管理员';
+            }}
+          />
+          <Column align='center' title='科室' dataIndex='department' key='' />
+          <Column align='center' title='注销状态' dataIndex='isCancel' key='' />
+          <Column
+            align='center'
+            title='重置密码'
+            fixed='right'
+            width='100px'
+            dataIndex=''
+            key=''
+            render={(text, record) => (
+              <Button
+                type='link'
+                onClick={() => {
+                  confirm({
+                    title: '重置密码?',
+                    okType: 'primary',
+                    content: '确认要重置密码?',
+                    okText: '确认',
+                    cancelText: '取消',
+                    onOk() {
+                      handleReset(record.uuid);
+                    },
+                    onCancel() {},
+                  });
+                }}
+              >
+                重置密码
+              </Button>
+            )}
+          />
+          <Column
+            align='center'
+            title='注销'
+            fixed='right'
+            width='100px'
+            dataIndex=''
+            key=''
+            render={(text, record) => (
+              <Button
+                type='link'
+                onClick={() => {
+                  confirm({
+                    title: '注销账号?',
+                    okType: 'primary',
+                    content: '确认要注销账号(注销后账号将无法登录)?',
+                    okText: '确认',
+                    cancelText: '取消',
+                    onOk() {
+                      handleCancellation(record.uuid);
+                    },
+                    onCancel() {},
+                  });
+                }}
+              >
+                注销
+              </Button>
+            )}
+          />
+          <Column
+            align='center'
+            title='修改'
+            dataIndex=''
+            fixed='right'
+            width='100px'
+            key=''
+            render={(text, record) => (
+              <Button
+                type='link'
+                onClick={() => {
+                  dispatch(userAction.setUserUuid(record.uuid));
+                  showModifyAccountModal();
+                }}
+              >
+                修改账号信息
+              </Button>
+            )}
+          />
+        </Table>
       </div>
     </div>
   );

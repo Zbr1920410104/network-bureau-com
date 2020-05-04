@@ -15,7 +15,10 @@ import { useHistory } from 'react-router-dom';
 
 // 请求
 import proxyFetch from '@/util/request';
-import { GET_STAFF_REVIEW_INFO } from '@/constants/api-constants';
+import {
+  GET_STAFF_REVIEW_INFO,
+  EXPORT_ALL_STAFF_INFO_EXCEL,
+} from '@/constants/api-constants';
 
 // 工具
 import moment from 'moment';
@@ -94,6 +97,14 @@ export default (props) => {
     );
   };
 
+  const handleExport = async () => {
+    const tempUrl = await proxyFetch(EXPORT_ALL_STAFF_INFO_EXCEL, {});
+    const url = `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
+      tempUrl
+    )}`;
+    window.open(url);
+  };
+
   return (
     <div className='review-list-box'>
       <p className='title-box'>
@@ -123,8 +134,12 @@ export default (props) => {
             <Search
               className='search'
               placeholder='请输入姓名'
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
+              value={name}
               onSearch={(e) => {
-                setName(e);
+                setScore('');
                 setIsNeedRefresh(true);
               }}
               enterButton
@@ -138,7 +153,11 @@ export default (props) => {
             >
               批量导出信息
             </Button>
-            <Button type='primary' className='export-all-button'>
+            <Button
+              type='primary'
+              className='export-all-button'
+              onClick={handleExport}
+            >
               导出所有人得分表
             </Button>
             <Modal
@@ -188,7 +207,7 @@ export default (props) => {
               setScore(e.target.value);
             }}
             onSearch={(e) => {
-              setScore(e);
+              setName('');
               setIsNeedRefresh(true);
             }}
             enterButton

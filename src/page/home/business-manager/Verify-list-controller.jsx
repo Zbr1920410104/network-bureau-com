@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
-import ExportAllContent from '@/components/home/business-manager/Export-all-content-controller.jsx';
-
 // localStorage
 import { LOCAL_STORAGE } from '@/constants/app-constants';
 
 // 请求
 import proxyFetch from '@/util/request';
-import { GET_STAFF_VERIFY_INFO } from '@/constants/api-constants';
+import {
+  GET_STAFF_VERIFY_INFO,
+  GET_STAFF_WRITE_STATUS_LIST,
+  GET_STAFF_VERIFY_STATUS_LIST,
+} from '@/constants/api-constants';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -29,6 +31,9 @@ import {
   Skeleton,
   Input,
   message,
+  Row,
+  Col,
+  Radio,
 } from 'antd';
 import '@/style/home/business-manager/verify-list.styl';
 const { Option } = Select,
@@ -59,6 +64,7 @@ export default (props) => {
       localStorageVerifyItem ? localStorageVerifyItem.split(',') : plainOptions
     ),
     [checkAll, setCheckAll] = useState(true),
+    [exportType, setExportType] = useState(''),
     dispatch = useDispatch();
 
   const showExportAllModal = () => {
@@ -70,6 +76,32 @@ export default (props) => {
   };
 
   const hideExportAllModal = () => {
+    setExportAllVisible(false);
+  };
+
+  const handleExportInfo = async () => {
+    let tempUrl = '';
+    console.log('exportType=', exportType);
+    if (exportType === '填写状态') {
+      tempUrl = await proxyFetch(
+        GET_STAFF_WRITE_STATUS_LIST,
+        { verifyStatus, name },
+        'GET'
+      );
+    } else if (exportType === '核实状态') {
+      tempUrl = await proxyFetch(
+        GET_STAFF_VERIFY_STATUS_LIST,
+        { verifyStatus, name },
+        'GET'
+      );
+    }
+
+    if (tempUrl) {
+      const url = `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
+        tempUrl
+      )}`;
+      window.open(url);
+    }
     setExportAllVisible(false);
   };
 
@@ -187,12 +219,26 @@ export default (props) => {
           <Modal
             title='批量导出信息'
             visible={exportAllVisible}
-            onOk={hideExportAllModal}
+            onOk={handleExportInfo}
             onCancel={hideExportAllModal}
             okText='确定'
             cancelText='取消'
           >
-            <ExportAllContent />
+            <Radio.Group
+              style={{ width: '100%' }}
+              onChange={(e) => {
+                setExportType(e.target.value);
+              }}
+            >
+              <Row>
+                <Col span={12}>
+                  <Radio value='填写状态'>填写状态</Radio>
+                </Col>
+                <Col span={12}>
+                  <Radio value='核实状态'>核实状态</Radio>
+                </Col>
+              </Row>
+            </Radio.Group>
           </Modal>
           <Modal
             title='选择审核的内容'

@@ -28,6 +28,7 @@ export const RESET_PASSWORD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_ADM
 export const ACCOUNT_CANCEL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_ADMIN}/accountCancel`;
 export const SELECT_ACCOUNT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_ADMIN}/selectAccount`;
 export const MODIFY_ACCOUNT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_ADMIN}/modifyAccount`;
+export const ACCOUNT_EXPORT_ALL_STAFF_INFO_EXCEL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_ADMIN}/accountExportAllStaffInfoExcel`;
 
 /**
  * 普通员工
@@ -91,6 +92,8 @@ export const SET_VERIFY_AWARD_SUCCESS_STATUS = `${DominConfigs.DOMAIN}${DominCon
 export const SET_VERIFY_THESIS_FAIL_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyThesisFailStatus`;
 export const SET_VERIFY_THESIS_SUCCESS_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyThesisSuccessStatus`;
 export const FINISH_BUSINESS_MANAGER_VERIFY = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/finishBusinessManagerVerify`;
+export const GET_STAFF_WRITE_STATUS_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getStaffWriteStatusList`;
+export const GET_STAFF_VERIFY_STATUS_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getStaffVerifyStatusList`;
 
 /**
  * 评审管理员
@@ -113,6 +116,7 @@ export const SET_AWARD_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_RE
 export const GET_THESIS_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getThesisScore`;
 export const SET_THESIS_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/setThesisScore`;
 export const FINISH_REVIEW_MANAGER_REVIEW = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/finishReviewManagerReview`;
+export const EXPORT_ALL_STAFF_INFO_EXCEL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/exportAllStaffInfoExcel`;
 
 /**
  * 文件
