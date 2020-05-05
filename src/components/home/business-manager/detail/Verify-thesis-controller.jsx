@@ -115,6 +115,7 @@ export default (props) => {
         const res = await proxyFetch(SET_VERIFY_THESIS_FAIL_STATUS, {
           uuid: staffThesisUuid,
           verifyRemarks,
+          staffUuid,
         });
 
         setStatusLoading(false);
@@ -135,6 +136,7 @@ export default (props) => {
 
       const res = await proxyFetch(SET_VERIFY_THESIS_SUCCESS_STATUS, {
         uuid: staffThesisUuid,
+        staffUuid,
       });
 
       setStatusLoading(false);

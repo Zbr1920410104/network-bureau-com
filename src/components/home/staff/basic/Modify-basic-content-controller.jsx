@@ -52,6 +52,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
         }
 
         delete staffBasic.isVerify;
+        delete staffBasic.verifyRemarks;
 
         setFieldsValue(staffBasic);
       }

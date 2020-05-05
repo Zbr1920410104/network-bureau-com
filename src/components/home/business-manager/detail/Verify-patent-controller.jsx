@@ -85,6 +85,7 @@ export default (props) => {
         const res = await proxyFetch(SET_VERIFY_PATENT_FAIL_STATUS, {
           uuid: staffPatentUuid,
           verifyRemarks,
+          staffUuid,
         });
 
         setStatusLoading(false);
@@ -105,6 +106,7 @@ export default (props) => {
 
       const res = await proxyFetch(SET_VERIFY_PATENT_SUCCESS_STATUS, {
         uuid: staffPatentUuid,
+        staffUuid,
       });
 
       setStatusLoading(false);

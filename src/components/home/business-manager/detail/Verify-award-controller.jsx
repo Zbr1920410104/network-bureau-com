@@ -116,6 +116,7 @@ export default (props) => {
         const res = await proxyFetch(SET_VERIFY_AWARD_FAIL_STATUS, {
           uuid: staffAwardUuid,
           verifyRemarks,
+          staffUuid,
         });
 
         setStatusLoading(false);
@@ -136,6 +137,7 @@ export default (props) => {
 
       const res = await proxyFetch(SET_VERIFY_AWARD_SUCCESS_STATUS, {
         uuid: staffAwardUuid,
+        staffUuid,
       });
 
       setStatusLoading(false);

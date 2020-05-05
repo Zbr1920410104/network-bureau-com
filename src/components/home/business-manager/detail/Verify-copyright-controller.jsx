@@ -82,6 +82,7 @@ export default (props) => {
         const res = await proxyFetch(SET_VERIFY_COPYRIGHT_FAIL_STATUS, {
           uuid: staffCopyrightUuid,
           verifyRemarks,
+          staffUuid,
         });
 
         setStatusLoading(false);
@@ -102,6 +103,7 @@ export default (props) => {
 
       const res = await proxyFetch(SET_VERIFY_COPYRIGHT_SUCCESS_STATUS, {
         uuid: staffCopyrightUuid,
+        staffUuid,
       });
 
       setStatusLoading(false);
