@@ -149,7 +149,7 @@ export default (props) => {
     content = <ReviewListController />;
   } else if (homeReviewDetail) {
     content = <ReviewDetailListController />;
-  }  else if (homeAccountList) {
+  } else if (homeAccountList) {
     content = <AccountListController />;
   } else if (homeAccountTime) {
     content = <AccountTimeController />;

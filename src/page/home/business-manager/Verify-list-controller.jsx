@@ -81,7 +81,7 @@ export default (props) => {
 
   const handleExportInfo = async () => {
     let tempUrl = '';
-    console.log('exportType=', exportType);
+
     if (exportType === '填写状态') {
       tempUrl = await proxyFetch(
         GET_STAFF_WRITE_STATUS_LIST,

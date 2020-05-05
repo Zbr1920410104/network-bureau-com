@@ -41,11 +41,12 @@ export default (props) => {
     dispatch = useDispatch(),
     [isNeedRefresh, setIsNeedRefresh] = useState(true),
     [statusLoading, setStatusLoading] = useState(false),
+    [isProjectVerify, setIsProjectVerify] = useState(''),
     [verifyRemarks, setVerifyRemarks] = useState('');
 
-  const showVerifyModal = (uuid, isVerify, verifyRemarks) => {
+  const showVerifyModal = ( isVerify, verifyRemarks) => {
     setVerifyRemarks(verifyRemarks);
-    dispatch(userAction.setStaffProjectUuid(uuid));
+    // dispatch(userAction.setStaffProjectUuid(uuid));
     dispatch(userAction.setStaffProjectVerifyStatus(isVerify));
     setVerifyVisible(true);
   };
@@ -122,6 +123,22 @@ export default (props) => {
         <div className='title-left-box'>
           <Icon type='file-done' className='icon' />
           <span>项目</span>
+          <Tag
+            className='content-tag'
+            color={verifyStatusToColor(isProjectVerify)}
+          >
+            {isProjectVerify}
+          </Tag>
+        </div>
+        <div className='title-right-box'>
+          <Button
+            type='link'
+            icon='edit'
+            className='opinion-button'
+            onClick={showVerifyModal}
+          >
+            核实
+          </Button>
         </div>
         <Modal
           title='请核实'
@@ -197,12 +214,12 @@ export default (props) => {
                   <div className='verify-description-title'>
                     <div className='description-title-text'>
                       <span>{`项目${index + 1}:  ${item.name}`}</span>
-                      <Tag
+                      {/* <Tag
                         className='content-tag'
                         color={verifyStatusToColor(item.isVerify)}
                       >
                         {item.isVerify}
-                      </Tag>
+                      </Tag> */}
                       {/* <span>{`最近填写/修改于: ${
                         item.currentWriteTime
                           ? moment(item.currentWriteTime).format(
@@ -211,7 +228,7 @@ export default (props) => {
                           : ''
                       }`}</span> */}
                     </div>
-                    <div className='description-title-button'>
+                    {/* <div className='description-title-button'>
                       <Button
                         type='link'
                         icon='edit'
@@ -226,7 +243,7 @@ export default (props) => {
                       >
                         核实
                       </Button>
-                    </div>
+                    </div> */}
                   </div>
                 }
               >
