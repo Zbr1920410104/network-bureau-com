@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 // 样式
 import { Icon, Input, Form, Button } from 'antd';
 import '@/style/login.styl';
+
+// 请求
+import proxyFetch from '@/util/request';
+import { GET_USER_NAME } from '@/constants/api-constants';
 
 // // localStorage
 // import { LOCAL_STORAGE } from '@/constants/app-constants';
@@ -19,6 +23,8 @@ import md5 from 'md5';
 
 export default Form.create({ name: 'login' })((props) => {
   const { getFieldDecorator } = props.form,
+    [user, setUser] = useState(''),
+    [name, setName] = useState(''),
     { loginLoading } = useSelector((state) => state.userStore),
     dispatch = useDispatch();
 
@@ -33,6 +39,16 @@ export default Form.create({ name: 'login' })((props) => {
       }
     });
   };
+
+  useEffect(() => {
+    (async () => {
+      if (user) {
+        const userName = await proxyFetch(GET_USER_NAME, { user }, 'GET');
+        setName(userName?.name);
+        console.log('name=', userName);
+      }
+    })();
+  }, [user]);
 
   return (
     <Form onSubmit={handleSubmitLogin}>
@@ -52,6 +68,9 @@ export default Form.create({ name: 'login' })((props) => {
           <Input
             prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
             placeholder='账号'
+            onChange={(e) => {
+              setUser(e.target.value);
+            }}
             size='large'
           />
         )}
@@ -67,6 +86,14 @@ export default Form.create({ name: 'login' })((props) => {
             type='password'
           />
         )}
+      </Form.Item>
+      <Form.Item>
+        <Input
+          prefix={<Icon type='contacts' style={{ color: 'rgba(0,0,0,.25)' }} />}
+          placeholder='姓名'
+          value={name}
+          size='large'
+        />
       </Form.Item>
       <Form.Item>
         <div className='login-button-box'>

@@ -67,7 +67,7 @@ export default Form.create({ name: 'staffTimeSet' })(({ form }) => {
       >
         {/* 权限 */}
         <Form.Item label='权限'>
-          <span>科研人员</span>
+          <span>普通员工</span>
         </Form.Item>
 
         {/* 开始 */}

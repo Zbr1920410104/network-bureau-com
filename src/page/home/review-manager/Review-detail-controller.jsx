@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 import ReviewProjectController from '@/components/home/review-manager/detail/Review-project-controller.jsx';
 import ReviewBasicController from '@/components/home/review-manager/detail/Review-basic-controller.jsx';
@@ -10,8 +10,6 @@ import ReviewThesisController from '@/components/home/review-manager/detail/Revi
 // 路由
 import { HOME_REVIEW_LIST } from '@/constants/route-constants';
 import { Link, useHistory } from 'react-router-dom';
-
-import ExportOneContent from '@/components/home/public/Export-one-content-controller.jsx';
 
 // localStorage
 import { LOCAL_STORAGE } from '@/constants/app-constants';
@@ -34,7 +32,6 @@ export default (props) => {
       `${LOCAL_STORAGE}-staffUuid`
     ),
     { staffUuid } = useSelector((state) => state.userStore),
-    [exportOneVisible, setExportOneVisible] = useState(false),
     dispatch = useDispatch(),
     history = useHistory();
 
@@ -43,14 +40,6 @@ export default (props) => {
       dispatch(userAction.setStaffUuid(localStorageStaffUuid));
     }
   }, [localStorageStaffUuid, staffUuid, dispatch]);
-
-  const showExportOneModal = () => {
-    setExportOneVisible(true);
-  };
-
-  const hideExportOneModal = () => {
-    setExportOneVisible(false);
-  };
 
   /**
    * 提交事件
@@ -109,26 +98,9 @@ export default (props) => {
           >
             我已确认对所有内容完成评分
           </Button>
-          <Button
-            type='primary'
-            className='export-button'
-            onClick={showExportOneModal}
-          >
-            导出当前员工信息
-          </Button>
-          <Button type='primary' className='export-button'>
+          {/* <Button type='primary' className='export-button'>
             导出当前员工得分表
-          </Button>
-          <Modal
-            title='导出当前员工信息'
-            visible={exportOneVisible}
-            onOk={hideExportOneModal}
-            onCancel={hideExportOneModal}
-            okText='确定'
-            cancelText='取消'
-          >
-            <ExportOneContent />
-          </Modal>
+          </Button> */}
         </div>
         {staffUuid ? (
           <div className='review-form-box'>

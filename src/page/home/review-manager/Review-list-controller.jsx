@@ -84,11 +84,23 @@ export default (props) => {
   const expandedRowRender = (record) => {
     return (
       <div className='table-inner-info-box'>
-        <span>{`项目得分:${record.projectScoreSum}`}</span>
-        <span>{`专利得分:${record.patentScoreSum}`}</span>
-        <span>{`软件著作权得分:${record.copyrightScoreSum}`}</span>
-        <span>{`奖项得分:${record.awardScoreSum}`}</span>
-        <span>{`论文/专著得分:${record.thesisScoreSum}`}</span>
+        <span>{`项目得分:${
+          record.projectScoreSum !== null ? record.projectScoreSum : '未评分'
+        }`}</span>
+        <span>{`专利得分:${
+          record.patentScoreSum !== null ? record.patentScoreSum : '未评分'
+        }`}</span>
+        <span>{`软件著作权得分:${
+          record.copyrightScoreSum !== null
+            ? record.copyrightScoreSum
+            : '未评分'
+        }`}</span>
+        <span>{`奖项得分:${
+          record.awardScoreSum !== null ? record.awardScoreSum : '未评分'
+        }`}</span>
+        <span>{`论文/专著得分:${
+          record.thesisScoreSum !== null ? record.thesisScoreSum : '未评分'
+        }`}</span>
       </div>
     );
   };
@@ -174,17 +186,17 @@ export default (props) => {
               className='export-all-button'
               onClick={showExportAllModal}
             >
-              批量导出信息
+              导出当前员工信息
             </Button>
             <Button
               type='primary'
               className='export-all-button'
               onClick={handleExport}
             >
-              导出所有人得分表
+              导出所有员工得分表
             </Button>
             <Modal
-              title='导出所有员工信息'
+              title='导出当前员工信息'
               visible={exportAllVisible}
               onOk={handleExportAllStaff}
               onCancel={hideExportAllModal}
@@ -286,7 +298,9 @@ export default (props) => {
               dataIndex='totalScore'
               key=''
               render={(text, record) => (
-                <span>{record.totalScore ? record.totalScore : '未评分'}</span>
+                <span>
+                  {record.totalScore !== null ? record.totalScore : '未评分'}
+                </span>
               )}
             />
             <Column
