@@ -33,6 +33,7 @@ import {
   Skeleton,
   Modal,
   Tag,
+  Alert,
 } from 'antd';
 const { Option } = Select,
   { TextArea } = Input,
@@ -159,6 +160,13 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
           <ModifyBasicContent />
         </Modal>
       </div>
+      {staffBasic.verifyRemarks ? (
+        <Alert
+          className='alert'
+          type='warning'
+          description={`修改建议: ${staffBasic.verifyRemarks}`}
+        />
+      ) : null}
       <Skeleton loading={basicLoading}>
         {isWritten ? (
           <Descriptions className='description-box'>

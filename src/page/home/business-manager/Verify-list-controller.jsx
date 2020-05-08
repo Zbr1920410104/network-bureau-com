@@ -9,6 +9,7 @@ import {
   GET_STAFF_VERIFY_INFO,
   GET_STAFF_WRITE_STATUS_LIST,
   GET_STAFF_VERIFY_STATUS_LIST,
+  GET_STAFF_EXPORT_INFO_URL,
 } from '@/constants/api-constants';
 
 // redux
@@ -60,6 +61,8 @@ export default (props) => {
     [verifyStatus, setVerifyStatus] = useState(0),
     [name, setName] = useState(''),
     [isNeedRefresh, setIsNeedRefresh] = useState(true),
+    [exportOneVisible, setExportOneVisible] = useState(false),
+    [exportList, setExportList] = useState([0, 1, 2, 3, 4, 5]),
     [checkedList, setCheckedList] = useState(
       localStorageVerifyItem ? localStorageVerifyItem.split(',') : plainOptions
     ),
@@ -167,6 +170,35 @@ export default (props) => {
     })();
   }, [isNeedRefresh, verifyStatus, name]);
 
+  const showExportOneModal = () => {
+    setExportOneVisible(true);
+  };
+
+  const hideExportOneModal = () => {
+    setExportOneVisible(false);
+  };
+
+  const handleExportChange = (e) => {
+    setExportList(e);
+  };
+
+  const handleExportStaff = async () => {
+    let tempUrl = await proxyFetch(GET_STAFF_EXPORT_INFO_URL, {
+      verifyStatus,
+      name,
+      exportList,
+    });
+
+    if (tempUrl) {
+      setExportOneVisible(false);
+
+      const url = `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
+        tempUrl
+      )}`;
+      window.open(url);
+    }
+  };
+
   return (
     <div className='verify-list-box'>
       <p className='title-box'>
@@ -195,7 +227,7 @@ export default (props) => {
           </Select>
           <Search
             className='search'
-            placeholder='请输入姓名'
+            placeholder='请输入姓名/账号'
             enterButton
             onSearch={(e) => {
               setName(e);
@@ -205,17 +237,47 @@ export default (props) => {
           <Button
             type='primary'
             className='export-all-button'
-            onClick={showExportAllModal}
-          >
-            批量导出信息
-          </Button>
-          <Button
-            type='primary'
-            className='export-all-button'
             onClick={showVerifyItemModal}
           >
             选择审核内容
           </Button>
+          <Button
+            type='primary'
+            className='export-all-button'
+            onClick={showExportAllModal}
+          >
+            导出填写/核实状态信息
+          </Button>
+          <Button
+            type='primary'
+            className='export-all-button'
+            onClick={showExportOneModal}
+          >
+            导出当前员工信息
+          </Button>
+          <Modal
+            title='导出当前员工信息'
+            visible={exportOneVisible}
+            onOk={handleExportStaff}
+            onCancel={hideExportOneModal}
+            okText='确定'
+            cancelText='取消'
+          >
+            <Checkbox.Group
+              options={[
+                { label: '基本信息', value: 0 },
+                { label: '项目', value: 1 },
+                { label: '专利', value: 2 },
+                { label: '软件著作权', value: 3 },
+                { label: '奖项', value: 4 },
+                { label: '论文/专著', value: 5 },
+              ]}
+              value={exportList}
+              onChange={(e) => {
+                handleExportChange(e);
+              }}
+            />
+          </Modal>
           <Modal
             title='批量导出信息'
             visible={exportAllVisible}

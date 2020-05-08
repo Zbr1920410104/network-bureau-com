@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 import VerifyProjectController from '@/components/home/business-manager/detail/Verify-project-controller.jsx';
 import VerifyBasicController from '@/components/home/business-manager/detail/Verify-basic-controller.jsx';
@@ -11,7 +11,7 @@ import VerifyThesisController from '@/components/home/business-manager/detail/Ve
 import { HOME_VERIFY_LIST } from '@/constants/route-constants';
 import { Link, useHistory } from 'react-router-dom';
 
-import ExportOneContent from '@/components/home/public/Export-one-content-controller.jsx';
+// import ExportOneContent from '@/components/home/public/Export-one-content-controller.jsx';
 
 // localStorage
 import { LOCAL_STORAGE } from '@/constants/app-constants';
@@ -22,7 +22,9 @@ import userAction from '@/redux/action/user';
 
 // 请求
 import proxyFetch from '@/util/request';
-import { FINISH_BUSINESS_MANAGER_VERIFY } from '@/constants/api-constants';
+import {
+  FINISH_BUSINESS_MANAGER_VERIFY,
+} from '@/constants/api-constants';
 
 // 样式
 import { Icon, Button, Modal } from 'antd';
@@ -37,8 +39,6 @@ export default (props) => {
       `${LOCAL_STORAGE}-verifyItem`
     ),
     { staffUuid, verifyItem } = useSelector((state) => state.userStore),
-    [exportOneVisible, setExportOneVisible] = useState(false),
-    [exportOneVerifyVisible, setExportOneVerifyVisible] = useState(false),
     dispatch = useDispatch(),
     history = useHistory();
 
@@ -53,22 +53,6 @@ export default (props) => {
       dispatch(userAction.setVerifyItem(localStorageVerifyItem));
     }
   }, [localStorageVerifyItem, verifyItem, dispatch]);
-
-  const showExportOneModal = () => {
-    setExportOneVisible(true);
-  };
-
-  const hideExportOneModal = () => {
-    setExportOneVisible(false);
-  };
-
-  const showExportOneVerifyModal = () => {
-    setExportOneVerifyVisible(true);
-  };
-
-  const hideExportOneVerifyModal = () => {
-    setExportOneVerifyVisible(false);
-  };
 
   /**
    * 提交事件
@@ -127,40 +111,6 @@ export default (props) => {
           >
             已核实所有信息,核实通过
           </Button>
-          <Button
-            type='primary'
-            className='export-button'
-            onClick={showExportOneModal}
-          >
-            导出当前员工信息
-          </Button>
-          <Button
-            type='primary'
-            className='export-button'
-            onClick={showExportOneVerifyModal}
-          >
-            查看/导出核实信息
-          </Button>
-          <Modal
-            title='导出当前员工信息'
-            visible={exportOneVisible}
-            onOk={hideExportOneModal}
-            onCancel={hideExportOneModal}
-            okText='确定'
-            cancelText='取消'
-          >
-            <ExportOneContent />
-          </Modal>
-          <Modal
-            title='导出当前员工核实信息'
-            visible={exportOneVerifyVisible}
-            onOk={hideExportOneVerifyModal}
-            onCancel={hideExportOneVerifyModal}
-            okText='确定'
-            cancelText='取消'
-          >
-            <ExportOneContent />
-          </Modal>
         </div>
         {staffUuid ? (
           <div className='verify-form-box'>

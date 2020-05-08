@@ -18,7 +18,7 @@ import UploadAwardContent from '@/components/home/staff/award/Upload-award-conte
 
 // 样式
 import '@/style/home/staff/write-detail.styl';
-import { Button, Modal, Icon, Descriptions, Skeleton, Tag } from 'antd';
+import { Button, Modal, Icon, Descriptions, Skeleton, Tag, Alert } from 'antd';
 const { confirm } = Modal;
 
 export default (props) => {
@@ -185,55 +185,63 @@ export default (props) => {
               <Descriptions
                 key={item.uuid}
                 title={
-                  <div className='write-description-title'>
-                    <div className='description-title-text'>
-                      <span>{`奖项${index + 1}:  ${item.awardName}`}</span>
-                      <Tag
-                        className='content-tag'
-                        color={verifyStatusToColor(item.isVerify)}
-                      >
-                        {item.isVerify}
-                      </Tag>
-                      {/* <span>{`最近填写/修改于: ${
+                  <div>
+                    <div className='write-description-title'>
+                      <div className='description-title-text'>
+                        <span>{`奖项${index + 1}:  ${item.awardName}`}</span>
+                        <Tag
+                          className='content-tag'
+                          color={verifyStatusToColor(item.isVerify)}
+                        >
+                          {item.isVerify}
+                        </Tag>
+                        {/* <span>{`最近填写/修改于: ${
                         item.currentWriteTime
                           ? moment(item.currentWriteTime).format(
                               'YYYY-MM-DD h:mm:ss a'
                             )
                           : ''
                       }`}</span> */}
+                      </div>
+                      <div className='description-title-button'>
+                        <Button
+                          type='link'
+                          icon='edit'
+                          onClick={() => {
+                            showModifyAwardModal(item.uuid);
+                          }}
+                          className='link-button'
+                        >
+                          <span>修改</span>
+                        </Button>
+                        <Button
+                          type='link'
+                          className='link-button'
+                          icon='delete'
+                          onClick={() => {
+                            confirm({
+                              title: '删除奖项?',
+                              okType: 'primary',
+                              content: '确认要删除奖项?',
+                              okText: '确认',
+                              cancelText: '取消',
+                              onOk() {
+                                handleDelete(item.uuid);
+                              },
+                              onCancel() {},
+                            });
+                          }}
+                        >
+                          <span>删除</span>
+                        </Button>
+                      </div>
                     </div>
-                    <div className='description-title-button'>
-                      <Button
-                        type='link'
-                        icon='edit'
-                        onClick={() => {
-                          showModifyAwardModal(item.uuid);
-                        }}
-                        className='link-button'
-                      >
-                        <span>修改</span>
-                      </Button>
-                      <Button
-                        type='link'
-                        className='link-button'
-                        icon='delete'
-                        onClick={() => {
-                          confirm({
-                            title: '删除奖项?',
-                            okType: 'primary',
-                            content: '确认要删除奖项?',
-                            okText: '确认',
-                            cancelText: '取消',
-                            onOk() {
-                              handleDelete(item.uuid);
-                            },
-                            onCancel() {},
-                          });
-                        }}
-                      >
-                        <span>删除</span>
-                      </Button>
-                    </div>
+                    {item.verifyRemarks ? (
+                      <Alert
+                        type='warning'
+                        description={`修改建议: ${item.verifyRemarks}`}
+                      />
+                    ) : null}
                   </div>
                 }
               >

@@ -20,7 +20,7 @@ import verifyStatusToColor from '@/components/home/staff/util/verify-status-to-c
 
 // 样式
 import '@/style/home/staff/write-item.styl';
-import { Button, Modal, Icon, Descriptions, Skeleton, Tag } from 'antd';
+import { Button, Modal, Icon, Descriptions, Skeleton, Tag, Alert } from 'antd';
 const { confirm } = Modal;
 
 export default (props) => {
@@ -153,55 +153,63 @@ export default (props) => {
               <Descriptions
                 key={item.uuid}
                 title={
-                  <div className='write-description-title'>
-                    <div className='description-title-text'>
-                      <span>{`专利${index + 1}:  ${item.patentName}`}</span>
-                      <Tag
-                        className='content-tag'
-                        color={verifyStatusToColor(item.isVerify)}
-                      >
-                        {item.isVerify}
-                      </Tag>
-                      {/* <span>{`最近填写/修改于: ${
+                  <div>
+                    <div className='write-description-title'>
+                      <div className='description-title-text'>
+                        <span>{`专利${index + 1}:  ${item.patentName}`}</span>
+                        <Tag
+                          className='content-tag'
+                          color={verifyStatusToColor(item.isVerify)}
+                        >
+                          {item.isVerify}
+                        </Tag>
+                        {/* <span>{`最近填写/修改于: ${
                         item.currentWriteTime
                           ? moment(item.currentWriteTime).format(
                               'YYYY-MM-DD h:mm:ss a'
                             )
                           : ''
                       }`}</span> */}
+                      </div>
+                      <div className='description-title-button'>
+                        <Button
+                          type='link'
+                          onClick={() => {
+                            showModifyPatentModal(item.uuid);
+                          }}
+                          className='link-button'
+                          icon='edit'
+                        >
+                          <span>修改</span>
+                        </Button>
+                        <Button
+                          type='link'
+                          icon='delete'
+                          className='link-button'
+                          onClick={() => {
+                            confirm({
+                              title: '删除专利?',
+                              okType: 'primary',
+                              content: '确认要删除专利?',
+                              okText: '确认',
+                              cancelText: '取消',
+                              onOk() {
+                                handleDelete(item.uuid);
+                              },
+                              onCancel() {},
+                            });
+                          }}
+                        >
+                          <span>删除</span>
+                        </Button>
+                      </div>
                     </div>
-                    <div className='description-title-button'>
-                      <Button
-                        type='link'
-                        onClick={() => {
-                          showModifyPatentModal(item.uuid);
-                        }}
-                        className='link-button'
-                        icon='edit'
-                      >
-                        <span>修改</span>
-                      </Button>
-                      <Button
-                        type='link'
-                        icon='delete'
-                        className='link-button'
-                        onClick={() => {
-                          confirm({
-                            title: '删除专利?',
-                            okType: 'primary',
-                            content: '确认要删除专利?',
-                            okText: '确认',
-                            cancelText: '取消',
-                            onOk() {
-                              handleDelete(item.uuid);
-                            },
-                            onCancel() {},
-                          });
-                        }}
-                      >
-                        <span>删除</span>
-                      </Button>
-                    </div>
+                    {item.verifyRemarks ? (
+                      <Alert
+                        type='warning'
+                        description={`修改建议: ${item.verifyRemarks}`}
+                      />
+                    ) : null}
                   </div>
                 }
               >

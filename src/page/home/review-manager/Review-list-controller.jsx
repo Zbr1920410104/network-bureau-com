@@ -3,8 +3,6 @@ import React, { useState, useEffect } from 'react';
 // localStorage
 import { LOCAL_STORAGE } from '@/constants/app-constants';
 
-import ExportAllContent from '@/components/home/review-manager/Export-all-content-controller.jsx';
-
 // redux
 import { useDispatch } from 'react-redux';
 import userAction from '@/redux/action/user';
@@ -18,13 +16,14 @@ import proxyFetch from '@/util/request';
 import {
   GET_STAFF_REVIEW_INFO,
   EXPORT_ALL_STAFF_INFO_EXCEL,
+  GET_REVIEW_MANAGER_EXPORT_ALL_INFO_URL,
 } from '@/constants/api-constants';
 
 // 工具
 import moment from 'moment';
 
 // 样式
-import { Table, Button, Select, Modal, Input, Skeleton } from 'antd';
+import { Table, Button, Select, Modal, Input, Skeleton, Checkbox } from 'antd';
 import '@/style/home/review-manager/review-list.styl';
 const { Option } = Select,
   { Column } = Table,
@@ -40,16 +39,9 @@ export default (props) => {
     [exportAllVisible, setExportAllVisible] = useState(false),
     [scoreLimit, setScoreLimit] = useState('等于'),
     [staffItem, setStaffItem] = useState('total'),
+    [exportAllList, setExportAllList] = useState([0, 1, 2, 3, 4, 5]),
     [score, setScore] = useState(''),
     dispatch = useDispatch();
-
-  const showExportAllModal = () => {
-    setExportAllVisible(true);
-  };
-
-  const hideExportAllModal = () => {
-    setExportAllVisible(false);
-  };
 
   const showError = () => {
     Modal.error({
@@ -77,6 +69,10 @@ export default (props) => {
     }
   }, [isNeedRefresh, reviewStatus, name, staffItem, scoreLimit, score]);
 
+  const handleAllChange = (e) => {
+    setExportAllList(e);
+  };
+
   const handleChangeScoreLimit = (e) => {
     setScoreLimit(e);
   };
@@ -103,6 +99,33 @@ export default (props) => {
       tempUrl
     )}`;
     window.open(url);
+  };
+
+  const handleExportAllStaff = async () => {
+    let tempUrl = await proxyFetch(GET_REVIEW_MANAGER_EXPORT_ALL_INFO_URL, {
+      reviewStatus,
+      name,
+      staffItem,
+      scoreLimit,
+      score,
+      exportAllList,
+    });
+
+    if (tempUrl) {
+      setExportAllVisible(false);
+      const url = `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
+        tempUrl
+      )}`;
+      window.open(url);
+    }
+  };
+
+  const showExportAllModal = () => {
+    setExportAllVisible(true);
+  };
+
+  const hideExportAllModal = () => {
+    setExportAllVisible(false);
   };
 
   return (
@@ -161,14 +184,27 @@ export default (props) => {
               导出所有人得分表
             </Button>
             <Modal
-              title='导出所有人信息'
+              title='导出所有员工信息'
               visible={exportAllVisible}
-              onOk={hideExportAllModal}
+              onOk={handleExportAllStaff}
               onCancel={hideExportAllModal}
               okText='确定'
               cancelText='取消'
             >
-              <ExportAllContent />
+              <Checkbox.Group
+                options={[
+                  { label: '基本信息', value: 0 },
+                  { label: '项目', value: 1 },
+                  { label: '专利', value: 2 },
+                  { label: '软件著作权', value: 3 },
+                  { label: '奖项', value: 4 },
+                  { label: '论文/专著', value: 5 },
+                ]}
+                value={exportAllList}
+                onChange={(e) => {
+                  handleAllChange(e);
+                }}
+              />
             </Modal>
           </div>
         </div>

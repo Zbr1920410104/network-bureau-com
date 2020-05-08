@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react';
 
 // 请求
 import proxyFetch from '@/util/request';
-import { GET_STAFF_WRITE_INFO } from '@/constants/api-constants';
+import {
+  GET_STAFF_WRITE_INFO,
+  GET_PERSONAL_EXPORT_INFO_URL,
+} from '@/constants/api-constants';
 
 // 样式
-import { Table, Button, Skeleton } from 'antd';
+import { Table, Button, Skeleton, Modal, Checkbox } from 'antd';
 import '@/style/home/staff/write-welcome.styl';
 
 import moment from 'moment';
@@ -19,7 +22,36 @@ const { Column } = Table;
 export default (props) => {
   const [staffWriteInfo, setStaffWriteInfo] = useState([]),
     [staffLoading, setStaffLoading] = useState(false),
+    [exportOneVisible, setExportOneVisible] = useState(false),
+    [exportList, setExportList] = useState([0, 1, 2, 3, 4, 5]),
     history = useHistory();
+
+  const showExportOneModal = () => {
+    setExportOneVisible(true);
+  };
+
+  const hideExportOneModal = () => {
+    setExportOneVisible(false);
+  };
+
+  const handleExportStaff = async () => {
+    let tempUrl = await proxyFetch(GET_PERSONAL_EXPORT_INFO_URL, {
+      exportList,
+    });
+
+    if (tempUrl) {
+      setExportOneVisible(false);
+
+      const url = `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
+        tempUrl
+      )}`;
+      window.open(url);
+    }
+  };
+
+  const handleChange = (e) => {
+    setExportList(e);
+  };
 
   useEffect(() => {
     (async () => {
@@ -41,6 +73,14 @@ export default (props) => {
         <Button
           type='primary'
           htmlType='submit'
+          className='export-button'
+          onClick={showExportOneModal}
+        >
+          导出个人填写信息
+        </Button>
+        <Button
+          type='primary'
+          htmlType='submit'
           className='button'
           onClick={() => {
             history.push(HOME_WRITE_DETAIL.path);
@@ -48,6 +88,29 @@ export default (props) => {
         >
           我要修改
         </Button>
+        <Modal
+          title='导出个人填写信息'
+          visible={exportOneVisible}
+          onOk={handleExportStaff}
+          onCancel={hideExportOneModal}
+          okText='确定'
+          cancelText='取消'
+        >
+          <Checkbox.Group
+            options={[
+              { label: '基本信息', value: 0 },
+              { label: '项目', value: 1 },
+              { label: '专利', value: 2 },
+              { label: '软件著作权', value: 3 },
+              { label: '奖项', value: 4 },
+              { label: '论文/专著', value: 5 },
+            ]}
+            value={exportList}
+            onChange={(e) => {
+              handleChange(e);
+            }}
+          />
+        </Modal>
       </div>
       <div className='write-list-box'>
         <Skeleton loading={staffLoading}>

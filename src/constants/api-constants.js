@@ -68,6 +68,7 @@ export const SAVE_UPLOAD_AWARD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_
 export const SELECT_UPLOAD_THESIS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/selectUploadThesis`;
 export const SAVE_UPLOAD_THESIS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/saveUploadThesis`;
 export const FINISH_STAFF_WRITE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/finishStaffWrite`;
+export const GET_PERSONAL_EXPORT_INFO_URL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getPersonalExportInfoUrl`;
 
 /**
  * 统计管理员
@@ -94,6 +95,8 @@ export const SET_VERIFY_THESIS_SUCCESS_STATUS = `${DominConfigs.DOMAIN}${DominCo
 export const FINISH_BUSINESS_MANAGER_VERIFY = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/finishBusinessManagerVerify`;
 export const GET_STAFF_WRITE_STATUS_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getStaffWriteStatusList`;
 export const GET_STAFF_VERIFY_STATUS_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getStaffVerifyStatusList`;
+export const GET_STAFF_EXPORT_INFO_URL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getStaffExportInfoUrl`;
+export const GET_STAFF_EXPORT_ALL_INFO_URL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getStaffExportAllInfoUrl`;
 
 /**
  * 评审管理员
@@ -117,6 +120,8 @@ export const GET_THESIS_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_R
 export const SET_THESIS_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/setThesisScore`;
 export const FINISH_REVIEW_MANAGER_REVIEW = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/finishReviewManagerReview`;
 export const EXPORT_ALL_STAFF_INFO_EXCEL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/exportAllStaffInfoExcel`;
+export const GE_REVIEW_MANAGER_EXPORT_INFO_URL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getReviewManagerExportInfoUrl`;
+export const GET_REVIEW_MANAGER_EXPORT_ALL_INFO_URL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getReviewManagerExportAllInfoUrl`;
 
 /**
  * 文件
