@@ -11,7 +11,7 @@ import {
 import moment from 'moment';
 
 // 样式
-import { Form, DatePicker, Button,Skeleton } from 'antd';
+import { Form, DatePicker, Button, Skeleton } from 'antd';
 
 export default Form.create({ name: 'reviewManagerTimeSet' })(({ form }) => {
   const { getFieldDecorator, setFieldsValue } = form,
@@ -40,27 +40,29 @@ export default Form.create({ name: 'reviewManagerTimeSet' })(({ form }) => {
   useEffect(() => {
     setGetDataLoading(true);
     (async () => {
-      let reviewManagerTime = await proxyFetch(
-        SELECT_REVIEW_MANAGER_TIME,
-        {},
-        'GET'
-      );
-      // 数据回显
-      if (reviewManagerTime) {
-        // 数据处理
-        // 时间处理
-        if (reviewManagerTime.startTime) {
-          reviewManagerTime.startTime = moment(reviewManagerTime.startTime);
+      if (isNeedRefresh) {
+        let reviewManagerTime = await proxyFetch(
+          SELECT_REVIEW_MANAGER_TIME,
+          {},
+          'GET'
+        );
+        // 数据回显
+        if (reviewManagerTime) {
+          // 数据处理
+          // 时间处理
+          if (reviewManagerTime.startTime) {
+            reviewManagerTime.startTime = moment(reviewManagerTime.startTime);
+          }
+
+          if (reviewManagerTime.endTime) {
+            reviewManagerTime.endTime = moment(reviewManagerTime.endTime);
+          }
+
+          setFieldsValue(reviewManagerTime);
         }
 
-        if (reviewManagerTime.endTime) {
-          reviewManagerTime.endTime = moment(reviewManagerTime.endTime);
-        }
-
-        setFieldsValue(reviewManagerTime);
+        setIsNeedRefresh(false);
       }
-
-      setIsNeedRefresh(false);
     })();
 
     setGetDataLoading(false);
@@ -82,14 +84,14 @@ export default Form.create({ name: 'reviewManagerTimeSet' })(({ form }) => {
         <Form.Item label='开始日期'>
           {getFieldDecorator('startTime', {
             rules: [{ required: true, message: '请选择开始日期！' }],
-          })(<DatePicker placeholder='20XX-XX-XX' />)}
+          })(<DatePicker placeholder='20XX-XX-XX' showTime />)}
         </Form.Item>
 
         {/* 截止日期 */}
         <Form.Item label='截止日期'>
           {getFieldDecorator('endTime', {
             rules: [{ required: true, message: '请选择截止日期！' }],
-          })(<DatePicker placeholder='20XX-XX-XX' />)}
+          })(<DatePicker placeholder='20XX-XX-XX' showTime />)}
         </Form.Item>
 
         {/* 保存按钮 */}

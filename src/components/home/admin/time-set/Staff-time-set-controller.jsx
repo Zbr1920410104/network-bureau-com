@@ -37,23 +37,25 @@ export default Form.create({ name: 'staffTimeSet' })(({ form }) => {
   useEffect(() => {
     setGetDataLoading(true);
     (async () => {
-      let staffTime = await proxyFetch(SELECT_STAFF_TIME, {}, 'GET');
-      // 数据回显
-      if (staffTime) {
-        // 数据处理
-        // 时间处理
-        if (staffTime.startTime) {
-          staffTime.startTime = moment(staffTime.startTime);
+      if (isNeedRefresh) {
+        let staffTime = await proxyFetch(SELECT_STAFF_TIME, {}, 'GET');
+        // 数据回显
+        if (staffTime) {
+          // 数据处理
+          // 时间处理
+          if (staffTime.startTime) {
+            staffTime.startTime = moment(staffTime.startTime);
+          }
+
+          if (staffTime.endTime) {
+            staffTime.endTime = moment(staffTime.endTime);
+          }
+
+          setFieldsValue(staffTime);
         }
 
-        if (staffTime.endTime) {
-          staffTime.endTime = moment(staffTime.endTime);
-        }
-
-        setFieldsValue(staffTime);
+        setIsNeedRefresh(false);
       }
-
-      setIsNeedRefresh(false);
     })();
     setGetDataLoading(false);
   }, [isNeedRefresh, setFieldsValue]);
@@ -74,14 +76,14 @@ export default Form.create({ name: 'staffTimeSet' })(({ form }) => {
         <Form.Item label='开始日期'>
           {getFieldDecorator('startTime', {
             rules: [{ required: true, message: '请选择开始日期！' }],
-          })(<DatePicker placeholder='20XX-XX-XX' />)}
+          })(<DatePicker placeholder='20XX-XX-XX' showTime />)}
         </Form.Item>
 
         {/* 截止日期 */}
         <Form.Item label='截止日期'>
           {getFieldDecorator('endTime', {
             rules: [{ required: true, message: '请选择截止日期！' }],
-          })(<DatePicker placeholder='20XX-XX-XX' />)}
+          })(<DatePicker placeholder='20XX-XX-XX' showTime />)}
         </Form.Item>
 
         {/* 保存按钮 */}

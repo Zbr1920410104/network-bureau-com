@@ -45,7 +45,6 @@ export default Form.create({ name: 'login' })((props) => {
       if (user) {
         const userName = await proxyFetch(GET_USER_NAME, { user }, 'GET');
         setName(userName?.name);
-        console.log('name=', userName);
       }
     })();
   }, [user]);
