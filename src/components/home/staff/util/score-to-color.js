@@ -4,6 +4,6 @@ export default (score) => {
   } else if (score === 0) {
     return 'red';
   } else {
-    return 'blue';
+    return 'gray';
   }
 };

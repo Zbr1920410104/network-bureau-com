@@ -61,19 +61,19 @@ export default Form.create({ name: 'password' })(({ form }) => {
       <div className='password-modify-content-box'>
         <div className='content-left-box'>
           <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
-            <Form.Item label='原始密码' hasFeedback>
+            <Form.Item label='原密码' hasFeedback>
               {getFieldDecorator('oldPassword', {
                 rules: [
                   {
                     required: true,
-                    message: '请输入原始密码！',
+                    message: '请输入原密码！',
                   },
                   {
                     pattern: /^\S{6,12}$/,
                     message: '密码需要6-12位',
                   },
                 ],
-              })(<Input.Password placeholder='请输入原始密码' />)}
+              })(<Input.Password placeholder='请输入原密码' />)}
             </Form.Item>
             <Form.Item label='新密码' hasFeedback>
               {getFieldDecorator('newPassword', {

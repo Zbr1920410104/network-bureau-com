@@ -16,6 +16,7 @@ import userAction from '@/redux/action/user';
 
 // 工具
 import verifyStatusToColor from '@/components/home/staff/util/verify-status-to-color';
+import scoreToColor from '@/components/home/staff/util/score-to-color';
 // import moment from 'moment';
 
 // 样式
@@ -28,6 +29,7 @@ export default (props) => {
     [modifyPatentVisible, setModifyPatentVisible] = useState(false),
     { changePatent } = useSelector((state) => state.userStore),
     [writePatentList, setWritePatentList] = useState([]),
+    [score, setScore] = useState(0),
     [writePatentLoading, setWritePatentLoading] = useState(false),
     [isNeedRefresh, setIsNeedRefresh] = useState(true),
     dispatch = useDispatch();
@@ -72,6 +74,12 @@ export default (props) => {
           setNewPatentVisible(false);
           setModifyPatentVisible(false);
           dispatch(userAction.setChangePatent(false));
+
+          let tempScore = 0;
+          const sum = writePatentList.reduce((accumulator, currentValue) => {
+            return accumulator + currentValue.score;
+          }, tempScore);
+          setScore(sum.toFixed(2));
         }
 
         setIsNeedRefresh(false);
@@ -93,6 +101,9 @@ export default (props) => {
         <div className='title-left-box'>
           <Icon type='tool' className='icon' />
           <span>专利</span>
+          <Tag className='content-tag' color={scoreToColor(score)}>
+            {`总评分:${score}`}
+          </Tag>
         </div>
         <Button
           type='link'
@@ -163,6 +174,12 @@ export default (props) => {
                         >
                           {item.isVerify}
                         </Tag>
+                        <Tag
+                          className='content-tag'
+                          color={scoreToColor(item.score)}
+                        >
+                          {item.score ? `评分:${item.score}` : '未评分'}
+                        </Tag>
                         {/* <span>{`最近填写/修改于: ${
                         item.currentWriteTime
                           ? moment(item.currentWriteTime).format(
@@ -179,6 +196,7 @@ export default (props) => {
                           }}
                           className='link-button'
                           icon='edit'
+                          disabled={item.isVerify === '核实通过'}
                         >
                           <span>修改</span>
                         </Button>
@@ -186,6 +204,7 @@ export default (props) => {
                           type='link'
                           icon='delete'
                           className='link-button'
+                          disabled={item.isVerify === '核实通过'}
                           onClick={() => {
                             confirm({
                               title: '删除专利?',

@@ -16,6 +16,7 @@ import userAction from '@/redux/action/user';
 
 // 工具
 import verifyStatusToColor from '@/components/home/staff/util/verify-status-to-color';
+import scoreToColor from '@/components/home/staff/util/score-to-color';
 import moment from 'moment';
 
 // 样式
@@ -29,6 +30,7 @@ export default (props) => {
     [modifyProjectVisible, setModifyProjectVisible] = useState(false),
     [writeProjectList, setWriteProjectList] = useState([]),
     [isNeedRefresh, setIsNeedRefresh] = useState(true),
+    [score, setScore] = useState(0),
     [writeProjectLoading, setWriteProjectLoading] = useState(false),
     dispatch = useDispatch();
 
@@ -72,6 +74,12 @@ export default (props) => {
           setNewProjectVisible(false);
           setModifyProjectVisible(false);
           dispatch(userAction.setChangeProject(false));
+
+          let tempScore = 0;
+          const sum = writeProjectList.reduce((accumulator, currentValue) => {
+            return accumulator + currentValue.score;
+          }, tempScore);
+          setScore(sum.toFixed(2));
         }
 
         setIsNeedRefresh(false);
@@ -93,6 +101,9 @@ export default (props) => {
         <div className='title-left-box'>
           <Icon type='file-done' className='icon' />
           <span>项目</span>
+          <Tag className='content-tag' color={scoreToColor(score)}>
+            {`总评分:${score}`}
+          </Tag>
         </div>
         <Button
           type='link'
@@ -165,6 +176,12 @@ export default (props) => {
                         >
                           {item.isVerify}
                         </Tag>
+                        <Tag
+                          className='content-tag'
+                          color={scoreToColor(item.score)}
+                        >
+                          {item.score ? `评分:${item.score}` : '未评分'}
+                        </Tag>
                         {/* <span>{`最近填写/修改于: ${
                         item.currentWriteTime
                           ? moment(item.currentWriteTime).format(
@@ -181,6 +198,7 @@ export default (props) => {
                           }}
                           className='link-button'
                           icon='edit'
+                          disabled={item.isVerify === '核实通过'}
                         >
                           <span>修改</span>
                         </Button>
@@ -188,6 +206,7 @@ export default (props) => {
                           type='link'
                           className='link-button'
                           icon='delete'
+                          disabled={item.isVerify === '核实通过'}
                           onClick={() => {
                             confirm({
                               title: '删除项目?',

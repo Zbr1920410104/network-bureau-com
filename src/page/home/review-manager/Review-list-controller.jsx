@@ -268,9 +268,9 @@ export default (props) => {
             rowKey={(record) => record.uuid}
             expandedRowRender={(record) => expandedRowRender(record)}
           >
+            <Column align='center' title='账号' dataIndex='userName' key='' />
             <Column align='center' title='姓名' dataIndex='name' key='' />
             <Column align='center' title='科室' dataIndex='department' key='' />
-            <Column align='center' title='办公号码' dataIndex='phone' key='' />
             <Column
               align='center'
               title='最后修改时间'

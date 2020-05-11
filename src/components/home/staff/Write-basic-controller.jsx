@@ -132,6 +132,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
               icon='edit'
               onClick={showModifyBasic}
               className='modify-button'
+              disabled={staffBasic.isVerify === '核实通过'}
             >
               修改
             </Button>

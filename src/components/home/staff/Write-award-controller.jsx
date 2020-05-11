@@ -10,6 +10,7 @@ import userAction from '@/redux/action/user';
 
 // 工具
 import verifyStatusToColor from '@/components/home/staff/util/verify-status-to-color';
+import scoreToColor from '@/components/home/staff/util/score-to-color';
 import moment from 'moment';
 
 import ModifyAwardContent from '@/components/home/staff/award/Modify-award-content-controller.jsx';
@@ -26,6 +27,7 @@ export default (props) => {
     [writeAwardList, setWriteAwardList] = useState([]),
     [writeAwardLoading, setWriteAwardLoading] = useState(false),
     dispatch = useDispatch(),
+    [score, setScore] = useState(0),
     [isNeedRefresh, setIsNeedRefresh] = useState(true),
     [newAwardVisible, setNewAwardVisible] = useState(false),
     [modifyAwardVisible, setModifyAwardVisible] = useState(false),
@@ -81,6 +83,12 @@ export default (props) => {
           setNewAwardVisible(false);
           setModifyAwardVisible(false);
           dispatch(userAction.setChangeAward(false));
+
+          let tempScore = 0;
+          const sum = writeAwardList.reduce((accumulator, currentValue) => {
+            return accumulator + currentValue.score;
+          }, tempScore);
+          setScore(sum.toFixed(2));
         }
 
         setIsNeedRefresh(false);
@@ -102,6 +110,9 @@ export default (props) => {
         <div className='title-left-box'>
           <Icon type='trophy' className='icon' />
           <span>奖项</span>
+          <Tag className='content-tag' color={scoreToColor(score)}>
+            {`总评分:${score}`}
+          </Tag>
         </div>
         <Button
           type='link'
@@ -195,6 +206,12 @@ export default (props) => {
                         >
                           {item.isVerify}
                         </Tag>
+                        <Tag
+                          className='content-tag'
+                          color={scoreToColor(item.score)}
+                        >
+                          {item.score ? `评分:${item.score}` : '未评分'}
+                        </Tag>
                         {/* <span>{`最近填写/修改于: ${
                         item.currentWriteTime
                           ? moment(item.currentWriteTime).format(
@@ -207,6 +224,7 @@ export default (props) => {
                         <Button
                           type='link'
                           icon='edit'
+                          disabled={item.isVerify === '核实通过'}
                           onClick={() => {
                             showModifyAwardModal(item.uuid);
                           }}
@@ -218,6 +236,7 @@ export default (props) => {
                           type='link'
                           className='link-button'
                           icon='delete'
+                          disabled={item.isVerify === '核实通过'}
                           onClick={() => {
                             confirm({
                               title: '删除奖项?',

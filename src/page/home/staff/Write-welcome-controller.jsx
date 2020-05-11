@@ -53,6 +53,30 @@ export default (props) => {
     setExportList(e);
   };
 
+  const expandedRowRender = (record) => {
+    return (
+      <div className='table-inner-info-box'>
+        <span>{`项目得分:${
+          record.projectScoreSum !== null ? record.projectScoreSum : '未评分  '
+        }`}</span>
+        <span>{`专利得分:${
+          record.patentScoreSum !== null ? record.patentScoreSum : '未评分  '
+        }`}</span>
+        <span>{`软件著作权得分:${
+          record.copyrightScoreSum !== null
+            ? record.copyrightScoreSum
+            : '未评分  '
+        }`}</span>
+        <span>{`奖项得分:${
+          record.awardScoreSum !== null ? record.awardScoreSum : '未评分  '
+        }`}</span>
+        <span>{`论文/专著得分:${
+          record.thesisScoreSum !== null ? record.thesisScoreSum : '未评分  '
+        }`}</span>
+      </div>
+    );
+  };
+
   useEffect(() => {
     (async () => {
       setStaffLoading(true);
@@ -117,9 +141,9 @@ export default (props) => {
           <Table
             dataSource={staffWriteInfo}
             className='table'
-            rowKey={(record) => record.id}
+            rowKey={(record) => record.name}
+            expandedRowRender={(record) => expandedRowRender(record)}
           >
-            <Column align='center' title='序号' dataIndex='id' key='' />
             <Column align='center' title='姓名' dataIndex='name' key='' />
             <Column align='center' title='科室' dataIndex='department' key='' />
             <Column
@@ -129,8 +153,8 @@ export default (props) => {
               key=''
               render={(text, record) => (
                 <span>
-                  {record.writeTime
-                    ? moment(record.writeTime).format('YYYY-MM-DD h:mm:ss a')
+                  {record.currentWriteTime
+                    ? moment(record.currentWriteTime).format('YYYY-MM-DD h:mm:ss a')
                     : ''}
                 </span>
               )}
@@ -153,6 +177,17 @@ export default (props) => {
               title='核实状态'
               dataIndex='verifyStatus'
               key=''
+            />
+            <Column
+              align='center'
+              title='总得分'
+              dataIndex='totalScore'
+              key=''
+              render={(text, record) => (
+                <span>
+                  {record.totalScore !== null ? record.totalScore : '未评分'}
+                </span>
+              )}
             />
           </Table>
         </Skeleton>

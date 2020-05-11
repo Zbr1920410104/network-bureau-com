@@ -338,9 +338,9 @@ export default (props) => {
             className='table'
             rowKey={(record) => record.uuid}
           >
+            <Column align='center' title='账号' dataIndex='userName' key='' />
             <Column align='center' title='姓名' dataIndex='name' key='' />
             <Column align='center' title='科室' dataIndex='department' key='' />
-            <Column align='center' title='手机号码' dataIndex='phone' key='' />
             <Column
               align='center'
               title='最后修改时间'

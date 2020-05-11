@@ -114,10 +114,8 @@ export default (props) => {
       <Modal
         title='下载附件'
         visible={uploadAwardVisible}
-        onOk={hideUploadAwardModal}
+        footer={null}
         onCancel={hideUploadAwardModal}
-        okText='保存'
-        cancelText='取消'
       >
         <div className='download-button-box'>
           {reviewAwardUrl ? (
