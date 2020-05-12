@@ -16,8 +16,8 @@ module.exports = {
     production: {
       user: 'root',
       host: '39.97.175.30',
-      ref: 'origin/dev',
-      repo: 'git@github.com:Zbr1920410104/network-bureau-com-review.git',
+      ref: 'origin/master',
+      repo: 'git@github.com:Zbr1920410104/network-bureau-review-com.git',
       path: '/network-bureau/network-bureau-com-review',
       'post-deploy':
         'npm install && npm run build',
