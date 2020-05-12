@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'network-bureau-com',
+      name: 'network-bureau-review-com',
 
       // Options reference: https://pm2.keymetrics.io/docs/usage/application-declaration/
       args: 'one two',
