@@ -128,10 +128,20 @@ export default Form.create({ name: 'department' })(({ form }) => {
         <Modal
           title='新增科室'
           visible={departmentVisible}
-          onOk={hideDepartmentModal}
-          onCancel={hideDepartmentModal}
-          okText='确认'
-          cancelText='取消'
+          onCancel={() => {
+            confirm({
+              title: '确认离开?',
+              okType: 'primary',
+              content: '离开填写内容将不会保存!',
+              okText: '确认',
+              cancelText: '取消',
+              onOk() {
+                hideDepartmentModal();
+              },
+              onCancel() {},
+            });
+          }}
+          footer={null}
         >
           <div className='inner-modal-box'>
             <Form
