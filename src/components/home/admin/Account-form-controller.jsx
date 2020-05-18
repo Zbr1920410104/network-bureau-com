@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 // redux
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import userAction from '@/redux/action/user';
 
 // 请求
@@ -14,6 +14,7 @@ const { Option } = Select;
 export default Form.create({ name: 'account' })(({ form }) => {
   const { getFieldDecorator, resetFields } = form;
   const [saveDataLoading, setSaveDataLoading] = useState(false),
+    { accountRefresh } = useSelector((state) => state.userStore),
     [depatmentList, setDepatmentList] = useState([]),
     dispatch = useDispatch();
 
@@ -45,6 +46,13 @@ export default Form.create({ name: 'account' })(({ form }) => {
       setDepatmentList(depatmentList);
     })();
   }, []);
+
+  useEffect(() => {
+    if (accountRefresh) {
+      resetFields();
+      dispatch(userAction.setAccountRefresh(false));
+    }
+  }, [accountRefresh, dispatch, resetFields]);
 
   return (
     <Form

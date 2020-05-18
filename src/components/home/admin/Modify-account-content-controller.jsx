@@ -19,7 +19,8 @@ export default Form.create({ name: 'account' })(({ form }) => {
   const { getFieldDecorator, setFieldsValue } = form;
   const [saveDataLoading, setSaveDataLoading] = useState(false),
     [depatmentList, setDepatmentList] = useState([]),
-    { userUuid } = useSelector((state) => state.userStore),
+    [needRefresh, setNeedRefresh] = useState(true),
+    { userUuid, accountRefresh } = useSelector((state) => state.userStore),
     dispatch = useDispatch();
 
   /**
@@ -55,19 +56,29 @@ export default Form.create({ name: 'account' })(({ form }) => {
   // 将已有的数据回显
   useEffect(() => {
     (async () => {
-      const userInfo = await proxyFetch(
-        SELECT_ACCOUNT,
-        { uuid: userUuid },
-        'GET'
-      );
-      // 数据回显
-      if (userInfo) {
-        // 数据处理
+      if (needRefresh) {
+        const userInfo = await proxyFetch(
+          SELECT_ACCOUNT,
+          { uuid: userUuid },
+          'GET'
+        );
+        // 数据回显
+        if (userInfo) {
+          // 数据处理
 
-        setFieldsValue(userInfo);
+          setFieldsValue(userInfo);
+        }
+        setNeedRefresh(false);
       }
     })();
-  }, [userUuid, setFieldsValue]);
+  }, [userUuid, needRefresh, setFieldsValue]);
+
+  useEffect(() => {
+    if (accountRefresh) {
+      setNeedRefresh(true);
+      dispatch(userAction.setAccountRefresh(false));
+    }
+  }, [accountRefresh, dispatch]);
 
   return (
     <div className='inner-form-box'>

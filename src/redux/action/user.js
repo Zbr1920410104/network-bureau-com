@@ -8,6 +8,7 @@ export default {
   setUserLoading: createAction('setUserLoading'),
   setModifyPassword: createAction('setModifyPassword'),
   setAddAccount: createAction('setAddAccount'),
+  setAccountRefresh: createAction('setAccountRefresh'),
   setModifyBasic: createAction('setModifyBasic'),
   setUserUuid: createAction('setUserUuid'),
   setStaffUuid: createAction('setStaffUuid'),

@@ -41,6 +41,12 @@ export default handleActions(
         addAccount: result,
       };
     },
+    setAccountRefresh(state, { payload: result }) {
+      return {
+        ...state,
+        accountRefresh: result,
+      };
+    },
     setModifyBasic(state, { payload: result }) {
       return {
         ...state,
@@ -229,6 +235,7 @@ export default handleActions(
     userLoading: false,
     modifyPassword: false,
     addAccount: false,
+    accountRefresh: false,
     // 普通员工
     modifyBasic: false,
     changeProject: false,

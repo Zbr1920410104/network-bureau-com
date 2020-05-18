@@ -40,6 +40,7 @@ export default (porps) => {
   };
 
   const hideAccountModal = () => {
+    dispatch(userAction.setAccountRefresh(true));
     setAccountVisible(false);
   };
 
@@ -48,6 +49,7 @@ export default (porps) => {
   };
 
   const hideModifyAccountModal = () => {
+    dispatch(userAction.setAccountRefresh(true));
     setModifyAccountVisible(false);
   };
 
