@@ -23,6 +23,12 @@ export default {
   setStaffAwardUuid: createAction('setStaffAwardUuid'),
   setChangeThesis: createAction('setChangeThesis'),
   setStaffThesisUuid: createAction('setStaffThesisUuid'),
+  setProjectRefresh: createAction('setProjectRefresh'),
+  setBasicRefresh: createAction('setBasicRefresh'),
+  setCopyrightRefresh: createAction('setCopyrightRefresh'),
+  setPatentRefresh: createAction('setPatentRefresh'),
+  setAwardRefresh: createAction('setAwardRefresh'),
+  setThesisRefresh: createAction('setThesisRefresh'),
   // 评审员打分
   setReviewProject: createAction('setReviewProject'),
   setReviewPatent: createAction('setReviewPatent'),

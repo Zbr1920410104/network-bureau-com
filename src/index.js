@@ -6,17 +6,24 @@ import App from '@/App.jsx';
 import * as serviceWorker from '@/serviceWorker';
 
 // 样式
+import { ConfigProvider } from 'antd';
+import zhCN from 'antd/es/locale/zh_CN';
+
 import 'normalize.css';
 import '@/index.styl';
 
 // redux
 import { Provider } from 'react-redux';
 import { store } from '@/redux';
+import moment from 'moment';
+moment.locale('zh-cn');
 
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
-      <App />
+      <ConfigProvider locale={zhCN}>
+        <App />
+      </ConfigProvider>
     </BrowserRouter>
   </Provider>,
   document.getElementById('root')

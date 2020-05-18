@@ -39,6 +39,7 @@ export default (props) => {
   };
 
   const hideNewCopyrightModal = () => {
+    dispatch(userAction.setCopyrightRefresh(true));
     setNewCopyrightVisible(false);
   };
 
@@ -48,6 +49,7 @@ export default (props) => {
   };
 
   const hideModifyCopyrightModal = () => {
+    dispatch(userAction.setStaffCopyrightUuid(''));
     setModifyCopyrightVisible(false);
   };
 

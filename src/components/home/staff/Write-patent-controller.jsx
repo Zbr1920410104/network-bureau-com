@@ -39,6 +39,7 @@ export default (props) => {
   };
 
   const hideNewPatentModal = () => {
+    dispatch(userAction.setPatentRefresh(true));
     setNewPatentVisible(false);
   };
 
@@ -48,6 +49,7 @@ export default (props) => {
   };
 
   const hideModifyPatentModal = () => {
+    dispatch(userAction.setStaffPatentUuid(''));
     setModifyPatentVisible(false);
   };
 

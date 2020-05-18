@@ -39,6 +39,7 @@ export default (props) => {
   };
 
   const hideNewProjectModal = () => {
+    dispatch(userAction.setProjectRefresh(true));
     setNewProjectVisible(false);
   };
 
@@ -55,6 +56,7 @@ export default (props) => {
   };
 
   const hideModifyProjectModal = () => {
+    dispatch(userAction.setStaffProjectUuid(''));
     setModifyProjectVisible(false);
   };
 

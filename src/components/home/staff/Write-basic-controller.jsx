@@ -109,6 +109,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
   };
 
   const hideModifyBasic = () => {
+    dispatch(userAction.setBasicRefresh(true));
     setModifyBasicVisible(false);
   };
 

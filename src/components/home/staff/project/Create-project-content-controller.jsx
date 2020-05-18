@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // redux
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import userAction from '@/redux/action/user';
 
 // 请求
@@ -16,6 +16,7 @@ const { TextArea } = Input,
 
 export default Form.create({ name: 'writeProject' })(({ form }) => {
   const { getFieldDecorator, resetFields } = form,
+    { projectRefresh } = useSelector((state) => state.userStore),
     [saveDataLoading, setSaveDataLoading] = useState(false),
     dispatch = useDispatch();
 
@@ -41,6 +42,13 @@ export default Form.create({ name: 'writeProject' })(({ form }) => {
       }
     });
   };
+
+  useEffect(() => {
+    if (projectRefresh) {
+      resetFields();
+      dispatch(userAction.setProjectRefresh(false));
+    }
+  }, [projectRefresh, dispatch, resetFields]);
 
   return (
     <div className='inner-form-box'>

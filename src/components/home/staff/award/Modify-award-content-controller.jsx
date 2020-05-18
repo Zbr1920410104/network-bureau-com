@@ -26,20 +26,22 @@ export default Form.create({ name: 'modifyAward' })(({ form }) => {
 
   useEffect(() => {
     (async () => {
-      const staffAward = await proxyFetch(
-        GET_STAFF_AWARD_BY_UUID,
-        { staffAwardUuid },
-        'GET'
-      );
+      if (staffAwardUuid) {
+        const staffAward = await proxyFetch(
+          GET_STAFF_AWARD_BY_UUID,
+          { staffAwardUuid },
+          'GET'
+        );
 
-      if (staffAward) {
-        // 时间处理
-        if (staffAward.awardTime) {
-          staffAward.awardTime = moment(staffAward.awardTime);
+        if (staffAward) {
+          // 时间处理
+          if (staffAward.awardTime) {
+            staffAward.awardTime = moment(staffAward.awardTime);
+          }
+
+          setFieldsValue(staffAward);
+          dispatch(userAction.setChangeAward(false));
         }
-
-        setFieldsValue(staffAward);
-        dispatch(userAction.setChangeAward(false));
       }
     })();
   }, [setFieldsValue, staffAwardUuid, dispatch]);

@@ -23,15 +23,17 @@ export default Form.create({ name: 'modifyCopyright' })(({ form }) => {
 
   useEffect(() => {
     (async () => {
-      const staffCopyright = await proxyFetch(
-        GET_STAFF_COPYRIGHT_BY_UUID,
-        { staffCopyrightUuid },
-        'GET'
-      );
+      if (staffCopyrightUuid) {
+        const staffCopyright = await proxyFetch(
+          GET_STAFF_COPYRIGHT_BY_UUID,
+          { staffCopyrightUuid },
+          'GET'
+        );
 
-      if (staffCopyright) {
-        setFieldsValue(staffCopyright);
-        dispatch(userAction.setChangeCopyright(false));
+        if (staffCopyright) {
+          setFieldsValue(staffCopyright);
+          dispatch(userAction.setChangeCopyright(false));
+        }
       }
     })();
   }, [setFieldsValue, staffCopyrightUuid, dispatch]);

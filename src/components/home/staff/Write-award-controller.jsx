@@ -38,6 +38,7 @@ export default (props) => {
   };
 
   const hideNewAwardModal = () => {
+    dispatch(userAction.setAwardRefresh(true));
     setNewAwardVisible(false);
   };
 
@@ -47,6 +48,7 @@ export default (props) => {
   };
 
   const hideModifyAwardModal = () => {
+    dispatch(userAction.setStaffAwardUuid(''));
     setModifyAwardVisible(false);
   };
 

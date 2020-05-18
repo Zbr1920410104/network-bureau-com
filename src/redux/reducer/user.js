@@ -125,6 +125,42 @@ export default handleActions(
         staffThesisUuid: result,
       };
     },
+    setProjectRefresh(state, { payload: result }) {
+      return {
+        ...state,
+        projectRefresh: result,
+      };
+    },
+    setBasicRefresh(state, { payload: result }) {
+      return {
+        ...state,
+        basicRefresh: result,
+      };
+    },
+    setCopyrightRefresh(state, { payload: result }) {
+      return {
+        ...state,
+        copyrightRefresh: result,
+      };
+    },
+    setPatentRefresh(state, { payload: result }) {
+      return {
+        ...state,
+        patentRefresh: result,
+      };
+    },
+    setAwardRefresh(state, { payload: result }) {
+      return {
+        ...state,
+        awardRefresh: result,
+      };
+    },
+    setThesisRefresh(state, { payload: result }) {
+      return {
+        ...state,
+        thesisRefresh: result,
+      };
+    },
     // 评审员打分
     setReviewProject(state, { payload: result }) {
       return {
@@ -205,6 +241,12 @@ export default handleActions(
     staffCopyrightUuid: '',
     staffAwardUuid: '',
     staffThesisUuid: '',
+    projectRefresh: false,
+    basicRefresh: false,
+    copyrightRefresh: false,
+    patentRefresh: false,
+    awardRefresh: false,
+    thesisRefresh: false,
     // 统计员
     staffProjectVerifyStatus: '',
     staffPatentVerifyStatus: '',

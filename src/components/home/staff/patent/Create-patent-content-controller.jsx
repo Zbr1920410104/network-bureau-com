@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // redux
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import userAction from '@/redux/action/user';
 
 // 请求
@@ -14,6 +14,7 @@ const { Option } = Select;
 
 export default Form.create({ name: 'writePatent' })(({ form }) => {
   const { getFieldDecorator, resetFields } = form,
+    { patentRefresh } = useSelector((state) => state.userStore),
     [saveDataLoading, setSaveDataLoading] = useState(false),
     dispatch = useDispatch();
 
@@ -39,6 +40,14 @@ export default Form.create({ name: 'writePatent' })(({ form }) => {
       }
     });
   };
+
+  useEffect(() => {
+    if (patentRefresh) {
+      resetFields();
+      dispatch(userAction.setPatentRefresh(false));
+    }
+  }, [patentRefresh, dispatch, resetFields]);
+
   return (
     <div className='inner-form-box'>
       <Form>

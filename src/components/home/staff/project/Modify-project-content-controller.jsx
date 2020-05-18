@@ -26,23 +26,25 @@ export default Form.create({ name: 'modifyProject' })(({ form }) => {
 
   useEffect(() => {
     (async () => {
-      const staffProject = await proxyFetch(
-        GET_STAFF_PROJECT_BY_UUID,
-        { staffProjectUuid },
-        'GET'
-      );
+      if (staffProjectUuid) {
+        const staffProject = await proxyFetch(
+          GET_STAFF_PROJECT_BY_UUID,
+          { staffProjectUuid },
+          'GET'
+        );
 
-      if (staffProject) {
-        if (staffProject.startTime) {
-          staffProject.startTime = moment(staffProject.startTime);
+        if (staffProject) {
+          if (staffProject.startTime) {
+            staffProject.startTime = moment(staffProject.startTime);
+          }
+
+          if (staffProject.endTime) {
+            staffProject.endTime = moment(staffProject.endTime);
+          }
+
+          setFieldsValue(staffProject);
+          dispatch(userAction.setChangeProject(false));
         }
-
-        if (staffProject.endTime) {
-          staffProject.endTime = moment(staffProject.endTime);
-        }
-
-        setFieldsValue(staffProject);
-        dispatch(userAction.setChangeProject(false));
       }
     })();
   }, [setFieldsValue, staffProjectUuid, dispatch]);

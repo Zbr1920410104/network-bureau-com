@@ -9,7 +9,7 @@ import {
 } from '@/constants/api-constants';
 
 // redux
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import userAction from '@/redux/action/user';
 
 // 组件
@@ -23,6 +23,8 @@ const { TextArea } = Input,
 
 export default Form.create({ name: 'staffBasic' })(({ form }) => {
   const { getFieldDecorator, setFieldsValue } = form,
+    { basicRefresh } = useSelector((state) => state.userStore),
+    [needRefresh, setNeedRefresh] = useState(true),
     [saveDataLoading, setSaveDataLoading] = useState(false),
     [depatmentList, setDepatmentList] = useState([]),
     dispatch = useDispatch();
@@ -38,26 +40,37 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
   // 将已有的数据回显
   useEffect(() => {
     (async () => {
-      const staffBasic = await proxyFetch(GET_STAFF_BASIC, {}, 'GET');
-      // 数据回显
-      if (staffBasic) {
-        // 数据处理
-        // 时间处理
-        if (staffBasic.workTime) {
-          staffBasic.workTime = moment(staffBasic.workTime);
+      if (needRefresh) {
+        const staffBasic = await proxyFetch(GET_STAFF_BASIC, {}, 'GET');
+        // 数据回显
+        if (staffBasic) {
+          // 数据处理
+          // 时间处理
+          if (staffBasic.workTime) {
+            staffBasic.workTime = moment(staffBasic.workTime);
+          }
+
+          if (staffBasic.getTime) {
+            staffBasic.getTime = moment(staffBasic.getTime);
+          }
+
+          delete staffBasic.isVerify;
+          delete staffBasic.verifyRemarks;
+
+          setFieldsValue(staffBasic);
         }
 
-        if (staffBasic.getTime) {
-          staffBasic.getTime = moment(staffBasic.getTime);
-        }
-
-        delete staffBasic.isVerify;
-        delete staffBasic.verifyRemarks;
-
-        setFieldsValue(staffBasic);
+        setNeedRefresh(false);
       }
     })();
-  }, [setFieldsValue]);
+  }, [setFieldsValue, basicRefresh, needRefresh]);
+
+  useEffect(() => {
+    if (basicRefresh) {
+      setNeedRefresh(true);
+      dispatch(userAction.setBasicRefresh(false));
+    }
+  }, [basicRefresh, dispatch]);
 
   /**
    * 提交事件

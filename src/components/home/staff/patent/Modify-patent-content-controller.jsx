@@ -23,15 +23,17 @@ export default Form.create({ name: 'modifyPatent' })(({ form }) => {
 
   useEffect(() => {
     (async () => {
-      const staffPatent = await proxyFetch(
-        GET_STAFF_PATENT_BY_UUID,
-        { staffPatentUuid },
-        'GET'
-      );
+      if (staffPatentUuid) {
+        const staffPatent = await proxyFetch(
+          GET_STAFF_PATENT_BY_UUID,
+          { staffPatentUuid },
+          'GET'
+        );
 
-      if (staffPatent) {
-        setFieldsValue(staffPatent);
-        dispatch(userAction.setChangePatent(false));
+        if (staffPatent) {
+          setFieldsValue(staffPatent);
+          dispatch(userAction.setChangePatent(false));
+        }
       }
     })();
   }, [setFieldsValue, staffPatentUuid, dispatch]);

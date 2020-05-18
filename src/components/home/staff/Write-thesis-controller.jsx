@@ -41,6 +41,7 @@ export default (props) => {
   };
 
   const hideNewThesisModal = () => {
+    dispatch(userAction.setThesisRefresh(true));
     setNewThesisVisible(false);
   };
 
@@ -50,6 +51,7 @@ export default (props) => {
   };
 
   const hideModifyThesisModal = () => {
+    dispatch(userAction.setStaffThesisUuid(''));
     setModifyThesisVisible(false);
   };
 

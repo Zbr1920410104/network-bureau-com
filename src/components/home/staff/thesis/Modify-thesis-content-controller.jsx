@@ -26,20 +26,22 @@ export default Form.create({ name: 'modifyThesis' })(({ form }) => {
 
   useEffect(() => {
     (async () => {
-      const staffThesis = await proxyFetch(
-        GET_STAFF_THESIS_BY_UUID,
-        { staffThesisUuid },
-        'GET'
-      );
+      if (staffThesisUuid) {
+        const staffThesis = await proxyFetch(
+          GET_STAFF_THESIS_BY_UUID,
+          { staffThesisUuid },
+          'GET'
+        );
 
-      if (staffThesis) {
-        // 时间处理
-        if (staffThesis.thesisTime) {
-          staffThesis.thesisTime = moment(staffThesis.thesisTime);
+        if (staffThesis) {
+          // 时间处理
+          if (staffThesis.thesisTime) {
+            staffThesis.thesisTime = moment(staffThesis.thesisTime);
+          }
+
+          setFieldsValue(staffThesis);
+          dispatch(userAction.setChangeThesis(false));
         }
-
-        setFieldsValue(staffThesis);
-        dispatch(userAction.setChangeThesis(false));
       }
     })();
   }, [setFieldsValue, staffThesisUuid, dispatch]);

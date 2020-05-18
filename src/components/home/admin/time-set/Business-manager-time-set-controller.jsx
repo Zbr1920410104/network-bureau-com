@@ -12,7 +12,6 @@ import {
 
 // 组件
 import moment from 'moment';
-import locale from 'antd/es/date-picker/locale/zh_CN';
 
 export default Form.create({ name: 'businessManagerTimeSet' })(({ form }) => {
   const { getFieldDecorator, setFieldsValue } = form,
@@ -87,14 +86,14 @@ export default Form.create({ name: 'businessManagerTimeSet' })(({ form }) => {
         <Form.Item label='开始日期'>
           {getFieldDecorator('startTime', {
             rules: [{ required: true, message: '请选择开始日期！' }],
-          })(<DatePicker placeholder='20XX-XX-XX' showTime locale={locale} />)}
+          })(<DatePicker placeholder='20XX-XX-XX' showTime />)}
         </Form.Item>
 
         {/* 截止日期 */}
         <Form.Item label='截止日期'>
           {getFieldDecorator('endTime', {
             rules: [{ required: true, message: '请选择截止日期！' }],
-          })(<DatePicker placeholder='20XX-XX-XX' showTime locale={locale} />)}
+          })(<DatePicker placeholder='20XX-XX-XX' showTime />)}
         </Form.Item>
 
         {/* 保存按钮 */}
