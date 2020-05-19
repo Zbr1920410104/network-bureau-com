@@ -5,6 +5,7 @@ import ModifyBasicContent from '@/components/home/staff/basic/Modify-basic-conte
 // 工具
 import verifyStatusToColor from '@/components/home/staff/util/verify-status-to-color';
 import moment from 'moment';
+import addressData from '@/components/home/staff/util/addressData';
 
 // redux
 import { useSelector, useDispatch } from 'react-redux';
@@ -34,6 +35,7 @@ import {
   Modal,
   Tag,
   Alert,
+  Cascader,
 } from 'antd';
 const { Option } = Select,
   { TextArea } = Input,
@@ -59,6 +61,9 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
     // 表单判断
     form.validateFields(async (err, value) => {
       if (!err) {
+        value.nativePlace =
+          value.nativePlace[0] +
+          (value.nativePlace[1] ? value.nativePlace[1] : '');
         const res = await proxyFetch(SAVE_STAFF_BASIC, value);
 
         if (res) {
@@ -113,6 +118,33 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
     setModifyBasicVisible(false);
   };
 
+  let addr = [];
+
+  const province = Object.keys(addressData);
+
+  for (let item in province) {
+    const key = province[item];
+    const cityList = [];
+    let provinceItem, cityItem;
+    if (addressData[key].length > 0) {
+      for (let city in addressData[key]) {
+        cityItem = {
+          value: addressData[key][city],
+          label: addressData[key][city],
+        };
+
+        cityList.push(cityItem);
+      }
+    }
+
+    provinceItem = {
+      value: key,
+      label: key,
+      children: cityList,
+    };
+
+    addr.push(provinceItem);
+  }
   return (
     <div className='write-basic-box'>
       <div className='basic-title-box'>
@@ -197,8 +229,11 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
             <Descriptions.Item label='手机'>
               {staffBasic.phone}
             </Descriptions.Item>
-            <Descriptions.Item label='学历/学位'>
+            <Descriptions.Item label='学历'>
               {staffBasic.education}
+            </Descriptions.Item>
+            <Descriptions.Item label='学位'>
+              {staffBasic.degree}
             </Descriptions.Item>
             <Descriptions.Item label='毕业学校'>
               {staffBasic.graduateSchool}
@@ -222,7 +257,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                 ? moment(staffBasic.getTime).format('YYYY-MM-DD')
                 : ''}
             </Descriptions.Item>
-            <Descriptions.Item label='研究方向' span={2}>
+            <Descriptions.Item label='研究方向'>
               {staffBasic.researchDirection}
             </Descriptions.Item>
             <Descriptions.Item label='学习经历' span={3}>
@@ -389,12 +424,8 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                         required: true,
                         message: '请输入籍贯！',
                       },
-                      {
-                        message: '籍贯过长！',
-                        max: 32,
-                      },
                     ],
-                  })(<Input placeholder='请输入籍贯' />)}
+                  })(<Cascader options={addr} />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -501,13 +532,9 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                   })(<Input placeholder='请输入手机号码' />)}
                 </Form.Item>
               </Col>
-            </Row>
-
-            {/* 第五行 */}
-            <Row>
               <Col span={8} key='10'>
                 <Form.Item
-                  label='学历/学位'
+                  label='学历'
                   labelCol={{ span: 6 }}
                   wrapperCol={{ span: 18 }}
                 >
@@ -524,6 +551,33 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                       <Option value='中专'>中专</Option>
                       <Option value='大专'>大专</Option>
                       <Option value='本科'>本科</Option>
+                      <Option value='硕士'>硕士</Option>
+                      <Option value='博士'>博士</Option>
+                    </Select>
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+
+            {/* 第五行 */}
+            <Row>
+              <Col span={8} key='10'>
+                <Form.Item
+                  label='学位'
+                  labelCol={{ span: 6 }}
+                  wrapperCol={{ span: 18 }}
+                >
+                  {getFieldDecorator('degree', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请选择学位！',
+                      },
+                    ],
+                  })(
+                    <Select placeholder='学位'>
+                      <Option value='无'>无</Option>
+                      <Option value='学士'>学士</Option>
                       <Option value='硕士'>硕士</Option>
                       <Option value='博士'>博士</Option>
                     </Select>

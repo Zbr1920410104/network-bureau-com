@@ -14,10 +14,20 @@ import userAction from '@/redux/action/user';
 
 // 组件
 import moment from 'moment';
+import addressData from '@/components/home/staff/util/addressData';
 
 // 样式
 import '@/style/home/modify-modal.styl';
-import { Form, Row, Input, Col, Select, DatePicker, Button } from 'antd';
+import {
+  Form,
+  Row,
+  Input,
+  Col,
+  Select,
+  DatePicker,
+  Button,
+  Cascader,
+} from 'antd';
 const { TextArea } = Input,
   { Option } = Select;
 
@@ -54,6 +64,37 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
             staffBasic.getTime = moment(staffBasic.getTime);
           }
 
+          if (staffBasic.nativePlace) {
+            let nativePlace = [];
+            let strength = staffBasic.nativePlace.length;
+            let indexProvince = staffBasic.nativePlace.indexOf('省');
+            if (indexProvince !== -1) {
+              nativePlace[0] = staffBasic.nativePlace.substring(
+                0,
+                indexProvince + 1
+              );
+              nativePlace[1] = staffBasic.nativePlace.substring(
+                indexProvince + 1,
+                strength
+              );
+            } else {
+              indexProvince = staffBasic.nativePlace.indexOf('区');
+              if (indexProvince !== -1) {
+                nativePlace[0] = staffBasic.nativePlace.substring(
+                  0,
+                  indexProvince + 1
+                );
+                nativePlace[1] = staffBasic.nativePlace.substring(
+                  indexProvince + 1,
+                  strength
+                );
+              } else {
+                nativePlace[0] = staffBasic.nativePlace;
+              }
+            }
+            staffBasic.nativePlace = nativePlace;
+          }
+
           delete staffBasic.isVerify;
           delete staffBasic.verifyRemarks;
 
@@ -83,6 +124,10 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
       if (!err) {
         setSaveDataLoading(true);
 
+        value.nativePlace =
+          value.nativePlace[0] +
+          (value.nativePlace[1] ? value.nativePlace[1] : '');
+
         const res = await proxyFetch(MODIFY_STAFF_BASIC, value);
 
         setSaveDataLoading(false);
@@ -93,6 +138,34 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
       }
     });
   };
+
+  let addr = [];
+
+  const province = Object.keys(addressData);
+
+  for (let item in province) {
+    const key = province[item];
+    const cityList = [];
+    let provinceItem, cityItem;
+    if (addressData[key].length > 0) {
+      for (let city in addressData[key]) {
+        cityItem = {
+          value: addressData[key][city],
+          label: addressData[key][city],
+        };
+
+        cityList.push(cityItem);
+      }
+    }
+
+    provinceItem = {
+      value: key,
+      label: key,
+      children: cityList,
+    };
+
+    addr.push(provinceItem);
+  }
 
   return (
     <div className='modify-modal-box'>
@@ -256,12 +329,8 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                     required: true,
                     message: '请输入籍贯！',
                   },
-                  {
-                    message: '籍贯过长！',
-                    max: 32,
-                  },
                 ],
-              })(<Input placeholder='请输入籍贯' />)}
+              })(<Cascader options={addr} />)}
             </Form.Item>
           </Col>
           <Col span={12} key='6'>
@@ -330,6 +399,30 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
               )}
             </Form.Item>
           </Col>
+          <Col span={12} key='18'>
+            <Form.Item
+              label='研究方向'
+              labelCol={{ span: 9 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('researchDirection', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入研究方向！',
+                  },
+                  {
+                    message: '研究方向过长！',
+                    max: 32,
+                  },
+                ],
+              })(<Input placeholder='请输入研究方向' />)}
+            </Form.Item>
+          </Col>
+        </Row>
+
+        {/* 第五行 */}
+        <Row>
           <Col span={12} key='8'>
             <Form.Item
               label='办公电话'
@@ -350,10 +443,6 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
               })(<Input placeholder='请输入办公电话' />)}
             </Form.Item>
           </Col>
-        </Row>
-
-        {/* 第五行 */}
-        <Row>
           <Col span={12} key='9'>
             <Form.Item
               label='手机号码'
@@ -374,9 +463,13 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
               })(<Input placeholder='请输入手机号码' />)}
             </Form.Item>
           </Col>
+        </Row>
+
+        {/* 第六行 */}
+        <Row>
           <Col span={12} key='10'>
             <Form.Item
-              label='学历/学位'
+              label='学历'
               labelCol={{ span: 9 }}
               wrapperCol={{ span: 15 }}
             >
@@ -399,11 +492,34 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
               )}
             </Form.Item>
           </Col>
+          <Col span={12} key='11'>
+            <Form.Item
+              label='学位'
+              labelCol={{ span: 9 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('degree', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择学位！',
+                  },
+                ],
+              })(
+                <Select placeholder='学位'>
+                  <Option value='无'>无</Option>
+                  <Option value='学士'>学士</Option>
+                  <Option value='硕士'>硕士</Option>
+                  <Option value='博士'>博士</Option>
+                </Select>
+              )}
+            </Form.Item>
+          </Col>
         </Row>
 
-        {/* 第六行 */}
+        {/* 第七行 */}
         <Row>
-          <Col span={12} key='11'>
+          <Col span={12} key='12'>
             <Form.Item
               label='毕业学校'
               labelCol={{ span: 9 }}
@@ -423,7 +539,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
               })(<Input placeholder='请输入毕业学校' />)}
             </Form.Item>
           </Col>
-          <Col span={12} key='12'>
+          <Col span={12} key='13'>
             <Form.Item
               label='所学专业'
               labelCol={{ span: 9 }}
@@ -445,9 +561,9 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
           </Col>
         </Row>
 
-        {/* 第七行 */}
+        {/* 第八行 */}
         <Row>
-          <Col span={12} key='13'>
+          <Col span={12} key='14'>
             <Form.Item
               label='职务'
               labelCol={{ span: 9 }}
@@ -467,7 +583,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
               })(<Input placeholder='请输入职务' />)}
             </Form.Item>
           </Col>
-          <Col span={12} key='14'>
+          <Col span={12} key='15'>
             <Form.Item
               label='参加工作时间'
               labelCol={{ span: 11 }}
@@ -480,9 +596,9 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
           </Col>
         </Row>
 
-        {/* 第八行 */}
+        {/* 第九行 */}
         <Row>
-          <Col span={12} key='15'>
+          <Col span={12} key='16'>
             <Form.Item
               label='职称'
               labelCol={{ span: 9 }}
@@ -502,7 +618,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
               })(<Input placeholder='请输入职称' />)}
             </Form.Item>
           </Col>
-          <Col span={12} key='16'>
+          <Col span={12} key='17'>
             <Form.Item
               label='获得时间'
               labelCol={{ span: 11 }}
@@ -515,33 +631,9 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
           </Col>
         </Row>
 
-        {/* 第九行 */}
-        <Row>
-          <Col span={12} key='17'>
-            <Form.Item
-              label='研究方向'
-              labelCol={{ span: 9 }}
-              wrapperCol={{ span: 15 }}
-            >
-              {getFieldDecorator('researchDirection', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入研究方向！',
-                  },
-                  {
-                    message: '研究方向过长！',
-                    max: 32,
-                  },
-                ],
-              })(<Input placeholder='请输入研究方向' />)}
-            </Form.Item>
-          </Col>
-        </Row>
-
         {/* 第八行 */}
         <Row>
-          <Col span={24} key='18'>
+          <Col span={24} key='19'>
             <Form.Item
               label='学习经历'
               labelCol={{ span: 5 }}
@@ -565,7 +657,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
 
         {/* 第九行 */}
         <Row>
-          <Col span={24} key='19'>
+          <Col span={24} key='20'>
             <Form.Item
               label='工作经历'
               labelCol={{ span: 5 }}

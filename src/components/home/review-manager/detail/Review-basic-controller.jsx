@@ -64,8 +64,11 @@ export default (props) => {
             {staffBasic.officePhone}
           </Descriptions.Item>
           <Descriptions.Item label='手机'>{staffBasic.phone}</Descriptions.Item>
-          <Descriptions.Item label='学历/学位'>
+          <Descriptions.Item label='学历'>
             {staffBasic.education}
+          </Descriptions.Item>
+          <Descriptions.Item label='学位'>
+            {staffBasic.degree}
           </Descriptions.Item>
           <Descriptions.Item label='毕业学校'>
             {staffBasic.graduateSchool}
@@ -87,7 +90,7 @@ export default (props) => {
               ? moment(staffBasic.getTime).format('YYYY-MM-DD')
               : ''}
           </Descriptions.Item>
-          <Descriptions.Item label='研究方向' span={2}>
+          <Descriptions.Item label='研究方向'>
             {staffBasic.researchDirection}
           </Descriptions.Item>
           <Descriptions.Item label='学习经历' span={3}>
