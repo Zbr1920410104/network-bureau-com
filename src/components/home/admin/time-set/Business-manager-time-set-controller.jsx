@@ -12,6 +12,7 @@ import {
 
 // 组件
 import moment from 'moment';
+import 'moment/locale/zh-cn';
 
 export default Form.create({ name: 'businessManagerTimeSet' })(({ form }) => {
   const { getFieldDecorator, setFieldsValue } = form,

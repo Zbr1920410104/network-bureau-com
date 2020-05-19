@@ -5,6 +5,7 @@ import wait from '@/util/wait-helper';
 
 // localStorage
 import { LOCAL_STORAGE } from '@/constants/app-constants';
+let enMoment = moment().locale('en');
 
 // 请求包装
 export default async (
@@ -14,7 +15,7 @@ export default async (
   ignoreParam = false
 ) => {
   // headers
-  const t = moment().format('Unix Timestamp');
+  const t = enMoment.format('Unix Timestamp');
   const os = 'opt';
 
   let headers = new Headers({
@@ -23,12 +24,12 @@ export default async (
     Connection: 'keep-alive',
     t,
     os,
-    authorization: `Bearer ${localStorage.getItem(`${LOCAL_STORAGE}-token`)}`
+    authorization: `Bearer ${localStorage.getItem(`${LOCAL_STORAGE}-token`)}`,
   });
 
   const fetchParams = {
     method: requestType,
-    headers
+    headers,
   };
 
   // 根据不同的请求类型 拼装请求参数
@@ -68,7 +69,7 @@ export default async (
   // 防闪烁
   const [res] = await Promise.all([
     _fetch(url, params, requestType, fetchParams),
-    wait(300)
+    wait(300),
   ]);
 
   return res;
@@ -148,7 +149,7 @@ async function _fetch(url, params = {}, requestType, fetchParams = {}) {
  * 返回值处理
  * @param {*} responseData
  */
-const responseHandle = responseData => {
+const responseHandle = (responseData) => {
   if (responseData.status) {
     return _responseHandle[responseData.status](responseData);
   } else {
@@ -157,41 +158,41 @@ const responseHandle = responseData => {
 };
 
 const _responseHandle = {
-  [DominConfigs.RESPONSE_CODE.success]: responseData => {
+  [DominConfigs.RESPONSE_CODE.success]: (responseData) => {
     if (responseData.msg) {
       message.success(responseData.msg);
     }
 
     return responseData.data;
   },
-  [DominConfigs.RESPONSE_CODE.created]: responseData => {
+  [DominConfigs.RESPONSE_CODE.created]: (responseData) => {
     if (responseData.msg) {
       message.success(responseData.msg);
     }
 
     return responseData.data;
   },
-  [DominConfigs.RESPONSE_CODE.noContent]: responseData => {
+  [DominConfigs.RESPONSE_CODE.noContent]: (responseData) => {
     if (responseData.msg) {
       message.success(responseData.msg);
     }
 
     return responseData.data;
   },
-  [DominConfigs.RESPONSE_CODE.error]: responseData => {
+  [DominConfigs.RESPONSE_CODE.error]: (responseData) => {
     if (responseData.msg) {
       message.error(responseData.msg);
     }
 
     return null;
   },
-  [DominConfigs.RESPONSE_CODE.unauthorized]: responseData => {
+  [DominConfigs.RESPONSE_CODE.unauthorized]: (responseData) => {
     message.warning(responseData.msg);
     // 清除过期的token
     localStorage.removeItem(`${LOCAL_STORAGE}-token`);
 
     return null;
-  }
+  },
 };
 
 /**
@@ -207,18 +208,18 @@ export const proxyFileFetch = async (url, data) => {
 
   let headers = new Headers({
     Accept: '*/*',
-    authorization: `Bearer ${localStorage.getItem(`${LOCAL_STORAGE}-token`)}`
+    authorization: `Bearer ${localStorage.getItem(`${LOCAL_STORAGE}-token`)}`,
   });
 
   const fetchParams = {
     method: 'POST',
     headers,
-    body: formData
+    body: formData,
   };
 
   const [res] = await Promise.all([
     _fetch(url, {}, 'POST', fetchParams),
-    wait(300)
+    wait(300),
   ]);
 
   return res;

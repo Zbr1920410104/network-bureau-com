@@ -15,8 +15,6 @@ import '@/index.styl';
 // redux
 import { Provider } from 'react-redux';
 import { store } from '@/redux';
-import moment from 'moment';
-moment.locale('zh-cn');
 
 ReactDOM.render(
   <Provider store={store}>
