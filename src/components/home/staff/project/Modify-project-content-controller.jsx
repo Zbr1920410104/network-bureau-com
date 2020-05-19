@@ -114,7 +114,7 @@ export default Form.create({ name: 'modifyProject' })(({ form }) => {
                   },
                   {
                     message: '项目名称过长！',
-                    max: 32,
+                    max: 64,
                   },
                 ],
               })(<Input placeholder='请输入项目名称' />)}
