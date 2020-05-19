@@ -4,6 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import userAction from '@/redux/action/user';
 
+// 路由
+import { INDEX } from '@/constants/route-constants';
+import { useHistory } from 'react-router-dom';
+
 // 请求
 import proxyFetch from '@/util/request';
 import {
@@ -15,6 +19,9 @@ import {
 
 import AccountFormController from '@/components/home/admin/Account-form-controller.jsx';
 import ModifyAccountContent from '@/components/home/admin/Modify-account-content-controller.jsx';
+
+// 工具
+import md5 from 'md5';
 
 // 样式
 import '@/style/home/admin/account-list.styl';
@@ -31,8 +38,9 @@ export default (porps) => {
     [accountVisible, setAccountVisible] = useState(false),
     [isNeedRefresh, setIsNeedRefresh] = useState(true),
     [accountList, setAccountList] = useState([]),
+    history = useHistory(),
     [modifyAccountVisible, setModifyAccountVisible] = useState(false),
-    { addAccount } = useSelector((state) => state.userStore),
+    { addAccount, uuid, userName } = useSelector((state) => state.userStore),
     dispatch = useDispatch();
 
   const showAccountModal = () => {
@@ -45,6 +53,7 @@ export default (porps) => {
   };
 
   const showModifyAccountModal = () => {
+    dispatch(userAction.setAccountRefresh(true));
     setModifyAccountVisible(true);
   };
 
@@ -79,13 +88,24 @@ export default (porps) => {
     })();
   }, [isNeedRefresh, role, name, addAccount, dispatch]);
 
-  const handleReset = async (uuid) => {
-    await proxyFetch(RESET_PASSWORD, { uuid });
+  const handleReset = async (userUuid) => {
+    const res = await proxyFetch(RESET_PASSWORD, { userUuid });
+    if (res) {
+      if (uuid === userUuid) {
+        let value = {};
+        value.password = md5('123456');
+        value.userName = userName;
+        dispatch(userAction.asyncSetUser(value));
+      }
+    }
   };
 
-  const handleCancellation = async (uuid) => {
-    const res = await proxyFetch(ACCOUNT_CANCEL, { uuid });
-    if (res) {
+  const handleCancellation = async (userUuid) => {
+    const cancelRes = await proxyFetch(ACCOUNT_CANCEL, { userUuid });
+    if (cancelRes) {
+      if (uuid === userUuid) {
+        history.push(INDEX.path);
+      }
       setIsNeedRefresh(true);
     }
   };
@@ -293,7 +313,7 @@ export default (porps) => {
               <Button
                 type='link'
                 onClick={() => {
-                  dispatch(userAction.setUserUuid(record.uuid));
+                  dispatch(userAction.setAccountUuid(record.uuid));
                   showModifyAccountModal();
                 }}
               >

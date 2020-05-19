@@ -20,7 +20,7 @@ export default Form.create({ name: 'account' })(({ form }) => {
   const [saveDataLoading, setSaveDataLoading] = useState(false),
     [depatmentList, setDepatmentList] = useState([]),
     [needRefresh, setNeedRefresh] = useState(true),
-    { userUuid, accountRefresh } = useSelector((state) => state.userStore),
+    { accountUuid, accountRefresh } = useSelector((state) => state.userStore),
     dispatch = useDispatch();
 
   /**
@@ -59,7 +59,7 @@ export default Form.create({ name: 'account' })(({ form }) => {
       if (needRefresh) {
         const userInfo = await proxyFetch(
           SELECT_ACCOUNT,
-          { uuid: userUuid },
+          { uuid: accountUuid },
           'GET'
         );
         // 数据回显
@@ -71,7 +71,7 @@ export default Form.create({ name: 'account' })(({ form }) => {
         setNeedRefresh(false);
       }
     })();
-  }, [userUuid, needRefresh, setFieldsValue]);
+  }, [accountUuid, needRefresh, setFieldsValue]);
 
   useEffect(() => {
     if (accountRefresh) {

@@ -15,19 +15,19 @@ import md5 from 'md5';
 import { Menu, Icon, Spin, message } from 'antd';
 
 export default (props) => {
-  const { role, userLoading, password, modifyPassword } = useSelector(
+  const { role, userLoading, password } = useSelector(
       (state) => state.userStore
     ),
     history = useHistory(),
     [navEnabled, setNavEnabled] = useState(true);
 
   useEffect(() => {
-    if (password === md5('123456') && !modifyPassword) {
+    if (password === md5('123456')) {
       setNavEnabled(false);
     } else {
       setNavEnabled(true);
     }
-  }, [password, modifyPassword]);
+  }, [password]);
 
   // 渲染nav 用 NAV[role];
   // nav loading用userLoading

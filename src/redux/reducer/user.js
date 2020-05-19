@@ -7,6 +7,7 @@ export default handleActions(
       return {
         ...state,
         uuid: result.uuid,
+        userName: result.userName,
         phone: result.phone,
         name: result.name,
         role: result.role,
@@ -53,10 +54,10 @@ export default handleActions(
         modifyBasic: result,
       };
     },
-    setUserUuid(state, { payload: result }) {
+    setAccountUuid(state, { payload: result }) {
       return {
         ...state,
-        userUuid: result,
+        accountUuid: result,
       };
     },
     setStaffUuid(state, { payload: result }) {
@@ -266,8 +267,9 @@ export default handleActions(
     reviewCopyright: false,
     reviewAward: false,
     reviewThesis: false,
-    userUuid: '',
+    accountUuid: '',
     uuid: '',
+    userName: '',
     phone: '',
     name: '',
     department: '',

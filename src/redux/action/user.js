@@ -10,7 +10,7 @@ export default {
   setAddAccount: createAction('setAddAccount'),
   setAccountRefresh: createAction('setAccountRefresh'),
   setModifyBasic: createAction('setModifyBasic'),
-  setUserUuid: createAction('setUserUuid'),
+  setAccountUuid: createAction('setAccountUuid'),
   setStaffUuid: createAction('setStaffUuid'),
   setVerifyItem: createAction('setVerifyItem'),
   // 普通员工填写

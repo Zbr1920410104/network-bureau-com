@@ -17,12 +17,15 @@ import { SAVE_PASSWORD } from '@/constants/api-constants';
 import { useSelector, useDispatch } from 'react-redux';
 import userAction from '@/redux/action/user';
 
+// 工具
+import md5 from 'md5';
+
 // 样式
 import { Form, Button, Input, Alert } from 'antd';
 import '@/style/home/public/password-modify.styl';
 
 export default Form.create({ name: 'password' })(({ form }) => {
-  const { role } = useSelector((state) => state.userStore);
+  const { role, userName } = useSelector((state) => state.userStore);
   const { getFieldDecorator } = form,
     history = useHistory(),
     dispatch = useDispatch();
@@ -38,7 +41,15 @@ export default Form.create({ name: 'password' })(({ form }) => {
         const res = await proxyFetch(SAVE_PASSWORD, value);
 
         if (res) {
-          dispatch(userAction.setModifyPassword(true));
+          // 处理加密密码
+          value.userName = userName;
+          value.password = md5(value.newPassword);
+          delete value.oldPassword;
+          delete value.newPassword;
+          // 使用redux-saga
+          if (userName && value.password) {
+            dispatch(userAction.asyncSetUser(value));
+          }
           if (role === 15) {
             history.push(HOME_WRITE_WELCOME.path);
           } else if (role === 10) {
