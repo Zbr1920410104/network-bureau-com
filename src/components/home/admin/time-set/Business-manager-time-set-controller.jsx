@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 // 样式
-import { Form, DatePicker, Button, Skeleton } from 'antd';
+import { Form, DatePicker, Button, Skeleton, Switch } from 'antd';
 
 // 请求
 import proxyFetch from '@/util/request';
@@ -42,24 +42,22 @@ export default Form.create({ name: 'businessManagerTimeSet' })(({ form }) => {
     setGetDataLoading(true);
     (async () => {
       if (isRefresh) {
-        let businessManagerTime = await proxyFetch(
-          SELECT_BUSINESS_MANAGER_TIME,
-          {},
-          'GET'
-        );
+        const res = await proxyFetch(SELECT_BUSINESS_MANAGER_TIME, {}, 'GET');
+        let businessManagerTime = {};
         // 数据回显
-        if (businessManagerTime) {
+        if (res) {
           // 数据处理
           // 时间处理
-          if (businessManagerTime.startTime) {
-            businessManagerTime.startTime = moment(
-              businessManagerTime.startTime
-            );
+          if (res.startTime) {
+            businessManagerTime.startTime = moment(res.startTime);
           }
 
-          if (businessManagerTime.endTime) {
-            businessManagerTime.endTime = moment(businessManagerTime.endTime);
+          if (res.endTime) {
+            businessManagerTime.endTime = moment(res.endTime);
           }
+
+          businessManagerTime.sysSwitch = res.sysSwitch === 1 ? true : false;
+          businessManagerTime.timeSwitch = res.timeSwitch === 1 ? true : false;
 
           setFieldsValue(businessManagerTime);
         }
@@ -83,18 +81,64 @@ export default Form.create({ name: 'businessManagerTimeSet' })(({ form }) => {
           <span>统计管理员</span>
         </Form.Item>
 
+        <Form.Item label='系统开关'>
+          {getFieldDecorator('sysSwitch', {
+            initialValue: true,
+            valuePropName: 'checked',
+          })(<Switch />)}
+        </Form.Item>
+
+        <Form.Item label='时间设置开关'>
+          {getFieldDecorator('timeSwitch', {
+            initialValue: true,
+            valuePropName: 'checked',
+          })(<Switch disabled={!form.getFieldValue('sysSwitch')} />)}
+        </Form.Item>
+
         {/* 开始 */}
         <Form.Item label='开始日期'>
           {getFieldDecorator('startTime', {
-            rules: [{ required: true, message: '请选择开始日期！' }],
-          })(<DatePicker placeholder='20XX-XX-XX' showTime />)}
+            rules: [
+              {
+                required:
+                  form.getFieldValue('timeSwitch') &&
+                  form.getFieldValue('sysSwitch'),
+                message: '请选择开始日期！',
+              },
+            ],
+          })(
+            <DatePicker
+              placeholder='20XX-XX-XX'
+              showTime
+              disabled={
+                !form.getFieldValue('timeSwitch') ||
+                !form.getFieldValue('sysSwitch')
+              }
+            />
+          )}
         </Form.Item>
 
         {/* 截止日期 */}
         <Form.Item label='截止日期'>
           {getFieldDecorator('endTime', {
-            rules: [{ required: true, message: '请选择截止日期！' }],
-          })(<DatePicker placeholder='20XX-XX-XX' showTime />)}
+            rules: [
+              {
+                required:
+                  form.getFieldValue('timeSwitch') &&
+                  form.getFieldValue('sysSwitch'),
+                message: '请选择截止日期！',
+              },
+            ],
+          })(
+            <DatePicker
+              placeholder='20XX-XX-XX'
+              showTime
+              disabled={
+                !form.getFieldValue('timeSwitch') ||
+                !form.getFieldValue('sysSwitch')
+              }
+            />
+          )}
         </Form.Item>
 
         {/* 保存按钮 */}
