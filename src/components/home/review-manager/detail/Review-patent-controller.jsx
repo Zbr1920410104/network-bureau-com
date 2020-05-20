@@ -34,6 +34,7 @@ export default (props) => {
   };
 
   const hideReviewPatentModal = () => {
+    dispatch(userAction.setStaffPatentUuid(''));
     setReviewPatentVisible(false);
   };
 

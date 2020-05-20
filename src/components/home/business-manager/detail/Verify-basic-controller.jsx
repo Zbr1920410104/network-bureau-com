@@ -39,11 +39,13 @@ export default (props) => {
     [statusLoading, setStatusLoading] = useState(false),
     [verifyRemarks, setVerifyRemarks] = useState('');
 
-  const showVerifyModal = () => {
+  const showVerifyModal = (verifyRemarks) => {
+    setVerifyRemarks(verifyRemarks);
     setVerifyVisible(true);
   };
 
   const hideVerifyModal = () => {
+    setVerifyRemarks('');
     setVerifyVisible(false);
   };
 
@@ -80,6 +82,7 @@ export default (props) => {
 
         setStatusLoading(false);
         if (res) {
+          setVerifyRemarks('');
           setIsNeedRefresh(true);
           setVerifyVisible(false);
         }
@@ -123,7 +126,7 @@ export default (props) => {
             type='link'
             icon='edit'
             className='opinion-button'
-            onClick={showVerifyModal}
+            onClick={() => showVerifyModal(staffBasic.verifyRemarks)}
           >
             核实
           </Button>
@@ -179,6 +182,7 @@ export default (props) => {
             placeholder='请输入核实意见及不通过理由'
             className='modal-textArea-box'
             disabled={staffBasic.isVerify !== '未核实'}
+            value={verifyRemarks}
             onChange={(e) => {
               setVerifyRemarks(e.target.value);
             }}

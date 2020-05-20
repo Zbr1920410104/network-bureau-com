@@ -6,10 +6,7 @@ import userAction from '@/redux/action/user';
 
 // 请求
 import proxyFetch from '@/util/request';
-import {
-  SET_AWARD_SCORE,
-  GET_AWARD_SCORE,
-} from '@/constants/api-constants';
+import { SET_AWARD_SCORE, GET_AWARD_SCORE } from '@/constants/api-constants';
 
 // 样式
 import '@/style/home/review-manager/review-detail.styl';
@@ -24,16 +21,18 @@ export default Form.create({ name: 'awardReview' })(({ form }) => {
 
   useEffect(() => {
     (async () => {
-      const staffAward = await proxyFetch(
-        GET_AWARD_SCORE,
-        { staffAwardUuid },
-        'GET'
-      );
+      if (staffAwardUuid) {
+        const staffAward = await proxyFetch(
+          GET_AWARD_SCORE,
+          { staffAwardUuid },
+          'GET'
+        );
 
-      if (staffAward) {
-        // 时间处理
+        if (staffAward) {
+          // 时间处理
 
-        setFieldsValue(staffAward);
+          setFieldsValue(staffAward);
+        }
       }
     })();
   }, [setFieldsValue, staffAwardUuid]);

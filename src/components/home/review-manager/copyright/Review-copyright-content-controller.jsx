@@ -24,16 +24,18 @@ export default Form.create({ name: 'copyrightReview' })(({ form }) => {
 
   useEffect(() => {
     (async () => {
-      const staffCopyright = await proxyFetch(
-        GET_COPYRIGHT_SCORE,
-        { staffCopyrightUuid },
-        'GET'
-      );
+      if (staffCopyrightUuid) {
+        const staffCopyright = await proxyFetch(
+          GET_COPYRIGHT_SCORE,
+          { staffCopyrightUuid },
+          'GET'
+        );
 
-      if (staffCopyright) {
-        // 时间处理
+        if (staffCopyright) {
+          // 时间处理
 
-        setFieldsValue(staffCopyright);
+          setFieldsValue(staffCopyright);
+        }
       }
     })();
   }, [setFieldsValue, staffCopyrightUuid]);

@@ -47,6 +47,7 @@ export default (props) => {
   };
 
   const hideReviewAwardModal = () => {
+    dispatch(userAction.setStaffAwardUuid(''));
     setReviewAwardVisible(false);
   };
 

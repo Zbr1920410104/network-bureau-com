@@ -58,6 +58,7 @@ export default (props) => {
   };
 
   const hideUploadAwardModal = () => {
+    dispatch(userAction.setStaffAwardUuid(''));
     setUploadAwardVisible(false);
   };
 

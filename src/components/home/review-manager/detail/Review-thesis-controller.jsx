@@ -41,6 +41,7 @@ export default (props) => {
   };
 
   const hideReviewThesisModal = () => {
+    dispatch(userAction.setStaffThesisUuid(''));
     setReviewThesisVisible(false);
   };
 

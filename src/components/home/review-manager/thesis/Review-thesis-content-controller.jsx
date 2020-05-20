@@ -21,16 +21,18 @@ export default Form.create({ name: 'thesisReview' })(({ form }) => {
 
   useEffect(() => {
     (async () => {
-      const staffThesis = await proxyFetch(
-        GET_THESIS_SCORE,
-        { staffThesisUuid },
-        'GET'
-      );
+      if (staffThesisUuid) {
+        const staffThesis = await proxyFetch(
+          GET_THESIS_SCORE,
+          { staffThesisUuid },
+          'GET'
+        );
 
-      if (staffThesis) {
-        // 时间处理
+        if (staffThesis) {
+          // 时间处理
 
-        setFieldsValue(staffThesis);
+          setFieldsValue(staffThesis);
+        }
       }
     })();
   }, [setFieldsValue, staffThesisUuid]);

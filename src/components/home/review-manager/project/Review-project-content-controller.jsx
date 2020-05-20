@@ -24,16 +24,18 @@ export default Form.create({ name: 'projectReview' })(({ form }) => {
 
   useEffect(() => {
     (async () => {
-      const staffProject = await proxyFetch(
-        GET_PROJECT_SCORE,
-        { staffProjectUuid },
-        'GET'
-      );
+      if (staffProjectUuid) {
+        const staffProject = await proxyFetch(
+          GET_PROJECT_SCORE,
+          { staffProjectUuid },
+          'GET'
+        );
 
-      if (staffProject) {
-        // 时间处理
+        if (staffProject) {
+          // 时间处理
 
-        setFieldsValue(staffProject);
+          setFieldsValue(staffProject);
+        }
       }
     })();
   }, [setFieldsValue, staffProjectUuid]);

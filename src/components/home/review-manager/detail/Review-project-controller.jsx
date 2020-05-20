@@ -34,6 +34,7 @@ export default (props) => {
   };
 
   const hideReviewProjectModal = () => {
+    dispatch(userAction.setStaffProjectUuid(''));
     setReviewProjectVisible(false);
   };
 

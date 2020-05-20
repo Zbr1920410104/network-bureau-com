@@ -6,10 +6,7 @@ import userAction from '@/redux/action/user';
 
 // 请求
 import proxyFetch from '@/util/request';
-import {
-  SET_PATENT_SCORE,
-  GET_PATENT_SCORE,
-} from '@/constants/api-constants';
+import { SET_PATENT_SCORE, GET_PATENT_SCORE } from '@/constants/api-constants';
 
 // 样式
 import '@/style/home/review-manager/review-detail.styl';
@@ -24,16 +21,18 @@ export default Form.create({ name: 'patentReview' })(({ form }) => {
 
   useEffect(() => {
     (async () => {
-      const staffPatent = await proxyFetch(
-        GET_PATENT_SCORE,
-        { staffPatentUuid },
-        'GET'
-      );
+      if (staffPatentUuid) {
+        const staffPatent = await proxyFetch(
+          GET_PATENT_SCORE,
+          { staffPatentUuid },
+          'GET'
+        );
 
-      if (staffPatent) {
-        // 时间处理
+        if (staffPatent) {
+          // 时间处理
 
-        setFieldsValue(staffPatent);
+          setFieldsValue(staffPatent);
+        }
       }
     })();
   }, [setFieldsValue, staffPatentUuid]);
@@ -60,7 +59,7 @@ export default Form.create({ name: 'patentReview' })(({ form }) => {
       }
     });
   };
-  
+
   return (
     <div className='review-modal-box'>
       <Form style={{ width: '100%' }}>

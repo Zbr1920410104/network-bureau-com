@@ -34,6 +34,7 @@ export default (props) => {
   };
 
   const hideReviewCopyrightModal = () => {
+    dispatch(userAction.setStaffCopyrightUuid(''));
     setReviewCopyrightVisible(false);
   };
 

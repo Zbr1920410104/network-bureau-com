@@ -15,7 +15,7 @@ const { Column } = Table;
 const { confirm } = Modal;
 
 export default Form.create({ name: 'department' })(({ form }) => {
-  const { getFieldDecorator } = form;
+  const { getFieldDecorator, resetFields } = form;
   const [departmentLoading, setDepartmentLoading] = useState(false),
     [departmentVisible, setDepartmentVisible] = useState(false),
     [departmentList, setDepartmentList] = useState([]),
@@ -31,6 +31,7 @@ export default Form.create({ name: 'department' })(({ form }) => {
   };
 
   const hideDepartmentModal = () => {
+    resetFields();
     setDepartmentVisible(false);
   };
 
@@ -49,6 +50,7 @@ export default Form.create({ name: 'department' })(({ form }) => {
         setIsRefresh(true);
 
         if (res) {
+          resetFields();
           setDepartmentVisible(false);
         }
       }

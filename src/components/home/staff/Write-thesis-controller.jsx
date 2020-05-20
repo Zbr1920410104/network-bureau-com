@@ -61,6 +61,7 @@ export default (props) => {
   };
 
   const hideUploadThesisModal = () => {
+    dispatch(userAction.setStaffThesisUuid(''));
     setUploadThesisVisible(false);
   };
 
