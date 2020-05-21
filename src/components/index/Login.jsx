@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
 // 样式
-import { Icon, Input, Form, Button } from 'antd';
+import { Icon, Input, Form, Button, message } from 'antd';
 import '@/style/login.styl';
 
 // 请求
 import proxyFetch from '@/util/request';
 import { GET_USER_NAME } from '@/constants/api-constants';
 
-// // localStorage
-// import { LOCAL_STORAGE } from '@/constants/app-constants';
+// localStorage
+import { LOCAL_STORAGE } from '@/constants/app-constants';
 
 // import { HOME_INDEX, HOME_PASSWORD } from '@/constants/route-constants';
 // import { useHistory } from 'react-router-dom';
@@ -23,6 +23,7 @@ import md5 from 'md5';
 
 export default Form.create({ name: 'login' })((props) => {
   const { getFieldDecorator } = props.form,
+    token = localStorage.getItem(`${LOCAL_STORAGE}-token`),
     [user, setUser] = useState(''),
     [name, setName] = useState(''),
     { loginLoading } = useSelector((state) => state.userStore),
@@ -36,6 +37,9 @@ export default Form.create({ name: 'login' })((props) => {
         values.password = md5(values.password);
         // 使用redux-saga
         dispatch(userAction.asyncSetUser(values));
+        if (token) {
+          message.warn('检测到有其他账号登录,其他账号将下线');
+        }
       }
     });
   };

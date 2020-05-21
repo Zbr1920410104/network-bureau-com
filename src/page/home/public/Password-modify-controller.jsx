@@ -6,6 +6,7 @@ import {
   HOME_REVIEW_LIST,
   HOME_VERIFY_LIST,
   HOME_ACCOUNT_LIST,
+  INDEX,
 } from '@/constants/route-constants';
 import { useHistory } from 'react-router-dom';
 
@@ -20,6 +21,9 @@ import userAction from '@/redux/action/user';
 // 工具
 import md5 from 'md5';
 
+// localStorage
+import { LOCAL_STORAGE } from '@/constants/app-constants';
+
 // 样式
 import { Form, Button, Input, Alert } from 'antd';
 import '@/style/home/public/password-modify.styl';
@@ -27,11 +31,16 @@ import '@/style/home/public/password-modify.styl';
 export default Form.create({ name: 'password' })(({ form }) => {
   const { role, userName } = useSelector((state) => state.userStore);
   const { getFieldDecorator } = form,
+    token = localStorage.getItem(`${LOCAL_STORAGE}-token`),
     history = useHistory(),
     dispatch = useDispatch();
 
   const handleSave = (e) => {
     e.preventDefault();
+
+    if (!token) {
+      history.push(INDEX.path);
+    }
 
     // 表单判断
     form.validateFields(async (err, value) => {

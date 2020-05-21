@@ -179,6 +179,7 @@ export default (props) => {
               className='exit-button'
               onClick={() => {
                 history.push(ROUTES.INDEX.path);
+                localStorage.removeItem(`${LOCAL_STORAGE}-token`);
               }}
             >
               [退出登录]
