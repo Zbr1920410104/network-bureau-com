@@ -38,7 +38,7 @@ export default Form.create({ name: 'login' })((props) => {
         // 使用redux-saga
         dispatch(userAction.asyncSetUser(values));
         if (token) {
-          message.warn('检测到有其他账号登录,其他账号将下线');
+          message.warn('系统只支持一个账号登录,其他账号将下线!');
         }
       }
     });
