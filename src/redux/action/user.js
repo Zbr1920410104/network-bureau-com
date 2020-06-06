@@ -13,6 +13,8 @@ export default {
   setAccountUuid: createAction('setAccountUuid'),
   setStaffUuid: createAction('setStaffUuid'),
   setVerifyItem: createAction('setVerifyItem'),
+  setDefaultPasswordRefresh: createAction('setDefaultPasswordRefresh'),
+  setChangeDefaultPassword: createAction('setChangeDefaultPassword'),
   // 普通员工填写
   setChangeProject: createAction('setChangeProject'),
   setStaffProjectUuid: createAction('setStaffProjectUuid'),

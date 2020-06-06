@@ -19,6 +19,7 @@ import {
 
 import AccountFormController from '@/components/home/admin/Account-form-controller.jsx';
 import ModifyAccountContent from '@/components/home/admin/Modify-account-content-controller.jsx';
+import ModifyKeyContent from '@/components/home/admin/Modify-key-content-controller.jsx';
 
 // 工具
 import md5 from 'md5';
@@ -36,20 +37,32 @@ export default (porps) => {
     [role, setRole] = useState(0),
     [name, setName] = useState(''),
     [accountVisible, setAccountVisible] = useState(false),
+    [keyModifyVisible, setKeyModifyVisible] = useState(false),
     [isNeedRefresh, setIsNeedRefresh] = useState(true),
     [accountList, setAccountList] = useState([]),
     history = useHistory(),
     [modifyAccountVisible, setModifyAccountVisible] = useState(false),
-    { addAccount, uuid, userName } = useSelector((state) => state.userStore),
+    { addAccount, uuid, userName, changeDefaultPassword } = useSelector(
+      (state) => state.userStore
+    ),
     dispatch = useDispatch();
 
   const showAccountModal = () => {
     setAccountVisible(true);
   };
 
+  const showKeyModifyModal = () => {
+    setKeyModifyVisible(true);
+  };
+
   const hideAccountModal = () => {
     dispatch(userAction.setAccountRefresh(true));
     setAccountVisible(false);
+  };
+
+  const hideModifyKeyModal = () => {
+    dispatch(userAction.setDefaultPasswordRefresh(true));
+    setKeyModifyVisible(false);
   };
 
   const showModifyAccountModal = () => {
@@ -61,6 +74,13 @@ export default (porps) => {
     dispatch(userAction.setAccountRefresh(true));
     setModifyAccountVisible(false);
   };
+
+  useEffect(() => {
+    if (changeDefaultPassword) {
+      dispatch(userAction.setChangeDefaultPassword(false));
+      setKeyModifyVisible(false);
+    }
+  }, [changeDefaultPassword, dispatch]);
 
   useEffect(() => {
     let _isMounted = true;
@@ -150,11 +170,19 @@ export default (porps) => {
             }}
           />
           <Button
+            className='primary-button'
             type='primary'
             style={{ marginBottom: 16 }}
             onClick={showAccountModal}
           >
             新增账号
+          </Button>
+          <Button
+            type='primary'
+            style={{ marginBottom: 16 }}
+            onClick={showKeyModifyModal}
+          >
+            修改默认密码
           </Button>
           <Button
             className='export-button'
@@ -194,6 +222,26 @@ export default (porps) => {
             footer={null}
           >
             <ModifyAccountContent />
+          </Modal>
+          <Modal
+            title='修改默认密码'
+            visible={keyModifyVisible}
+            onCancel={() => {
+              confirm({
+                title: '确认离开?',
+                okType: 'primary',
+                content: '离开修改的内容将不会保存!',
+                okText: '确认',
+                cancelText: '取消',
+                onOk() {
+                  hideModifyKeyModal();
+                },
+                onCancel() {},
+              });
+            }}
+            footer={null}
+          >
+            <ModifyKeyContent />
           </Modal>
           <Modal
             title='新增账号'

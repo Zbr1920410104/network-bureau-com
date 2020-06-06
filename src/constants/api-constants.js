@@ -9,6 +9,7 @@ export const GET_USER_TOKEN = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_USE
 export const GET_USER_NAME = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_USER}/getUserName`; // 登录
 export const GET_MY_INFO = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_USER}/getMyInfo`;
 export const SAVE_PASSWORD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_USER}/savePassword`;
+export const GET_DEFAULT_PASSWORD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_USER}/getDefaultPassword`;
 
 /**
  * 管理员
@@ -30,6 +31,7 @@ export const ACCOUNT_CANCEL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_ADM
 export const SELECT_ACCOUNT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_ADMIN}/selectAccount`;
 export const MODIFY_ACCOUNT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_ADMIN}/modifyAccount`;
 export const ACCOUNT_EXPORT_ALL_STAFF_INFO_EXCEL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_ADMIN}/accountExportAllStaffInfoExcel`;
+export const CHANGE_DEFAULT_PASSWORD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_ADMIN}/changeDefaultPassword`;
 
 /**
  * 普通员工
