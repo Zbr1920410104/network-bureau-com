@@ -5,8 +5,8 @@ import proxyFetch, { proxyFileFetch } from '@/util/request';
 import {
   UPLOAD_FILE,
   GET_FILE_URL,
-  SELECT_UPLOAD_AWARD,
-  SAVE_UPLOAD_AWARD,
+  SELECT_UPLOAD_PATENT,
+  SAVE_UPLOAD_PATENT,
 } from '@/constants/api-constants';
 
 // redux
@@ -15,11 +15,12 @@ import userAction from '@/redux/action/user';
 
 // 样式
 import { Form, Upload, Button, Icon, Alert, message } from 'antd';
+import '@/style/home/staff/write-inner-modal.styl';
 
-export default Form.create({ name: 'uploadAward' })(({ form }) => {
+export default Form.create({ name: 'uploadPatent' })(({ form }) => {
   const { getFieldDecorator, setFieldsValue, getFieldValue } = form,
-    { staffAwardUuid } = useSelector((state) => state.userStore),
-    [awardLoading, setAwardLoading] = useState(false),
+    { staffPatentUuid } = useSelector((state) => state.userStore),
+    [patentLoading, setPatentLoading] = useState(false),
     [isNeedUrlFresh, setIsNeedUrlFresh] = useState(false),
     [firstPreviewUrl, setFirstPreviewUrl] = useState(''),
     [secondPreviewUrl, setSecondPreviewUrl] = useState(''),
@@ -29,34 +30,32 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
     [thirdFileName, setThirdFileName] = useState(''),
     [saveDataLoading, setSaveDataLoading] = useState(false),
     dispatch = useDispatch(),
-    firstFormAwardUrl =
+    firstFormPatentUrl =
       getFieldValue('firstUrl') && getFieldValue('firstUrl')[0],
-    secondFormAwardUrl =
+    secondFormPatentUrl =
       getFieldValue('secondUrl') && getFieldValue('secondUrl')[0],
-    thirdFormAwardUrl =
+    thirdFormPatentUrl =
       getFieldValue('thirdUrl') && getFieldValue('thirdUrl')[0];
 
   // 将已有的数据回显
   useEffect(() => {
-    if (staffAwardUuid) {
+    if (staffPatentUuid) {
       (async () => {
-        let writeAward = await proxyFetch(
-          SELECT_UPLOAD_AWARD,
-          { uuid: staffAwardUuid },
+        let writePatent = await proxyFetch(
+          SELECT_UPLOAD_PATENT,
+          { uuid: staffPatentUuid },
           'GET'
         );
 
         // 数据回显
-        if (writeAward && writeAward.firstUrl) {
+        if (writePatent && writePatent.firstUrl) {
           // 数据处理
+          setFieldsValue({ firstUrl: [writePatent.firstUrl] });
           setFieldsValue({
-            firstUrl: [writeAward.firstUrl],
+            secondUrl: [writePatent.secondUrl],
           });
           setFieldsValue({
-            secondUrl: [writeAward.secondUrl],
-          });
-          setFieldsValue({
-            thirdUrl: [writeAward.thirdUrl],
+            thirdUrl: [writePatent.thirdUrl],
           });
           setIsNeedUrlFresh(true);
         } else {
@@ -66,7 +65,7 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
         }
       })();
     }
-  }, [staffAwardUuid, setFieldsValue]);
+  }, [staffPatentUuid, setFieldsValue]);
 
   /**
    * 上传头像
@@ -75,16 +74,16 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
   const handleUploadFirstFile = async (file) => {
     if (handleBeforeUpload(file)) {
       // loading
-      setAwardLoading(true);
+      setPatentLoading(true);
 
       // 参数需要加上oss的文件夹位置
       const fileUrl = await proxyFileFetch(UPLOAD_FILE, {
         file: file.file,
-        folderName: 'write/award',
+        folderName: 'write/patent',
       });
 
       // loading
-      setAwardLoading(false);
+      setPatentLoading(false);
 
       if (fileUrl) {
         // 设置form
@@ -97,16 +96,16 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
   const handleUploadSecondFile = async (file) => {
     if (handleBeforeUpload(file)) {
       // loading
-      setAwardLoading(true);
+      setPatentLoading(true);
 
       // 参数需要加上oss的文件夹位置
       const fileUrl = await proxyFileFetch(UPLOAD_FILE, {
         file: file.file,
-        folderName: 'write/award',
+        folderName: 'write/patent',
       });
 
       // loading
-      setAwardLoading(false);
+      setPatentLoading(false);
 
       if (fileUrl) {
         // 设置form
@@ -119,16 +118,16 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
   const handleUploadThirdFile = async (file) => {
     if (handleBeforeUpload(file)) {
       // loading
-      setAwardLoading(true);
+      setPatentLoading(true);
 
       // 参数需要加上oss的文件夹位置
       const fileUrl = await proxyFileFetch(UPLOAD_FILE, {
         file: file.file,
-        folderName: 'write/award',
+        folderName: 'write/patent',
       });
 
       // loading
-      setAwardLoading(false);
+      setPatentLoading(false);
 
       if (fileUrl) {
         // 设置form
@@ -139,17 +138,17 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
   };
 
   useEffect(() => {
-    if (firstFormAwardUrl && isNeedUrlFresh) {
+    if (firstFormPatentUrl && isNeedUrlFresh) {
       (async () => {
-        setAwardLoading(true);
+        setPatentLoading(true);
 
         const firstPreviewUrl = await proxyFetch(
           GET_FILE_URL,
-          { fileUrl: firstFormAwardUrl },
+          { fileUrl: firstFormPatentUrl },
           'GET'
         );
 
-        setAwardLoading(false);
+        setPatentLoading(false);
         // 切换下载的url
         setFirstPreviewUrl(firstPreviewUrl);
         const firstUrlArr = firstPreviewUrl.split('?');
@@ -160,20 +159,20 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
         setIsNeedUrlFresh(false);
       })();
     }
-  }, [firstFormAwardUrl, isNeedUrlFresh]);
+  }, [firstFormPatentUrl, isNeedUrlFresh]);
 
   useEffect(() => {
-    if (secondFormAwardUrl && isNeedUrlFresh) {
+    if (secondFormPatentUrl && isNeedUrlFresh) {
       (async () => {
-        setAwardLoading(true);
+        setPatentLoading(true);
 
         const secondPreviewUrl = await proxyFetch(
           GET_FILE_URL,
-          { fileUrl: secondFormAwardUrl },
+          { fileUrl: secondFormPatentUrl },
           'GET'
         );
 
-        setAwardLoading(false);
+        setPatentLoading(false);
         // 切换下载的url
         setSecondPreviewUrl(secondPreviewUrl);
         const secondUrlArr = secondPreviewUrl.split('?');
@@ -184,20 +183,20 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
         setIsNeedUrlFresh(false);
       })();
     }
-  }, [secondFormAwardUrl, isNeedUrlFresh]);
+  }, [secondFormPatentUrl, isNeedUrlFresh]);
 
   useEffect(() => {
-    if (thirdFormAwardUrl && isNeedUrlFresh) {
+    if (thirdFormPatentUrl && isNeedUrlFresh) {
       (async () => {
-        setAwardLoading(true);
+        setPatentLoading(true);
 
         const thirdPreviewUrl = await proxyFetch(
           GET_FILE_URL,
-          { fileUrl: thirdFormAwardUrl },
+          { fileUrl: thirdFormPatentUrl },
           'GET'
         );
 
-        setAwardLoading(false);
+        setPatentLoading(false);
         // 切换下载的url
         setThirdPreviewUrl(thirdPreviewUrl);
         const thirdUrlArr = thirdPreviewUrl.split('?');
@@ -208,7 +207,7 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
         setIsNeedUrlFresh(false);
       })();
     }
-  }, [thirdFormAwardUrl, isNeedUrlFresh]);
+  }, [thirdFormPatentUrl, isNeedUrlFresh]);
 
   /**
    * 提交事件
@@ -218,19 +217,19 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
 
     // 表单判断
     form.validateFields(async (err, value) => {
-      if (staffAwardUuid) {
+      if (staffPatentUuid) {
         if (!err) {
-          value.uuid = staffAwardUuid;
+          value.uuid = staffPatentUuid;
           value.firstUrl = value.firstUrl[0];
           value.secondUrl = value.secondUrl ? value.secondUrl[0] : '';
           value.thirdUrl = value.thirdUrl ? value.thirdUrl[0] : '';
 
           setSaveDataLoading(true);
-          const res = await proxyFetch(SAVE_UPLOAD_AWARD, value);
+          const res = await proxyFetch(SAVE_UPLOAD_PATENT, value);
           setSaveDataLoading(false);
 
           if (res) {
-            dispatch(userAction.setChangeAward(true));
+            dispatch(userAction.setChangePatent(true));
           }
         }
       }
@@ -241,7 +240,7 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
     <div className='inner-form-box'>
       <Alert
         className='inner-alert'
-        message='上传获奖证明附件注意事项'
+        message='上传专利附件注意事项'
         description={
           <div className='text-box'>
             <span>
@@ -255,7 +254,7 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
             <span>
               (压缩文件)，请尽量上传图片或文档，并按照从上至下的顺序上传(
             </span>
-            <span className='important-text'>获奖证明附件1必须上传</span>
+            <span className='important-text'>专利附件1必须上传</span>
             <span>)，当需要上传的文件超过三个时，请</span>
             <span className='important-text'>压缩打包</span>
             <span>后上传。确保全部上传完毕后点击下方</span>
@@ -267,7 +266,7 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
       />
       <Form>
         <Form.Item
-          label='获奖证明附件1'
+          label='专利附件1'
           labelCol={{ span: 7 }}
           wrapperCol={{ span: 16 }}
         >
@@ -276,7 +275,7 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
             getValueFromEvent: (e) => {
               return e && e.fileList;
             },
-            rules: [{ required: true, message: '请上传获奖证明附件1!' }],
+            rules: [{ required: true, message: '请上传专利附件1!' }],
           })(
             <div>
               {firstFileName === 'jpg' ||
@@ -294,7 +293,7 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
                 // 进行将图片格式和大小判断
                 customRequest={handleUploadFirstFile}
               >
-                {firstPreviewUrl && !awardLoading ? (
+                {firstPreviewUrl && !patentLoading ? (
                   <div>
                     <Button
                       className='half-button'
@@ -327,9 +326,9 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
                   <Button
                     className='button'
                     size='large'
-                    loading={awardLoading}
+                    loading={patentLoading}
                   >
-                    点击上传文件
+                    点击文件上传压缩文件
                     <Icon type='inbox' />
                   </Button>
                 )}
@@ -339,7 +338,7 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
         </Form.Item>
 
         <Form.Item
-          label='获奖证明附件2'
+          label='专利附件2'
           labelCol={{ span: 7 }}
           wrapperCol={{ span: 16 }}
         >
@@ -365,7 +364,7 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
                 // 进行将图片格式和大小判断
                 customRequest={handleUploadSecondFile}
               >
-                {secondPreviewUrl && !awardLoading ? (
+                {secondPreviewUrl && !patentLoading ? (
                   <div>
                     <Button
                       className='half-button'
@@ -398,9 +397,9 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
                   <Button
                     className='button'
                     size='large'
-                    loading={awardLoading}
+                    loading={patentLoading}
                   >
-                    点击上传文件
+                    点击文件上传图片文件
                     <Icon type='inbox' />
                   </Button>
                 )}
@@ -410,7 +409,7 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
         </Form.Item>
 
         <Form.Item
-          label='获奖证明附件3'
+          label='专利附件3'
           labelCol={{ span: 7 }}
           wrapperCol={{ span: 16 }}
         >
@@ -436,7 +435,7 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
                 // 进行将图片格式和大小判断
                 customRequest={handleUploadThirdFile}
               >
-                {thirdPreviewUrl && !awardLoading ? (
+                {thirdPreviewUrl && !patentLoading ? (
                   <div>
                     <Button
                       className='half-button'
@@ -469,9 +468,9 @@ export default Form.create({ name: 'uploadAward' })(({ form }) => {
                   <Button
                     className='button'
                     size='large'
-                    loading={awardLoading}
+                    loading={patentLoading}
                   >
-                    点击上传文件
+                    点击文件上传图片文件
                     <Icon type='inbox' />
                   </Button>
                 )}
@@ -519,9 +518,9 @@ const handleBeforeUpload = ({ file }) => {
   }
 
   // 判断大小是否符合
-  if (file.size > 1024 * 1024 * 10) {
+  if (file.size > 1024 * 1024 * 100) {
     // 10MB
-    message.error('文件大小必须小于10MB');
+    message.error('文件大小必须小于100MB');
     return false;
   }
 
