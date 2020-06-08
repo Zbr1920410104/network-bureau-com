@@ -198,7 +198,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
         <Alert
           className='alert'
           type='warning'
-          description={`修改建议: ${staffBasic.verifyRemarks}`}
+          description={`核实建议: ${staffBasic.verifyRemarks}`}
         />
       ) : null}
       <Skeleton loading={basicLoading}>

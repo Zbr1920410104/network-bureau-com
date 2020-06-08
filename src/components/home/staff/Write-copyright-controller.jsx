@@ -263,10 +263,19 @@ export default (props) => {
                         </Button>
                       </div>
                     </div>
-                    {item.verifyRemarks ? (
+                    {item.verifyRemarks || item.reviewRemarks ? (
                       <Alert
                         type='warning'
-                        description={`修改建议: ${item.verifyRemarks}`}
+                        description={
+                          <div>
+                            {item.verifyRemarks ? (
+                              <div>{`核实建议: ${item.verifyRemarks}`}</div>
+                            ) : null}
+                            {item.reviewRemarks ? (
+                              <div>{`评审建议: ${item.reviewRemarks}`}</div>
+                            ) : null}
+                          </div>
+                        }
                       />
                     ) : null}
                   </div>

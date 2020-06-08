@@ -28,6 +28,7 @@ import {
   Skeleton,
   Tag,
   message,
+  Alert,
 } from 'antd';
 const { TextArea } = Input,
   { confirm } = Modal;
@@ -413,39 +414,47 @@ export default (props) => {
               <Descriptions
                 key={item.uuid}
                 title={
-                  <div className='verify-description-title'>
-                    <div className='description-title-text'>
-                      <span>{`奖项${index + 1}:  ${item.awardName}`}</span>
-                      <Tag
-                        className='content-tag'
-                        color={verifyStatusToColor(item.isVerify)}
-                      >
-                        {item.isVerify}
-                      </Tag>
-                      {/* <span>{`最近填写/修改于: ${
+                  <div>
+                    <div className='verify-description-title'>
+                      <div className='description-title-text'>
+                        <span>{`奖项${index + 1}:  ${item.awardName}`}</span>
+                        <Tag
+                          className='content-tag'
+                          color={verifyStatusToColor(item.isVerify)}
+                        >
+                          {item.isVerify}
+                        </Tag>
+                        {/* <span>{`最近填写/修改于: ${
                         item.currentWriteTime
                           ? moment(item.currentWriteTime).format(
                               'YYYY-MM-DD h:mm:ss a'
                             )
                           : ''
                       }`}</span> */}
+                      </div>
+                      <div className='description-title-button'>
+                        <Button
+                          type='link'
+                          icon='edit'
+                          className='opinion-button'
+                          onClick={() =>
+                            showVerifyModal(
+                              item.uuid,
+                              item.isVerify,
+                              item.verifyRemarks
+                            )
+                          }
+                        >
+                          核实
+                        </Button>
+                      </div>
                     </div>
-                    <div className='description-title-button'>
-                      <Button
-                        type='link'
-                        icon='edit'
-                        className='opinion-button'
-                        onClick={() =>
-                          showVerifyModal(
-                            item.uuid,
-                            item.isVerify,
-                            item.verifyRemarks
-                          )
-                        }
-                      >
-                        核实
-                      </Button>
-                    </div>
+                    {item.reviewRemarks ? (
+                      <Alert
+                        type='warning'
+                        description={`评审建议: ${item.reviewRemarks}`}
+                      />
+                    ) : null}
                   </div>
                 }
               >

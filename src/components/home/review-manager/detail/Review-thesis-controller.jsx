@@ -342,13 +342,13 @@ export default (props) => {
                           ? `评分:${item.score}`
                           : '未评分'}
                       </Tag>
-                      <span>
+                      {/* <span>
                         {item.reviewTime
                           ? moment(item.reviewTime).format(
                               'YYYY-MM-DD h:mm:ss a'
                             )
                           : ''}
-                      </span>
+                      </span> */}
                     </div>
                     <div className='description-title-button'>
                       <Button

@@ -127,7 +127,7 @@ export default (props) => {
   const showError = () => {
     Modal.error({
       title: '无法核实',
-      content: '员工未填写完毕或已全部核实后通过无法再核实',
+      content: '员工未填写完毕无法进行核实',
       okText: '确认',
     });
   };
@@ -371,7 +371,10 @@ export default (props) => {
                 <Button
                   type='link'
                   onClick={() => {
-                    if (record.verifyStatus === '待核实') {
+                    if (
+                      record.verifyStatus === '待核实' ||
+                      record.verifyStatus === '核实通过'
+                    ) {
                       handleSuccess(record.uuid);
                     } else {
                       showError();

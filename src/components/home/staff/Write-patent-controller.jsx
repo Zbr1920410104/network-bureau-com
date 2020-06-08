@@ -36,16 +36,15 @@ export default (props) => {
     dispatch = useDispatch(),
     [uploadPatentVisible, setUploadPatentVisible] = useState(false);
 
-    const showUploadPatentModal = (uuid) => {
-      dispatch(userAction.setStaffPatentUuid(uuid));
-      setUploadPatentVisible(true);
-    };
-  
-    const hideUploadPatentModal = () => {
-      dispatch(userAction.setStaffPatentUuid(''));
-      setUploadPatentVisible(false);
-    };
+  const showUploadPatentModal = (uuid) => {
+    dispatch(userAction.setStaffPatentUuid(uuid));
+    setUploadPatentVisible(true);
+  };
 
+  const hideUploadPatentModal = () => {
+    dispatch(userAction.setStaffPatentUuid(''));
+    setUploadPatentVisible(false);
+  };
 
   const showNewPatentModal = () => {
     setNewPatentVisible(true);
@@ -261,10 +260,19 @@ export default (props) => {
                         </Button>
                       </div>
                     </div>
-                    {item.verifyRemarks ? (
+                    {item.verifyRemarks || item.reviewRemarks ? (
                       <Alert
                         type='warning'
-                        description={`修改建议: ${item.verifyRemarks}`}
+                        description={
+                          <div>
+                            {item.verifyRemarks ? (
+                              <div>{`核实建议: ${item.verifyRemarks}`}</div>
+                            ) : null}
+                            {item.reviewRemarks ? (
+                              <div>{`评审建议: ${item.reviewRemarks}`}</div>
+                            ) : null}
+                          </div>
+                        }
                       />
                     ) : null}
                   </div>
@@ -279,7 +287,7 @@ export default (props) => {
                 <Descriptions.Item label='授权国家和地区' span={3}>
                   {item.patentNation}
                 </Descriptions.Item>
-                <Descriptions.Item label='上传/查看附件'span={3}>
+                <Descriptions.Item label='上传/查看附件' span={3}>
                   <Button
                     type='link'
                     onClick={() => {
