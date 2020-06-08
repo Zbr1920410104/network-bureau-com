@@ -24,16 +24,25 @@ export default (props) => {
     [uploadAwardVisible, setUploadAwardVisible] = useState(false),
     [reviewAwardVisible, setReviewAwardVisible] = useState(false),
     [reviewAwardList, setReviewAwardList] = useState([]),
-    [reviewAwardUrl, setReviewAwardUrl] = useState(''),
-    [previewUrl, setPreviewUrl] = useState(''),
+    [firstFileName, setFirstFileName] = useState(''),
+    [secondFileName, setSecondFileName] = useState(''),
+    [thirdFileName, setThirdFileName] = useState(''),
+    [firstReviewAwardUrl, setFirstReviewAwardUrl] = useState(''),
+    [secondReviewAwardUrl, setSecondReviewAwardUrl] = useState(''),
+    [thirdReviewAwardUrl, setThirdReviewAwardUrl] = useState(''),
+    [firstPreviewUrl, setFirstPreviewUrl] = useState(''),
+    [secondPreviewUrl, setSecondPreviewUrl] = useState(''),
+    [thirdPreviewUrl, setThirdPreviewUrl] = useState(''),
     [getFileLoading, setGetFileLoading] = useState(true),
     [reviewAwardLoading, setReviewAwardLoading] = useState(false),
     [score, setScore] = useState(0),
     [isNeedRefresh, setIsNeedRefresh] = useState(true),
     dispatch = useDispatch();
 
-  const showUploadAwardModal = (url) => {
-    setReviewAwardUrl(url);
+  const showUploadAwardModal = (firstUrl, secondUrl, thirdUrl) => {
+    setFirstReviewAwardUrl(firstUrl);
+    setSecondReviewAwardUrl(secondUrl);
+    setThirdReviewAwardUrl(thirdUrl);
     setUploadAwardVisible(true);
   };
 
@@ -88,20 +97,62 @@ export default (props) => {
   }, [reviewAward, dispatch]);
 
   useEffect(() => {
-    if (reviewAwardUrl) {
+    if (firstReviewAwardUrl) {
       (async () => {
         setGetFileLoading(true);
-        const previewUrl = await proxyFetch(
+
+        // 附件1的url处理
+        const firstPreviewUrl = await proxyFetch(
           GET_FILE_URL,
-          { fileUrl: reviewAwardUrl },
+          { fileUrl: firstReviewAwardUrl },
           'GET'
         );
 
-        setPreviewUrl(previewUrl);
+        setFirstPreviewUrl(firstPreviewUrl);
+        const firstUrlArr = firstPreviewUrl.split('?');
+        const firstUrlArrList = firstUrlArr[0],
+          firstAppU = firstUrlArrList.split('/');
+        const firstFileName = firstAppU[firstAppU.length - 1];
+        setFirstFileName(firstFileName.split('.')[1].toLowerCase());
+
+        // 附件2的url处理
+        let secondPreviewUrl = '';
+        if (secondReviewAwardUrl) {
+          secondPreviewUrl = await proxyFetch(
+            GET_FILE_URL,
+            { fileUrl: secondReviewAwardUrl },
+            'GET'
+          );
+
+          const secondUrlArr = secondPreviewUrl.split('?');
+          const secondUrlArrList = secondUrlArr[0],
+            secondAppU = secondUrlArrList.split('/');
+          const secondFileName = secondAppU[secondAppU.length - 1];
+          setSecondFileName(secondFileName.split('.')[1].toLowerCase());
+        }
+        setSecondPreviewUrl(secondPreviewUrl);
+
+        // 附件3的url处理
+        let thirdPreviewUrl = '';
+        if (thirdReviewAwardUrl) {
+          thirdPreviewUrl = await proxyFetch(
+            GET_FILE_URL,
+            { fileUrl: thirdReviewAwardUrl },
+            'GET'
+          );
+
+          const thirdUrlArr = thirdPreviewUrl.split('?');
+          const thirdUrlArrList = thirdUrlArr[0],
+            thirdAppU = thirdUrlArrList.split('/');
+          const thirdFileName = thirdAppU[thirdAppU.length - 1];
+          setThirdFileName(thirdFileName.split('.')[1].toLowerCase());
+        }
+        setThirdPreviewUrl(thirdPreviewUrl);
+
         setGetFileLoading(false);
       })();
     }
-  }, [reviewAwardUrl]);
+  }, [firstReviewAwardUrl, secondReviewAwardUrl, thirdReviewAwardUrl]);
 
   return (
     <div className='review-item-detail-box'>
@@ -113,27 +164,138 @@ export default (props) => {
         </Tag>
       </div>
       <Modal
-        title='下载附件'
+        title='查看附件'
         visible={uploadAwardVisible}
-        footer={null}
         onCancel={hideUploadAwardModal}
+        footer={null}
       >
         <div className='download-button-box'>
-          {reviewAwardUrl ? (
-            <a href={previewUrl}>
+          <div className='inner-button-box'>
+            {firstFileName === 'jpg' ||
+            firstFileName === 'jpeg' ||
+            firstFileName === 'png' ? (
+              <img
+                src={firstPreviewUrl}
+                alt='avatar'
+                style={{ width: '100%' }}
+                className='img'
+              />
+            ) : null}
+            {firstReviewAwardUrl ? (
               <Button
                 type='primary'
                 size='large'
                 className='download-button'
                 icon='download'
                 loading={getFileLoading}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (
+                    firstFileName === 'doc' ||
+                    firstFileName === 'docx' ||
+                    firstFileName === 'xls' ||
+                    firstFileName === 'xlsx'
+                  ) {
+                    window.open(
+                      `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
+                        firstPreviewUrl
+                      )}`
+                    );
+                  } else {
+                    window.open(firstPreviewUrl, '_blank');
+                  }
+                }}
               >
-                下载附件
+                查看附件1
               </Button>
-            </a>
-          ) : (
-            <Button disabled>员工未上传</Button>
-          )}
+            ) : (
+              <Button disabled>附件1未上传</Button>
+            )}
+          </div>
+          <div className='inner-button-box'>
+            {secondFileName === 'jpg' ||
+            secondFileName === 'jpeg' ||
+            secondFileName === 'png' ? (
+              <img
+                src={secondPreviewUrl}
+                alt='avatar'
+                style={{ width: '100%' }}
+                className='img'
+              />
+            ) : null}
+            {secondReviewAwardUrl ? (
+              <Button
+                type='primary'
+                size='large'
+                className='download-button'
+                icon='download'
+                loading={getFileLoading}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (
+                    secondFileName === 'doc' ||
+                    secondFileName === 'docx' ||
+                    secondFileName === 'xls' ||
+                    secondFileName === 'xlsx'
+                  ) {
+                    window.open(
+                      `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
+                        secondPreviewUrl
+                      )}`
+                    );
+                  } else {
+                    window.open(secondPreviewUrl, '_blank');
+                  }
+                }}
+              >
+                查看附件2
+              </Button>
+            ) : (
+              <Button disabled>附件2未上传</Button>
+            )}
+          </div>
+          <div className='inner-button-box'>
+            {thirdFileName === 'jpg' ||
+            thirdFileName === 'jpeg' ||
+            thirdFileName === 'png' ? (
+              <img
+                src={thirdPreviewUrl}
+                alt='avatar'
+                style={{ width: '100%' }}
+                className='img'
+              />
+            ) : null}
+            {thirdReviewAwardUrl ? (
+              <Button
+                type='primary'
+                size='large'
+                className='download-button'
+                icon='download'
+                loading={getFileLoading}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (
+                    thirdFileName === 'doc' ||
+                    thirdFileName === 'docx' ||
+                    thirdFileName === 'xls' ||
+                    thirdFileName === 'xlsx'
+                  ) {
+                    window.open(
+                      `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
+                        thirdPreviewUrl
+                      )}`
+                    );
+                  } else {
+                    window.open(thirdPreviewUrl, '_blank');
+                  }
+                }}
+              >
+                查看附件3
+              </Button>
+            ) : (
+              <Button disabled>附件3未上传</Button>
+            )}
+          </div>
         </div>
       </Modal>
       <Modal
@@ -219,7 +381,11 @@ export default (props) => {
                   <Button
                     type='link'
                     onClick={() => {
-                      showUploadAwardModal(item.url);
+                      showUploadAwardModal(
+                        item.firstUrl,
+                        item.secondUrl,
+                        item.thirdUrl
+                      );
                     }}
                     className='link-button'
                   >
