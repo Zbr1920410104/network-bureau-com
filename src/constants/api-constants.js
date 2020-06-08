@@ -131,4 +131,5 @@ export const GET_REVIEW_MANAGER_EXPORT_ALL_INFO_URL = `${DominConfigs.DOMAIN}${D
  */
 export const UPLOAD_JPG_FILE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_FILE}/uploadJpgFile`; // 上传jpg,png,jpeg文件
 export const UPLOAD_ZIP_FILE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_FILE}/uploadZipFile`; // 上传word,pdf文件
+export const UPLOAD_FILE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_FILE}/uploadFile`; // 上传文件
 export const GET_FILE_URL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_FILE}/getFileUrl`; // 获取文件url

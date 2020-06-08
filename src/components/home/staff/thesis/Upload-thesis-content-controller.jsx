@@ -38,9 +38,9 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
         );
 
         // 数据回显
-        if (writeThesis && writeThesis.url) {
+        if (writeThesis && writeThesis.firstUrl) {
           // 数据处理
-          setFieldsValue({ thesisUrl: [writeThesis.url] });
+          setFieldsValue({ thesisUrl: [writeThesis.firstUrl] });
           setIsNeedUrlFresh(true);
         } else {
           setPreviewUrl('');
