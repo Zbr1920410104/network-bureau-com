@@ -35,6 +35,7 @@ import {
   Row,
   Col,
   Radio,
+  Icon,
 } from 'antd';
 import '@/style/home/business-manager/verify-list.styl';
 const { Option } = Select,
@@ -361,6 +362,26 @@ export default (props) => {
               title='核实状态'
               dataIndex='verifyStatus'
               key=''
+              render={(text, record) => (
+                <div>
+                  <span>{record.verifyStatus}</span>
+                  {record.verifyStatus === '核实通过' ? (
+                    <Icon
+                      type='check-circle'
+                      theme='twoTone'
+                      twoToneColor='#52c41a'
+                      className='icon'
+                    />
+                  ) : record.verifyStatus === '核实不通过' ? (
+                    <Icon
+                      type='close-circle'
+                      theme='twoTone'
+                      twoToneColor='#f5222d'
+                      className='icon'
+                    />
+                  ) : null}
+                </div>
+              )}
             />
             <Column
               align='center'

@@ -48,14 +48,6 @@ export default (props) => {
           <span>填写/修改个人信息</span>
         </p>
       </div>
-      <div className='write-form-box'>
-        <WriteBasicController />
-        <WriteProjectController />
-        <WritePatentController />
-        <WriteCopyrightController />
-        <WriteAwardController />
-        <WriteThesisController />
-      </div>
       <div className='write-bottom-box'>
         <Button
           type='primary'
@@ -85,6 +77,14 @@ export default (props) => {
         >
           确认提交
         </Button>
+      </div>
+      <div className='write-form-box'>
+        <WriteBasicController />
+        <WriteProjectController />
+        <WritePatentController />
+        <WriteCopyrightController />
+        <WriteAwardController />
+        <WriteThesisController />
       </div>
     </div>
   );
