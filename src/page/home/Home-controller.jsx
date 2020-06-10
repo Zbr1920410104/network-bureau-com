@@ -39,69 +39,69 @@ import Nav from '@/components/home/Nav.jsx';
 
 // 样式
 import '@/style/home/home.styl';
-import { Layout, Icon, Button } from 'antd';
+import { Layout, Icon, Button, Spin } from 'antd';
 
 const HomeIndexController = loadable(() => import('./Home-index-controller'), {
-  fallback: <div>Loading...</div>,
+  fallback: <Spin className='spin' />,
 });
 const PasswordModifyController = loadable(
   () => import('./public/Password-modify-controller'),
   {
-    fallback: <div>Loading...</div>,
+    fallback: <Spin className='spin' />,
   }
 );
 const WriteWelcomeController = loadable(
   () => import('./staff/Write-welcome-controller'),
   {
-    fallback: <div>Loading...</div>,
+    fallback: <Spin className='spin' />,
   }
 );
 const WriteDetailController = loadable(
   () => import('./staff/Write-detail-controller'),
   {
-    fallback: <div>Loading...</div>,
+    fallback: <Spin className='spin' />,
   }
 );
 const VerifyListController = loadable(
   () => import('./business-manager/Verify-list-controller'),
   {
-    fallback: <div>Loading...</div>,
+    fallback: <Spin className='spin' />,
   }
 );
 const VerifyDetailController = loadable(
   () => import('./business-manager/Verify-detail-controller'),
   {
-    fallback: <div>Loading...</div>,
+    fallback: <Spin className='spin' />,
   }
 );
 const ReviewListController = loadable(
   () => import('./review-manager/Review-list-controller'),
   {
-    fallback: <div>Loading...</div>,
+    fallback: <Spin className='spin' />,
   }
 );
 const ReviewDetailListController = loadable(
   () => import('./review-manager/Review-detail-controller'),
   {
-    fallback: <div>Loading...</div>,
+    fallback: <Spin className='spin' />,
   }
 );
 const AccountListController = loadable(
   () => import('./admin/Account-list-controller'),
   {
-    fallback: <div>Loading...</div>,
+    fallback: <Spin className='spin' />,
   }
 );
 const AccountTimeController = loadable(
   () => import('./admin/Account-time-controller'),
   {
-    fallback: <div>Loading...</div>,
+    fallback: <Spin className='spin' />,
   }
 );
 const DepartmentListController = loadable(
   () => import('./admin/Department-list-controller'),
   {
-    fallback: <div>Loading...</div>,
+    fallback: <Spin className='spin' />,
   }
 );
 
