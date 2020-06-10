@@ -41,69 +41,67 @@ import Nav from '@/components/home/Nav.jsx';
 import '@/style/home/home.styl';
 import { Layout, Icon, Button } from 'antd';
 
-const Loading = () => <div>Loading...</div>;
-
 const HomeIndexController = loadable(() => import('./Home-index-controller'), {
-  fallback: Loading,
+  fallback: <div>Loading...</div>,
 });
 const PasswordModifyController = loadable(
   () => import('./public/Password-modify-controller'),
   {
-    fallback: Loading,
+    fallback: <div>Loading...</div>,
   }
 );
 const WriteWelcomeController = loadable(
   () => import('./staff/Write-welcome-controller'),
   {
-    fallback: Loading,
+    fallback: <div>Loading...</div>,
   }
 );
 const WriteDetailController = loadable(
   () => import('./staff/Write-detail-controller'),
   {
-    fallback: Loading,
+    fallback: <div>Loading...</div>,
   }
 );
 const VerifyListController = loadable(
   () => import('./business-manager/Verify-list-controller'),
   {
-    fallback: Loading,
+    fallback: <div>Loading...</div>,
   }
 );
 const VerifyDetailController = loadable(
   () => import('./business-manager/Verify-detail-controller'),
   {
-    fallback: Loading,
+    fallback: <div>Loading...</div>,
   }
 );
 const ReviewListController = loadable(
   () => import('./review-manager/Review-list-controller'),
   {
-    fallback: Loading,
+    fallback: <div>Loading...</div>,
   }
 );
 const ReviewDetailListController = loadable(
   () => import('./review-manager/Review-detail-controller'),
   {
-    fallback: Loading,
+    fallback: <div>Loading...</div>,
   }
 );
 const AccountListController = loadable(
   () => import('./admin/Account-list-controller'),
   {
-    fallback: Loading,
+    fallback: <div>Loading...</div>,
   }
 );
 const AccountTimeController = loadable(
   () => import('./admin/Account-time-controller'),
   {
-    fallback: Loading,
+    fallback: <div>Loading...</div>,
   }
 );
 const DepartmentListController = loadable(
   () => import('./admin/Department-list-controller'),
   {
-    fallback: Loading,
+    fallback: <div>Loading...</div>,
   }
 );
 
