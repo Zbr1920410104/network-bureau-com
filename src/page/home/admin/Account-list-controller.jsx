@@ -14,15 +14,13 @@ import {
   QUARY_ACCOUNT,
   RESET_PASSWORD,
   ACCOUNT_CANCEL,
+  GET_DEFAULT_PASSWORD,
   ACCOUNT_EXPORT_ALL_STAFF_INFO_EXCEL,
 } from '@/constants/api-constants';
 
 import AccountFormController from '@/components/home/admin/Account-form-controller.jsx';
 import ModifyAccountContent from '@/components/home/admin/Modify-account-content-controller.jsx';
 import ModifyKeyContent from '@/components/home/admin/Modify-key-content-controller.jsx';
-
-// 工具
-import md5 from 'md5';
 
 // 样式
 import '@/style/home/admin/account-list.styl';
@@ -113,7 +111,12 @@ export default (porps) => {
     if (res) {
       if (uuid === userUuid) {
         let value = {};
-        value.password = md5('123456');
+        const { defaultPassword } = await proxyFetch(
+          GET_DEFAULT_PASSWORD,
+          {},
+          'GET'
+        );
+        value.password = defaultPassword;
         value.userName = userName;
         dispatch(userAction.asyncSetUser(value));
       }
