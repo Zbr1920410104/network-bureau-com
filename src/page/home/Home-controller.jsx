@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 
+import loadable from '@loadable/component';
+
 // redux
 import userAction from '@/redux/action/user';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,25 +11,25 @@ import { useRouteMatch, useHistory } from 'react-router-dom';
 import * as ROUTES from '@/constants/route-constants';
 
 // controller
-import HomeIndexController from '@/page/home/Home-index-controller.jsx';
-import PasswordModifyController from '@/page/home/public/Password-modify-controller.jsx';
+// import HomeIndexController from '@/page/home/Home-index-controller.jsx';
+// import PasswordModifyController from '@/page/home/public/Password-modify-controller.jsx';
 
 // 员工
-import WriteWelcomeController from '@/page/home/staff/Write-welcome-controller.jsx';
-import WriteDetailController from '@/page/home/staff/Write-detail-controller.jsx';
+// import WriteWelcomeController from '@/page/home/staff/Write-welcome-controller.jsx';
+// import WriteDetailController from '@/page/home/staff/Write-detail-controller.jsx';
 
 // 业务员
-import VerifyListController from '@/page/home/business-manager/Verify-list-controller.jsx';
-import VerifyDetailController from '@/page/home/business-manager/Verify-detail-controller.jsx';
+// import VerifyListController from '@/page/home/business-manager/Verify-list-controller.jsx';
+// import VerifyDetailController from '@/page/home/business-manager/Verify-detail-controller.jsx';
 
 // 评审员
-import ReviewListController from '@/page/home/review-manager/Review-list-controller.jsx';
-import ReviewDetailListController from '@/page/home/review-manager/Review-detail-controller.jsx';
+// import ReviewListController from '@/page/home/review-manager/Review-list-controller.jsx';
+// import ReviewDetailListController from '@/page/home/review-manager/Review-detail-controller.jsx';
 
 // 管理员
-import AccountListController from '@/page/home/admin/Account-list-controller.jsx';
-import AccountTimeController from '@/page/home/admin/Account-time-controller.jsx';
-import DepartmentListController from '@/page/home/admin/Department-list-controller.jsx';
+// import AccountListController from '@/page/home/admin/Account-list-controller.jsx';
+// import AccountTimeController from '@/page/home/admin/Account-time-controller.jsx';
+// import DepartmentListController from '@/page/home/admin/Department-list-controller.jsx';
 
 // localStorage
 import { LOCAL_STORAGE } from '@/constants/app-constants';
@@ -38,6 +40,73 @@ import Nav from '@/components/home/Nav.jsx';
 // 样式
 import '@/style/home/home.styl';
 import { Layout, Icon, Button } from 'antd';
+
+const Loading = () => <div>Loading...</div>;
+
+const HomeIndexController = loadable(() => import('./Home-index-controller'), {
+  fallback: Loading,
+});
+const PasswordModifyController = loadable(
+  () => import('./public/Password-modify-controller'),
+  {
+    fallback: Loading,
+  }
+);
+const WriteWelcomeController = loadable(
+  () => import('./staff/Write-welcome-controller'),
+  {
+    fallback: Loading,
+  }
+);
+const WriteDetailController = loadable(
+  () => import('./staff/Write-detail-controller'),
+  {
+    fallback: Loading,
+  }
+);
+const VerifyListController = loadable(
+  () => import('./business-manager/Verify-list-controller'),
+  {
+    fallback: Loading,
+  }
+);
+const VerifyDetailController = loadable(
+  () => import('./business-manager/Verify-detail-controller'),
+  {
+    fallback: Loading,
+  }
+);
+const ReviewListController = loadable(
+  () => import('./review-manager/Review-list-controller'),
+  {
+    fallback: Loading,
+  }
+);
+const ReviewDetailListController = loadable(
+  () => import('./review-manager/Review-detail-controller'),
+  {
+    fallback: Loading,
+  }
+);
+const AccountListController = loadable(
+  () => import('./admin/Account-list-controller'),
+  {
+    fallback: Loading,
+  }
+);
+const AccountTimeController = loadable(
+  () => import('./admin/Account-time-controller'),
+  {
+    fallback: Loading,
+  }
+);
+const DepartmentListController = loadable(
+  () => import('./admin/Department-list-controller'),
+  {
+    fallback: Loading,
+  }
+);
+
 const { Header, Content, Footer, Sider } = Layout;
 
 export default (props) => {
