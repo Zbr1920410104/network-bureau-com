@@ -728,10 +728,6 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                         required: true,
                         message: '请输入学习经历！',
                       },
-                      {
-                        message: '学习经历过长！',
-                        max: 300,
-                      },
                     ],
                   })(<TextArea rows={4} placeholder='学习经历' />)}
                 </Form.Item>
@@ -751,10 +747,6 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                       {
                         required: true,
                         message: '请输入工作经历！',
-                      },
-                      {
-                        message: '工作经历过长！',
-                        max: 300,
                       },
                     ],
                   })(<TextArea rows={4} placeholder='工作经历' />)}
