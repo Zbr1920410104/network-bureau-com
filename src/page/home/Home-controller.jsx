@@ -229,7 +229,7 @@ export default (props) => {
       <Sider className='home-sider'>
         <div className='logo'>
           <Icon type='reconciliation' />
-          <span>业务管理系统</span>
+          <span>科研管理系统</span>
         </div>
         <div className='user-info'>
           <span>

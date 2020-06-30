@@ -10,12 +10,12 @@ export const NAV = {
       icon: 'audit',
       name: '首页',
     },
-    {
-      key: 'password',
-      path: ROUTE.HOME_PASSWORD.path,
-      name: '修改密码',
-      icon: 'key',
-    },
+    // {
+    //   key: 'password',
+    //   path: ROUTE.HOME_PASSWORD.path,
+    //   name: '修改密码',
+    //   icon: 'key',
+    // },
     {
       key: 'accountManage',
       path: ROUTE.HOME_ACCOUNT_LIST.path,
