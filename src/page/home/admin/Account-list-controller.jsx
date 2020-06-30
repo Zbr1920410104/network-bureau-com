@@ -272,7 +272,7 @@ export default (porps) => {
           className='table'
           loading={accountLoading}
           rowKey={(record) => record.uuid}
-          scroll={{ x: 1200 }}
+          scroll={{ x: 1080 }}
         >
           <Column
             align='center'
@@ -282,7 +282,7 @@ export default (porps) => {
             fixed='left'
           />
           <Column align='center' title='账号' dataIndex='userName' key='' />
-          <Column align='center' title='电话号码' dataIndex='phone' key='' />
+          <Column align='center' title='科室' dataIndex='department' key='' />
           <Column
             align='center'
             title='权限'
@@ -295,8 +295,8 @@ export default (porps) => {
               else if (record.role === 1) return '超级管理员';
             }}
           />
-          <Column align='center' title='科室' dataIndex='department' key='' />
-          <Column align='center' title='注销状态' dataIndex='isCancel' key='' />
+          <Column align='center' title='电话号码' dataIndex='phone' key='' />
+          {/* <Column align='center' title='注销状态' dataIndex='isCancel' key='' /> */}
           <Column
             align='center'
             title='重置密码'
@@ -339,7 +339,7 @@ export default (porps) => {
                   confirm({
                     title: '注销账号?',
                     okType: 'primary',
-                    content: '确认要注销账号(注销后账号将无法登录)?',
+                    content: '确认要注销账号(注销后账号所有信息将删除)?',
                     okText: '确认',
                     cancelText: '取消',
                     onOk() {
