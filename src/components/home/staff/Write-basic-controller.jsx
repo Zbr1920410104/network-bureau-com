@@ -548,11 +548,9 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                   })(
                     <Select placeholder='学历'>
                       <Option value='高中及以下'>高中及以下</Option>
-                      <Option value='中专'>中专</Option>
-                      <Option value='大专'>大专</Option>
+                      <Option value='专科'>专科</Option>
                       <Option value='本科'>本科</Option>
-                      <Option value='硕士'>硕士</Option>
-                      <Option value='博士'>博士</Option>
+                      <Option value='研究生'>研究生</Option>
                     </Select>
                   )}
                 </Form.Item>
