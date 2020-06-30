@@ -50,7 +50,8 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
     { modifyBasic } = useSelector((state) => state.userStore),
     [isNeedRefresh, setIsNeedRefresh] = useState(true),
     dispatch = useDispatch(),
-    [basicLoading, setBasicLoading] = useState(false);
+    [basicLoading, setBasicLoading] = useState(false),
+    [saveDataLoading, setSaveDataLoading] = useState(false);
 
   /**
    * 提交事件
@@ -60,7 +61,8 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
 
     // 表单判断
     form.validateFields(async (err, value) => {
-      if (!err) {
+      if (!err && !saveDataLoading) {
+        setSaveDataLoading(true);
         value.nativePlace =
           value.nativePlace[0] +
           (value.nativePlace[1] ? value.nativePlace[1] : '');
@@ -70,6 +72,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
           setIswritten(true);
           setIsNeedRefresh(true);
         }
+        setSaveDataLoading(false);
       }
     });
   };
@@ -758,7 +761,12 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
       </Skeleton>
       <div className='basic-bottom-box'>
         {!isWritten ? (
-          <Button type='primary' className='save-button' onClick={handleWrite}>
+          <Button
+            type='primary'
+            className='save-button'
+            onClick={handleWrite}
+            loading={saveDataLoading}
+          >
             暂存
           </Button>
         ) : null}

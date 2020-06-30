@@ -121,7 +121,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
 
     // 表单判断
     form.validateFields(async (err, value) => {
-      if (!err) {
+      if (!err && !saveDataLoading) {
         setSaveDataLoading(true);
 
         value.nativePlace =
