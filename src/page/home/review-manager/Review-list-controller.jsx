@@ -123,14 +123,18 @@ export default (props) => {
   };
 
   const handleExportAllStaff = async () => {
-    let tempUrl = await proxyFetch(GET_REVIEW_MANAGER_EXPORT_ALL_INFO_URL, {
-      reviewStatus,
-      name,
-      staffItem,
-      scoreLimit,
-      score,
-      exportAllList,
-    });
+    let tempUrl = await proxyFetch(
+      GET_REVIEW_MANAGER_EXPORT_ALL_INFO_URL,
+      {
+        reviewStatus,
+        name,
+        staffItem,
+        scoreLimit,
+        score,
+        exportAllList,
+      },
+      'GET'
+    );
 
     if (tempUrl) {
       setExportAllVisible(false);
