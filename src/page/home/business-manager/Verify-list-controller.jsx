@@ -221,7 +221,7 @@ export default (props) => {
             }}
           >
             <Option value='0'>全部</Option>
-            <Option value='未填写完毕'>未填写完毕</Option>
+            <Option value='未提交'>未提交</Option>
             <Option value='待核实'>待核实</Option>
             <Option value='核实通过'>核实通过</Option>
             <Option value='核实未通过'>核实未通过</Option>
