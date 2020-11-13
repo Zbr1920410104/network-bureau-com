@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
+// 请求
+import proxyFetch from '@/util/request';
+import { GET_DEFAULT_PASSWORD } from '@/constants/api-constants';
+
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 // 导航栏数据
@@ -8,8 +12,6 @@ import { NAV } from '@/constants/nav-constants';
 // 路由
 import { HOME_PASSWORD } from '@/constants/route-constants';
 import { useHistory } from 'react-router-dom';
-
-import md5 from 'md5';
 
 // 样式
 import { Menu, Icon, Spin, message } from 'antd';
@@ -22,11 +24,18 @@ export default (props) => {
     [navEnabled, setNavEnabled] = useState(true);
 
   useEffect(() => {
-    if (password === md5('123456')) {
-      setNavEnabled(false);
-    } else {
-      setNavEnabled(true);
-    }
+    (async () => {
+      const { defaultPassword } = await proxyFetch(
+        GET_DEFAULT_PASSWORD,
+        {},
+        'GET'
+      );
+      if (password === defaultPassword) {
+        setNavEnabled(false);
+      } else {
+        setNavEnabled(true);
+      }
+    })();
   }, [password]);
 
   // 渲染nav 用 NAV[role];

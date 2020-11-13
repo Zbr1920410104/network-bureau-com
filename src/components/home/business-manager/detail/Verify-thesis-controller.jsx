@@ -28,6 +28,7 @@ import {
   Skeleton,
   Tag,
   message,
+  Alert,
 } from 'antd';
 const { TextArea } = Input,
   { confirm } = Modal;
@@ -39,8 +40,15 @@ export default (props) => {
     [verifyVisible, setVerifyVisible] = useState(false),
     [uploadThesisVisible, setUploadThesisVisible] = useState(false),
     [verifyThesisList, setVerifyThesisList] = useState([]),
-    [verifyThesisUrl, setVerifyThesisUrl] = useState(''),
-    [previewUrl, setPreviewUrl] = useState(''),
+    [firstFileName, setFirstFileName] = useState(''),
+    [secondFileName, setSecondFileName] = useState(''),
+    [thirdFileName, setThirdFileName] = useState(''),
+    [firstVerifyThesisUrl, setFirstVerifyThesisUrl] = useState(''),
+    [secondVerifyThesisUrl, setSecondVerifyThesisUrl] = useState(''),
+    [thirdVerifyThesisUrl, setThirdVerifyThesisUrl] = useState(''),
+    [firstPreviewUrl, setFirstPreviewUrl] = useState(''),
+    [secondPreviewUrl, setSecondPreviewUrl] = useState(''),
+    [thirdPreviewUrl, setThirdPreviewUrl] = useState(''),
     [getFileLoading, setGetFileLoading] = useState(true),
     [verifyThesisLoading, setVerifyThesisLoading] = useState(false),
     dispatch = useDispatch(),
@@ -59,8 +67,11 @@ export default (props) => {
     setVerifyVisible(false);
     setVerifyRemarks('');
   };
-  const showUploadThesisModal = (url) => {
-    setVerifyThesisUrl(url);
+
+  const showUploadThesisModal = (firstUrl, secondUrl, thirdUrl) => {
+    setFirstVerifyThesisUrl(firstUrl);
+    setSecondVerifyThesisUrl(secondUrl);
+    setThirdVerifyThesisUrl(thirdUrl);
     setUploadThesisVisible(true);
   };
 
@@ -92,20 +103,60 @@ export default (props) => {
   }, [isNeedRefresh, staffUuid]);
 
   useEffect(() => {
-    if (verifyThesisUrl) {
+    if (firstVerifyThesisUrl) {
       (async () => {
         setGetFileLoading(true);
-        const previewUrl = await proxyFetch(
+        // 附件1的url处理
+        const firstPreviewUrl = await proxyFetch(
           GET_FILE_URL,
-          { fileUrl: verifyThesisUrl },
+          { fileUrl: firstVerifyThesisUrl },
           'GET'
         );
 
-        setPreviewUrl(previewUrl);
+        setFirstPreviewUrl(firstPreviewUrl);
+        const firstUrlArr = firstPreviewUrl.split('?');
+        const firstUrlArrList = firstUrlArr[0],
+          firstAppU = firstUrlArrList.split('/');
+        const firstFileName = firstAppU[firstAppU.length - 1];
+        setFirstFileName(firstFileName.split('.')[1].toLowerCase());
+
+        // 附件2的url处理
+        let secondPreviewUrl = '';
+        if (secondVerifyThesisUrl) {
+          secondPreviewUrl = await proxyFetch(
+            GET_FILE_URL,
+            { fileUrl: secondVerifyThesisUrl },
+            'GET'
+          );
+
+          const secondUrlArr = secondPreviewUrl.split('?');
+          const secondUrlArrList = secondUrlArr[0],
+            secondAppU = secondUrlArrList.split('/');
+          const secondFileName = secondAppU[secondAppU.length - 1];
+          setSecondFileName(secondFileName.split('.')[1].toLowerCase());
+        }
+        setSecondPreviewUrl(secondPreviewUrl);
+
+        // 附件3的url处理
+        let thirdPreviewUrl = '';
+        if (thirdVerifyThesisUrl) {
+          thirdPreviewUrl = await proxyFetch(
+            GET_FILE_URL,
+            { fileUrl: thirdVerifyThesisUrl },
+            'GET'
+          );
+
+          const thirdUrlArr = thirdPreviewUrl.split('?');
+          const thirdUrlArrList = thirdUrlArr[0],
+            thirdAppU = thirdUrlArrList.split('/');
+          const thirdFileName = thirdAppU[thirdAppU.length - 1];
+          setThirdFileName(thirdFileName.split('.')[1].toLowerCase());
+        }
+        setThirdPreviewUrl(thirdPreviewUrl);
         setGetFileLoading(false);
       })();
     }
-  }, [verifyThesisUrl]);
+  }, [firstVerifyThesisUrl, secondVerifyThesisUrl, thirdVerifyThesisUrl]);
 
   const handleSetFailStatus = () => {
     if (verifyRemarks) {
@@ -226,21 +277,132 @@ export default (props) => {
         footer={null}
       >
         <div className='download-button-box'>
-          {verifyThesisUrl ? (
-            <a href={previewUrl}>
+          <div className='inner-button-box'>
+            {firstFileName === 'jpg' ||
+            firstFileName === 'jpeg' ||
+            firstFileName === 'png' ? (
+              <img
+                src={firstPreviewUrl}
+                alt='avatar'
+                style={{ width: '100%' }}
+                className='img'
+              />
+            ) : null}
+            {firstVerifyThesisUrl ? (
               <Button
                 type='primary'
                 size='large'
                 className='download-button'
                 icon='download'
                 loading={getFileLoading}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (
+                    firstFileName === 'doc' ||
+                    firstFileName === 'docx' ||
+                    firstFileName === 'xls' ||
+                    firstFileName === 'xlsx'
+                  ) {
+                    window.open(
+                      `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
+                        firstPreviewUrl
+                      )}`
+                    );
+                  } else {
+                    window.open(firstPreviewUrl, '_blank');
+                  }
+                }}
               >
-                下载附件
+                查看附件1
               </Button>
-            </a>
-          ) : (
-            <Button disabled>员工未上传</Button>
-          )}
+            ) : (
+              <Button disabled>附件1未上传</Button>
+            )}
+          </div>
+          <div className='inner-button-box'>
+            {secondFileName === 'jpg' ||
+            secondFileName === 'jpeg' ||
+            secondFileName === 'png' ? (
+              <img
+                src={secondPreviewUrl}
+                alt='avatar'
+                style={{ width: '100%' }}
+                className='img'
+              />
+            ) : null}
+            {secondVerifyThesisUrl ? (
+              <Button
+                type='primary'
+                size='large'
+                className='download-button'
+                icon='download'
+                loading={getFileLoading}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (
+                    secondFileName === 'doc' ||
+                    secondFileName === 'docx' ||
+                    secondFileName === 'xls' ||
+                    secondFileName === 'xlsx'
+                  ) {
+                    window.open(
+                      `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
+                        secondPreviewUrl
+                      )}`
+                    );
+                  } else {
+                    window.open(secondPreviewUrl, '_blank');
+                  }
+                }}
+              >
+                查看附件2
+              </Button>
+            ) : (
+              <Button disabled>附件2未上传</Button>
+            )}
+          </div>
+          <div className='inner-button-box'>
+            {thirdFileName === 'jpg' ||
+            thirdFileName === 'jpeg' ||
+            thirdFileName === 'png' ? (
+              <img
+                src={thirdPreviewUrl}
+                alt='avatar'
+                style={{ width: '100%' }}
+                className='img'
+              />
+            ) : null}
+            {thirdVerifyThesisUrl ? (
+              <Button
+                type='primary'
+                size='large'
+                className='download-button'
+                icon='download'
+                loading={getFileLoading}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (
+                    thirdFileName === 'doc' ||
+                    thirdFileName === 'docx' ||
+                    thirdFileName === 'xls' ||
+                    thirdFileName === 'xlsx'
+                  ) {
+                    window.open(
+                      `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
+                        thirdPreviewUrl
+                      )}`
+                    );
+                  } else {
+                    window.open(thirdPreviewUrl, '_blank');
+                  }
+                }}
+              >
+                查看附件3
+              </Button>
+            ) : (
+              <Button disabled>附件3未上传</Button>
+            )}
+          </div>
         </div>
       </Modal>
       <div className='verify-description-box'>
@@ -250,41 +412,49 @@ export default (props) => {
               <Descriptions
                 key={item.uuid}
                 title={
-                  <div className='verify-description-title'>
-                    <div className='description-title-text'>
-                      <span>{`论文/专著${index + 1}:  ${
-                        item.thesisTitle
-                      }`}</span>
-                      <Tag
-                        className='content-tag'
-                        color={verifyStatusToColor(item.isVerify)}
-                      >
-                        {item.isVerify}
-                      </Tag>
-                      {/* <span>{`最近填写/修改于: ${
+                  <div>
+                    <div className='verify-description-title'>
+                      <div className='description-title-text'>
+                        <span>{`论文/专著${index + 1}:  ${
+                          item.thesisTitle
+                        }`}</span>
+                        <Tag
+                          className='content-tag'
+                          color={verifyStatusToColor(item.isVerify)}
+                        >
+                          {item.isVerify}
+                        </Tag>
+                        {/* <span>{`最近填写/修改于: ${
                         item.currentVerifyTime
                           ? moment(item.currentVerifyTime).format(
                               'YYYY-MM-DD h:mm:ss a'
                             )
                           : ''
                       }`}</span> */}
+                      </div>
+                      <div className='description-title-button'>
+                        <Button
+                          type='link'
+                          icon='edit'
+                          className='opinion-button'
+                          onClick={() =>
+                            showVerifyModal(
+                              item.uuid,
+                              item.isVerify,
+                              item.verifyRemarks
+                            )
+                          }
+                        >
+                          核实
+                        </Button>
+                      </div>
                     </div>
-                    <div className='description-title-button'>
-                      <Button
-                        type='link'
-                        icon='edit'
-                        className='opinion-button'
-                        onClick={() =>
-                          showVerifyModal(
-                            item.uuid,
-                            item.isVerify,
-                            item.verifyRemarks
-                          )
-                        }
-                      >
-                        核实
-                      </Button>
-                    </div>
+                    {item.reviewRemarks ? (
+                      <Alert
+                        type='warning'
+                        description={`评审建议: ${item.reviewRemarks}`}
+                      />
+                    ) : null}
                   </div>
                 }
               >
@@ -319,7 +489,11 @@ export default (props) => {
                   <Button
                     type='link'
                     onClick={() => {
-                      showUploadThesisModal(item.url);
+                      showUploadThesisModal(
+                        item.firstUrl,
+                        item.secondUrl,
+                        item.thirdUrl
+                      );
                     }}
                     className='link-button'
                   >

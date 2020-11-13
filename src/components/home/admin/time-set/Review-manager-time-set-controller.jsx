@@ -87,14 +87,14 @@ export default Form.create({ name: 'reviewManagerTimeSet' })(({ form }) => {
 
         <Form.Item label='系统开关'>
           {getFieldDecorator('sysSwitch', {
-            initialValue: true,
+            initialValue: false,
             valuePropName: 'checked',
           })(<Switch />)}
         </Form.Item>
 
         <Form.Item label='时间设置开关'>
           {getFieldDecorator('timeSwitch', {
-            initialValue: true,
+            initialValue: false,
             valuePropName: 'checked',
           })(<Switch disabled={!form.getFieldValue('sysSwitch')} />)}
         </Form.Item>

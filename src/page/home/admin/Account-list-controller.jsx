@@ -14,14 +14,13 @@ import {
   QUARY_ACCOUNT,
   RESET_PASSWORD,
   ACCOUNT_CANCEL,
+  GET_DEFAULT_PASSWORD,
   ACCOUNT_EXPORT_ALL_STAFF_INFO_EXCEL,
 } from '@/constants/api-constants';
 
 import AccountFormController from '@/components/home/admin/Account-form-controller.jsx';
 import ModifyAccountContent from '@/components/home/admin/Modify-account-content-controller.jsx';
-
-// 工具
-import md5 from 'md5';
+import ModifyKeyContent from '@/components/home/admin/Modify-key-content-controller.jsx';
 
 // 样式
 import '@/style/home/admin/account-list.styl';
@@ -36,20 +35,32 @@ export default (porps) => {
     [role, setRole] = useState(0),
     [name, setName] = useState(''),
     [accountVisible, setAccountVisible] = useState(false),
+    [keyModifyVisible, setKeyModifyVisible] = useState(false),
     [isNeedRefresh, setIsNeedRefresh] = useState(true),
     [accountList, setAccountList] = useState([]),
     history = useHistory(),
     [modifyAccountVisible, setModifyAccountVisible] = useState(false),
-    { addAccount, uuid, userName } = useSelector((state) => state.userStore),
+    { addAccount, uuid, userName, changeDefaultPassword } = useSelector(
+      (state) => state.userStore
+    ),
     dispatch = useDispatch();
 
   const showAccountModal = () => {
     setAccountVisible(true);
   };
 
+  const showKeyModifyModal = () => {
+    setKeyModifyVisible(true);
+  };
+
   const hideAccountModal = () => {
     dispatch(userAction.setAccountRefresh(true));
     setAccountVisible(false);
+  };
+
+  const hideModifyKeyModal = () => {
+    dispatch(userAction.setDefaultPasswordRefresh(true));
+    setKeyModifyVisible(false);
   };
 
   const showModifyAccountModal = () => {
@@ -61,6 +72,13 @@ export default (porps) => {
     dispatch(userAction.setAccountRefresh(true));
     setModifyAccountVisible(false);
   };
+
+  useEffect(() => {
+    if (changeDefaultPassword) {
+      dispatch(userAction.setChangeDefaultPassword(false));
+      setKeyModifyVisible(false);
+    }
+  }, [changeDefaultPassword, dispatch]);
 
   useEffect(() => {
     let _isMounted = true;
@@ -93,7 +111,12 @@ export default (porps) => {
     if (res) {
       if (uuid === userUuid) {
         let value = {};
-        value.password = md5('123456');
+        const { defaultPassword } = await proxyFetch(
+          GET_DEFAULT_PASSWORD,
+          {},
+          'GET'
+        );
+        value.password = defaultPassword;
         value.userName = userName;
         dispatch(userAction.asyncSetUser(value));
       }
@@ -150,11 +173,19 @@ export default (porps) => {
             }}
           />
           <Button
+            className='primary-button'
             type='primary'
             style={{ marginBottom: 16 }}
             onClick={showAccountModal}
           >
             新增账号
+          </Button>
+          <Button
+            type='primary'
+            style={{ marginBottom: 16 }}
+            onClick={showKeyModifyModal}
+          >
+            修改默认密码
           </Button>
           <Button
             className='export-button'
@@ -196,6 +227,26 @@ export default (porps) => {
             <ModifyAccountContent />
           </Modal>
           <Modal
+            title='修改默认密码'
+            visible={keyModifyVisible}
+            onCancel={() => {
+              confirm({
+                title: '确认离开?',
+                okType: 'primary',
+                content: '离开修改的内容将不会保存!',
+                okText: '确认',
+                cancelText: '取消',
+                onOk() {
+                  hideModifyKeyModal();
+                },
+                onCancel() {},
+              });
+            }}
+            footer={null}
+          >
+            <ModifyKeyContent />
+          </Modal>
+          <Modal
             title='新增账号'
             visible={accountVisible}
             onCancel={() => {
@@ -222,6 +273,7 @@ export default (porps) => {
           loading={accountLoading}
           rowKey={(record) => record.uuid}
           // scroll={{ x: 1000 }}
+          scroll={{ x: 1080 }}
         >
           <Column
             align='center'
@@ -231,7 +283,7 @@ export default (porps) => {
             // fixed='left'
           />
           <Column align='center' title='账号' dataIndex='userName' key='' />
-          <Column align='center' title='电话号码' dataIndex='phone' key='' />
+          <Column align='center' title='科室' dataIndex='department' key='' />
           <Column
             align='center'
             title='权限'
@@ -244,8 +296,8 @@ export default (porps) => {
               else if (record.role === 1) return '超级管理员';
             }}
           />
-          <Column align='center' title='科室' dataIndex='department' key='' />
-          <Column align='center' title='注销状态' dataIndex='isCancel' key='' />
+          <Column align='center' title='电话号码' dataIndex='phone' key='' />
+          {/* <Column align='center' title='注销状态' dataIndex='isCancel' key='' /> */}
           <Column
             align='center'
             title='重置密码'
@@ -288,7 +340,7 @@ export default (porps) => {
                   confirm({
                     title: '注销账号?',
                     okType: 'primary',
-                    content: '确认要注销账号(注销后账号将无法登录)?',
+                    content: '确认要注销账号(注销后账号所有信息将删除)?',
                     okText: '确认',
                     cancelText: '取消',
                     onOk() {

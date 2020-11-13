@@ -121,7 +121,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
 
     // 表单判断
     form.validateFields(async (err, value) => {
-      if (!err) {
+      if (!err && !saveDataLoading) {
         setSaveDataLoading(true);
 
         value.nativePlace =
@@ -483,11 +483,9 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
               })(
                 <Select placeholder='学历'>
                   <Option value='高中及以下'>高中及以下</Option>
-                  <Option value='中专'>中专</Option>
-                  <Option value='大专'>大专</Option>
+                  <Option value='专科'>专科</Option>
                   <Option value='本科'>本科</Option>
-                  <Option value='硕士'>硕士</Option>
-                  <Option value='博士'>博士</Option>
+                  <Option value='研究生'>研究生</Option>
                 </Select>
               )}
             </Form.Item>
@@ -645,10 +643,6 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                     required: true,
                     message: '请输入学习经历！',
                   },
-                  {
-                    message: '学习经历过长！',
-                    max: 300,
-                  },
                 ],
               })(<TextArea rows={4} placeholder='学习经历' />)}
             </Form.Item>
@@ -668,10 +662,6 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                   {
                     required: true,
                     message: '请输入工作经历！',
-                  },
-                  {
-                    message: '工作经历过长！',
-                    max: 300,
                   },
                 ],
               })(<TextArea rows={4} placeholder='工作经历' />)}

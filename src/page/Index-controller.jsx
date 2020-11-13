@@ -19,16 +19,16 @@ export default props => {
           />
           <div className='text-box'>
             <p className='main-describe'>欢迎使用</p>
-            <p className='main-describe'>业务线上</p>
-            <p className='main-describe'>评审系统</p>
+            <p className='main-describe'>科研线上</p>
+            <p className='main-describe'>管理系统</p>
             <p className='sub-describe'>
-              轻松线上填写与评审,带给您愉快便捷的使用体验。
+              轻松线上填写核实与评审,带给您愉快便捷的使用体验。
             </p>
           </div>
         </div>
         <div className='right-box'>
           <h1 className='logo'>
-            <Icon type='reconciliation' /> <span>业务评审系统</span>
+            <Icon type='reconciliation' /> <span>科研管理系统</span>
           </h1>
           <div className='form'>
             <LoginComponent />

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import ModifyPatentContent from '@/components/home/staff/patent/Modify-patent-content-controller.jsx';
 import CreatePatentContent from '@/components/home/staff/patent/Create-patent-content-controller.jsx';
+import UploadPatentContent from '@/components/home/staff/patent/Upload-patent-content-controller.jsx';
 
 // 请求
 import proxyFetch from '@/util/request';
@@ -32,7 +33,18 @@ export default (props) => {
     [score, setScore] = useState(0),
     [writePatentLoading, setWritePatentLoading] = useState(false),
     [isNeedRefresh, setIsNeedRefresh] = useState(true),
-    dispatch = useDispatch();
+    dispatch = useDispatch(),
+    [uploadPatentVisible, setUploadPatentVisible] = useState(false);
+
+  const showUploadPatentModal = (uuid) => {
+    dispatch(userAction.setStaffPatentUuid(uuid));
+    setUploadPatentVisible(true);
+  };
+
+  const hideUploadPatentModal = () => {
+    dispatch(userAction.setStaffPatentUuid(''));
+    setUploadPatentVisible(false);
+  };
 
   const showNewPatentModal = () => {
     setNewPatentVisible(true);
@@ -73,6 +85,7 @@ export default (props) => {
 
         if (writePatentList) {
           setWritePatentList(writePatentList);
+          setUploadPatentVisible(false);
           setNewPatentVisible(false);
           setModifyPatentVisible(false);
           dispatch(userAction.setChangePatent(false));
@@ -136,6 +149,28 @@ export default (props) => {
         footer={null}
       >
         <CreatePatentContent />
+      </Modal>
+      <Modal
+        title='上传附件'
+        visible={uploadPatentVisible}
+        footer={null}
+        onCancel={() => {
+          confirm({
+            title: '确认离开?',
+            okType: 'primary',
+            content: '确认文件已保存后离开,否则文件无法保存',
+            okText: '确认',
+            cancelText: '取消',
+            onOk() {
+              hideUploadPatentModal();
+            },
+            onCancel() {},
+          });
+        }}
+        okText='确定'
+        cancelText='取消'
+      >
+        <UploadPatentContent />
       </Modal>
       <Modal
         title='修改专利内容'
@@ -225,10 +260,19 @@ export default (props) => {
                         </Button>
                       </div>
                     </div>
-                    {item.verifyRemarks ? (
+                    {item.verifyRemarks || item.reviewRemarks ? (
                       <Alert
                         type='warning'
-                        description={`修改建议: ${item.verifyRemarks}`}
+                        description={
+                          <div>
+                            {item.verifyRemarks ? (
+                              <div>{`核实建议: ${item.verifyRemarks}`}</div>
+                            ) : null}
+                            {item.reviewRemarks ? (
+                              <div>{`评审建议: ${item.reviewRemarks}`}</div>
+                            ) : null}
+                          </div>
+                        }
                       />
                     ) : null}
                   </div>
@@ -242,6 +286,18 @@ export default (props) => {
                 </Descriptions.Item>
                 <Descriptions.Item label='授权国家和地区' span={3}>
                   {item.patentNation}
+                </Descriptions.Item>
+                <Descriptions.Item label='上传/查看附件' span={3}>
+                  <Button
+                    type='link'
+                    onClick={() => {
+                      showUploadPatentModal(item.uuid);
+                    }}
+                    className='link-button'
+                  >
+                    <Icon type='upload' />
+                    <span>上传/查看</span>
+                  </Button>
                 </Descriptions.Item>
               </Descriptions>
             ))

@@ -27,8 +27,15 @@ export default (props) => {
     [reviewThesisVisible, setReviewThesisVisible] = useState(false),
     [uploadThesisVisible, setUploadThesisVisible] = useState(false),
     [reviewThesisList, setReviewThesisList] = useState([]),
-    [reviewThesisUrl, setReviewThesisUrl] = useState(''),
-    [previewUrl, setPreviewUrl] = useState(''),
+    [firstFileName, setFirstFileName] = useState(''),
+    [secondFileName, setSecondFileName] = useState(''),
+    [thirdFileName, setThirdFileName] = useState(''),
+    [firstReviewThesisUrl, setFirstReviewThesisUrl] = useState(''),
+    [secondReviewThesisUrl, setSecondReviewThesisUrl] = useState(''),
+    [thirdReviewThesisUrl, setThirdReviewThesisUrl] = useState(''),
+    [firstPreviewUrl, setFirstPreviewUrl] = useState(''),
+    [secondPreviewUrl, setSecondPreviewUrl] = useState(''),
+    [thirdPreviewUrl, setThirdPreviewUrl] = useState(''),
     [getFileLoading, setGetFileLoading] = useState(true),
     [reviewThesisLoading, setReviewThesisLoading] = useState(false),
     [score, setScore] = useState(0),
@@ -45,8 +52,10 @@ export default (props) => {
     setReviewThesisVisible(false);
   };
 
-  const showUploadThesisModal = (url) => {
-    setReviewThesisUrl(url);
+  const showUploadThesisModal = (firstUrl, secondUrl, thirdUrl) => {
+    setFirstReviewThesisUrl(firstUrl);
+    setSecondReviewThesisUrl(secondUrl);
+    setThirdReviewThesisUrl(thirdUrl);
     setUploadThesisVisible(true);
   };
 
@@ -92,20 +101,62 @@ export default (props) => {
   }, [reviewThesis, dispatch]);
 
   useEffect(() => {
-    if (reviewThesisUrl) {
+    if (firstReviewThesisUrl) {
       (async () => {
         setGetFileLoading(true);
-        const previewUrl = await proxyFetch(
+
+        // 附件1的url处理
+        const firstPreviewUrl = await proxyFetch(
           GET_FILE_URL,
-          { fileUrl: reviewThesisUrl },
+          { fileUrl: firstReviewThesisUrl },
           'GET'
         );
 
-        setPreviewUrl(previewUrl);
+        setFirstPreviewUrl(firstPreviewUrl);
+        const firstUrlArr = firstPreviewUrl.split('?');
+        const firstUrlArrList = firstUrlArr[0],
+          firstAppU = firstUrlArrList.split('/');
+        const firstFileName = firstAppU[firstAppU.length - 1];
+        setFirstFileName(firstFileName.split('.')[1].toLowerCase());
+
+        // 附件2的url处理
+        let secondPreviewUrl = '';
+        if (secondReviewThesisUrl) {
+          secondPreviewUrl = await proxyFetch(
+            GET_FILE_URL,
+            { fileUrl: secondReviewThesisUrl },
+            'GET'
+          );
+
+          const secondUrlArr = secondPreviewUrl.split('?');
+          const secondUrlArrList = secondUrlArr[0],
+            secondAppU = secondUrlArrList.split('/');
+          const secondFileName = secondAppU[secondAppU.length - 1];
+          setSecondFileName(secondFileName.split('.')[1].toLowerCase());
+        }
+        setSecondPreviewUrl(secondPreviewUrl);
+
+        // 附件3的url处理
+        let thirdPreviewUrl = '';
+        if (thirdReviewThesisUrl) {
+          thirdPreviewUrl = await proxyFetch(
+            GET_FILE_URL,
+            { fileUrl: thirdReviewThesisUrl },
+            'GET'
+          );
+
+          const thirdUrlArr = thirdPreviewUrl.split('?');
+          const thirdUrlArrList = thirdUrlArr[0],
+            thirdAppU = thirdUrlArrList.split('/');
+          const thirdFileName = thirdAppU[thirdAppU.length - 1];
+          setThirdFileName(thirdFileName.split('.')[1].toLowerCase());
+        }
+        setThirdPreviewUrl(thirdPreviewUrl);
+
         setGetFileLoading(false);
       })();
     }
-  }, [reviewThesisUrl]);
+  }, [firstReviewThesisUrl, secondReviewThesisUrl, thirdReviewThesisUrl]);
 
   return (
     <div className='review-item-detail-box'>
@@ -143,21 +194,132 @@ export default (props) => {
         footer={null}
       >
         <div className='download-button-box'>
-          {reviewThesisUrl ? (
-            <a href={previewUrl}>
+          <div className='inner-button-box'>
+            {firstFileName === 'jpg' ||
+            firstFileName === 'jpeg' ||
+            firstFileName === 'png' ? (
+              <img
+                src={firstPreviewUrl}
+                alt='avatar'
+                style={{ width: '100%' }}
+                className='img'
+              />
+            ) : null}
+            {firstReviewThesisUrl ? (
               <Button
                 type='primary'
                 size='large'
                 className='download-button'
                 icon='download'
                 loading={getFileLoading}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (
+                    firstFileName === 'doc' ||
+                    firstFileName === 'docx' ||
+                    firstFileName === 'xls' ||
+                    firstFileName === 'xlsx'
+                  ) {
+                    window.open(
+                      `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
+                        firstPreviewUrl
+                      )}`
+                    );
+                  } else {
+                    window.open(firstPreviewUrl, '_blank');
+                  }
+                }}
               >
-                下载附件
+                查看附件1
               </Button>
-            </a>
-          ) : (
-            <Button disabled>员工未上传</Button>
-          )}
+            ) : (
+              <Button disabled>附件1未上传</Button>
+            )}
+          </div>
+          <div className='inner-button-box'>
+            {secondFileName === 'jpg' ||
+            secondFileName === 'jpeg' ||
+            secondFileName === 'png' ? (
+              <img
+                src={secondPreviewUrl}
+                alt='avatar'
+                style={{ width: '100%' }}
+                className='img'
+              />
+            ) : null}
+            {secondReviewThesisUrl ? (
+              <Button
+                type='primary'
+                size='large'
+                className='download-button'
+                icon='download'
+                loading={getFileLoading}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (
+                    secondFileName === 'doc' ||
+                    secondFileName === 'docx' ||
+                    secondFileName === 'xls' ||
+                    secondFileName === 'xlsx'
+                  ) {
+                    window.open(
+                      `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
+                        secondPreviewUrl
+                      )}`
+                    );
+                  } else {
+                    window.open(secondPreviewUrl, '_blank');
+                  }
+                }}
+              >
+                查看附件2
+              </Button>
+            ) : (
+              <Button disabled>附件2未上传</Button>
+            )}
+          </div>
+          <div className='inner-button-box'>
+            {thirdFileName === 'jpg' ||
+            thirdFileName === 'jpeg' ||
+            thirdFileName === 'png' ? (
+              <img
+                src={thirdPreviewUrl}
+                alt='avatar'
+                style={{ width: '100%' }}
+                className='img'
+              />
+            ) : null}
+            {thirdReviewThesisUrl ? (
+              <Button
+                type='primary'
+                size='large'
+                className='download-button'
+                icon='download'
+                loading={getFileLoading}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (
+                    thirdFileName === 'doc' ||
+                    thirdFileName === 'docx' ||
+                    thirdFileName === 'xls' ||
+                    thirdFileName === 'xlsx'
+                  ) {
+                    window.open(
+                      `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
+                        thirdPreviewUrl
+                      )}`
+                    );
+                  } else {
+                    window.open(thirdPreviewUrl, '_blank');
+                  }
+                }}
+              >
+                查看附件3
+              </Button>
+            ) : (
+              <Button disabled>附件3未上传</Button>
+            )}
+          </div>
         </div>
       </Modal>
       <div className='review-description-box'>
@@ -180,13 +342,13 @@ export default (props) => {
                           ? `评分:${item.score}`
                           : '未评分'}
                       </Tag>
-                      <span>
+                      {/* <span>
                         {item.reviewTime
                           ? moment(item.reviewTime).format(
                               'YYYY-MM-DD h:mm:ss a'
                             )
                           : ''}
-                      </span>
+                      </span> */}
                     </div>
                     <div className='description-title-button'>
                       <Button
@@ -233,7 +395,9 @@ export default (props) => {
                   <Button
                     type='link'
                     onClick={() => {
-                      showUploadThesisModal(item.url);
+                      showUploadThesisModal( item.firstUrl,
+                        item.secondUrl,
+                        item.thirdUrl);
                     }}
                     className='link-button'
                   >

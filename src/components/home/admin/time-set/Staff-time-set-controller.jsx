@@ -84,7 +84,7 @@ export default Form.create({ name: 'staffTimeSet' })(({ form }) => {
 
         <Form.Item label='时间设置开关'>
           {getFieldDecorator('timeSwitch', {
-            initialValue: true,
+            initialValue: false,
             valuePropName: 'checked',
           })(<Switch disabled={!form.getFieldValue('sysSwitch')} />)}
         </Form.Item>

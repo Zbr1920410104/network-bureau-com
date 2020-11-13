@@ -50,7 +50,8 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
     { modifyBasic } = useSelector((state) => state.userStore),
     [isNeedRefresh, setIsNeedRefresh] = useState(true),
     dispatch = useDispatch(),
-    [basicLoading, setBasicLoading] = useState(false);
+    [basicLoading, setBasicLoading] = useState(false),
+    [saveDataLoading, setSaveDataLoading] = useState(false);
 
   /**
    * 提交事件
@@ -60,7 +61,8 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
 
     // 表单判断
     form.validateFields(async (err, value) => {
-      if (!err) {
+      if (!err && !saveDataLoading) {
+        setSaveDataLoading(true);
         value.nativePlace =
           value.nativePlace[0] +
           (value.nativePlace[1] ? value.nativePlace[1] : '');
@@ -70,6 +72,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
           setIswritten(true);
           setIsNeedRefresh(true);
         }
+        setSaveDataLoading(false);
       }
     });
   };
@@ -198,7 +201,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
         <Alert
           className='alert'
           type='warning'
-          description={`修改建议: ${staffBasic.verifyRemarks}`}
+          description={`核实建议: ${staffBasic.verifyRemarks}`}
         />
       ) : null}
       <Skeleton loading={basicLoading}>
@@ -548,11 +551,9 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                   })(
                     <Select placeholder='学历'>
                       <Option value='高中及以下'>高中及以下</Option>
-                      <Option value='中专'>中专</Option>
-                      <Option value='大专'>大专</Option>
+                      <Option value='专科'>专科</Option>
                       <Option value='本科'>本科</Option>
-                      <Option value='硕士'>硕士</Option>
-                      <Option value='博士'>博士</Option>
+                      <Option value='研究生'>研究生</Option>
                     </Select>
                   )}
                 </Form.Item>
@@ -730,10 +731,6 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                         required: true,
                         message: '请输入学习经历！',
                       },
-                      {
-                        message: '学习经历过长！',
-                        max: 300,
-                      },
                     ],
                   })(<TextArea rows={4} placeholder='学习经历' />)}
                 </Form.Item>
@@ -754,10 +751,6 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                         required: true,
                         message: '请输入工作经历！',
                       },
-                      {
-                        message: '工作经历过长！',
-                        max: 300,
-                      },
                     ],
                   })(<TextArea rows={4} placeholder='工作经历' />)}
                 </Form.Item>
@@ -768,7 +761,12 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
       </Skeleton>
       <div className='basic-bottom-box'>
         {!isWritten ? (
-          <Button type='primary' className='save-button' onClick={handleWrite}>
+          <Button
+            type='primary'
+            className='save-button'
+            onClick={handleWrite}
+            loading={saveDataLoading}
+          >
             暂存
           </Button>
         ) : null}

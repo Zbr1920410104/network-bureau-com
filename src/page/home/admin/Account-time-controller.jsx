@@ -26,7 +26,7 @@ export default (props) => {
             <span>打开时，需设置系统开放的</span>
             <span className='important-text'>开始时间</span>
             <span>和</span>
-            <span className='important-text'>结束时间</span>
+            <span className='important-text'>截止时间</span>
             <span>，用户可以在这段时间内登录使用本系统。关闭</span>
             <span className='important-text'>时间设置开关</span>
             <span>时，用户可以无限期登录使用本系统。</span>

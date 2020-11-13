@@ -75,8 +75,8 @@ export default Form.create({ name: 'projectReview' })(({ form }) => {
             rules: [
               { required: true, message: '请输入分数!' },
               {
-                pattern: /^\d+(\.\d{0,2})?$/,
-                message: '请输入正确的分数,最多保留2位小数',
+                pattern: /(^\d{1,3})+(\.\d{0,2})?$/,
+                message: '请输入正确的分数,整数最高三位,最多保留2位小数。',
               },
             ],
           })(<Input placeholder='请输入分数' />)}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import ModifyCopyrightContent from '@/components/home/staff/copyright/Modify-copyright-content-controller.jsx';
 import CreateCopyrightContent from '@/components/home/staff/copyright/Create-copyright-content-controller.jsx';
+import UploadCopyrightContent from '@/components/home/staff/copyright/Upload-copyright-content-controller.jsx';
 
 // 请求
 import proxyFetch from '@/util/request';
@@ -32,7 +33,18 @@ export default (props) => {
     [score, setScore] = useState(0),
     [writeCopyrightLoading, setWriteCopyrightLoading] = useState(false),
     [isNeedRefresh, setIsNeedRefresh] = useState(true),
-    dispatch = useDispatch();
+    dispatch = useDispatch(),
+    [uploadCopyrightVisible, setUploadCopyrightVisible] = useState(false);
+
+    const showUploadCopyrightModal = (uuid) => {
+      dispatch(userAction.setStaffCopyrightUuid(uuid));
+      setUploadCopyrightVisible(true);
+    };
+  
+    const hideUploadCopyrightModal = () => {
+      dispatch(userAction.setStaffCopyrightUuid(''));
+      setUploadCopyrightVisible(false);
+    };
 
   const showNewCopyrightModal = () => {
     setNewCopyrightVisible(true);
@@ -72,6 +84,7 @@ export default (props) => {
         );
 
         if (writeCopyrightList) {
+          setUploadCopyrightVisible(false);
           setNewCopyrightVisible(false);
           setModifyCopyrightVisible(false);
           setWriteCopyrightList(writeCopyrightList);
@@ -137,6 +150,28 @@ export default (props) => {
         cancelText='取消'
       >
         <CreateCopyrightContent />
+      </Modal>
+      <Modal
+        title='上传附件'
+        visible={uploadCopyrightVisible}
+        footer={null}
+        onCancel={() => {
+          confirm({
+            title: '确认离开?',
+            okType: 'primary',
+            content: '确认文件已保存后离开,否则文件无法保存',
+            okText: '确认',
+            cancelText: '取消',
+            onOk() {
+              hideUploadCopyrightModal();
+            },
+            onCancel() {},
+          });
+        }}
+        okText='确定'
+        cancelText='取消'
+      >
+        <UploadCopyrightContent />
       </Modal>
       <Modal
         title='修改软件著作权内容'
@@ -228,10 +263,19 @@ export default (props) => {
                         </Button>
                       </div>
                     </div>
-                    {item.verifyRemarks ? (
+                    {item.verifyRemarks || item.reviewRemarks ? (
                       <Alert
                         type='warning'
-                        description={`修改建议: ${item.verifyRemarks}`}
+                        description={
+                          <div>
+                            {item.verifyRemarks ? (
+                              <div>{`核实建议: ${item.verifyRemarks}`}</div>
+                            ) : null}
+                            {item.reviewRemarks ? (
+                              <div>{`评审建议: ${item.reviewRemarks}`}</div>
+                            ) : null}
+                          </div>
+                        }
                       />
                     ) : null}
                   </div>
@@ -245,6 +289,18 @@ export default (props) => {
                 </Descriptions.Item>
                 <Descriptions.Item label='授权范围'>
                   {item.copyrightArrange}
+                </Descriptions.Item>
+                <Descriptions.Item label='上传/查看附件'span={3}>
+                  <Button
+                    type='link'
+                    onClick={() => {
+                      showUploadCopyrightModal(item.uuid);
+                    }}
+                    className='link-button'
+                  >
+                    <Icon type='upload' />
+                    <span>上传/查看</span>
+                  </Button>
                 </Descriptions.Item>
               </Descriptions>
             ))

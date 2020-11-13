@@ -35,6 +35,7 @@ import {
   Row,
   Col,
   Radio,
+  Icon,
 } from 'antd';
 import '@/style/home/business-manager/verify-list.styl';
 const { Option } = Select,
@@ -127,7 +128,7 @@ export default (props) => {
   const showError = () => {
     Modal.error({
       title: '无法核实',
-      content: '员工未填写完毕或已全部核实后通过无法再核实',
+      content: '员工未填写完毕无法进行核实',
       okText: '确认',
     });
   };
@@ -220,7 +221,7 @@ export default (props) => {
             }}
           >
             <Option value='0'>全部</Option>
-            <Option value='未填写完毕'>未填写完毕</Option>
+            <Option value='未提交'>未提交</Option>
             <Option value='待核实'>待核实</Option>
             <Option value='核实通过'>核实通过</Option>
             <Option value='核实未通过'>核实未通过</Option>
@@ -361,6 +362,26 @@ export default (props) => {
               title='核实状态'
               dataIndex='verifyStatus'
               key=''
+              render={(text, record) => (
+                <div>
+                  <span>{record.verifyStatus}</span>
+                  {record.verifyStatus === '核实通过' ? (
+                    <Icon
+                      type='check-circle'
+                      theme='twoTone'
+                      twoToneColor='#52c41a'
+                      className='icon'
+                    />
+                  ) : record.verifyStatus === '核实不通过' ? (
+                    <Icon
+                      type='close-circle'
+                      theme='twoTone'
+                      twoToneColor='#f5222d'
+                      className='icon'
+                    />
+                  ) : null}
+                </div>
+              )}
             />
             <Column
               align='center'
@@ -371,7 +392,10 @@ export default (props) => {
                 <Button
                   type='link'
                   onClick={() => {
-                    if (record.verifyStatus === '待核实') {
+                    if (
+                      record.verifyStatus === '待核实' ||
+                      record.verifyStatus === '核实通过'
+                    ) {
                       handleSuccess(record.uuid);
                     } else {
                       showError();

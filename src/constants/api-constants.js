@@ -9,6 +9,7 @@ export const GET_USER_TOKEN = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_USE
 export const GET_USER_NAME = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_USER}/getUserName`; // 登录
 export const GET_MY_INFO = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_USER}/getMyInfo`;
 export const SAVE_PASSWORD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_USER}/savePassword`;
+export const GET_DEFAULT_PASSWORD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_USER}/getDefaultPassword`;
 
 /**
  * 管理员
@@ -30,6 +31,7 @@ export const ACCOUNT_CANCEL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_ADM
 export const SELECT_ACCOUNT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_ADMIN}/selectAccount`;
 export const MODIFY_ACCOUNT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_ADMIN}/modifyAccount`;
 export const ACCOUNT_EXPORT_ALL_STAFF_INFO_EXCEL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_ADMIN}/accountExportAllStaffInfoExcel`;
+export const CHANGE_DEFAULT_PASSWORD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_ADMIN}/changeDefaultPassword`;
 
 /**
  * 普通员工
@@ -64,6 +66,12 @@ export const GET_WRITE_THESIS_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.
 export const GET_STAFF_THESIS_BY_UUID = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getStaffThesisByUuid`;
 export const MODIFY_STAFF_THESIS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/modifyStaffThesis`;
 export const DELETE_THESIS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/deleteThesis`;
+export const SELECT_UPLOAD_PROJECT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/selectUploadProject`;
+export const SAVE_UPLOAD_PROJECT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/saveUploadProject`;
+export const SELECT_UPLOAD_PATENT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/selectUploadPatent`;
+export const SAVE_UPLOAD_PATENT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/saveUploadPatent`;
+export const SELECT_UPLOAD_COPYRIGHT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/selectUploadCopyright`;
+export const SAVE_UPLOAD_COPYRIGHT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/saveUploadCopyright`;
 export const SELECT_UPLOAD_AWARD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/selectUploadAward`;
 export const SAVE_UPLOAD_AWARD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/saveUploadAward`;
 export const SELECT_UPLOAD_THESIS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/selectUploadThesis`;
@@ -129,4 +137,5 @@ export const GET_REVIEW_MANAGER_EXPORT_ALL_INFO_URL = `${DominConfigs.DOMAIN}${D
  */
 export const UPLOAD_JPG_FILE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_FILE}/uploadJpgFile`; // 上传jpg,png,jpeg文件
 export const UPLOAD_ZIP_FILE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_FILE}/uploadZipFile`; // 上传word,pdf文件
+export const UPLOAD_FILE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_FILE}/uploadFile`; // 上传文件
 export const GET_FILE_URL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_FILE}/getFileUrl`; // 获取文件url

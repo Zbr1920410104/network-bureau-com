@@ -24,12 +24,6 @@
         margin-left: 16px;
       }
     }
-
-    .download-button-box {
-      .download-button {
-        width: 300px;
-      }
-    }
   }
 
   .verify-description-title {
@@ -61,6 +55,28 @@
 
   .verify-description-box {
     padding: 20px;
+  }
+}
+
+.download-button-box {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+
+  .inner-button-box {
+    padding-bottom: 20px;
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+
+    .download-button {
+      width: 300px;
+    }
+
+    .img {
+      padding-bottom: 20px;
+    }
   }
 }
 

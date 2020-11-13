@@ -36,6 +36,18 @@ export default handleActions(
         modifyPassword: result,
       };
     },
+    setDefaultPasswordRefresh(state, { payload: result }) {
+      return {
+        ...state,
+        defaultPasswordRefresh: result,
+      };
+    },
+    setChangeDefaultPassword(state, { payload: result }) {
+      return {
+        ...state,
+        changeDefaultPassword: result,
+      };
+    },
     setAddAccount(state, { payload: result }) {
       return {
         ...state,
@@ -237,6 +249,8 @@ export default handleActions(
     modifyPassword: false,
     addAccount: false,
     accountRefresh: false,
+    defaultPasswordRefresh: false,
+    changeDefaultPassword: false,
     // 普通员工
     modifyBasic: false,
     changeProject: false,

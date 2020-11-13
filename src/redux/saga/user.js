@@ -22,7 +22,6 @@ import {
   HOME_REVIEW_LIST,
   INDEX,
 } from '@/constants/route-constants';
-import md5 from 'md5';
 
 const effects = {
   asyncSetUser: function* ({ payload }) {
@@ -39,28 +38,35 @@ const effects = {
       localStorage.clear();
       localStorage.setItem(`${LOCAL_STORAGE}-token`, res.token);
 
+      const { defaultPassword } = yield call(
+        proxyFetch,
+        APIS.GET_DEFAULT_PASSWORD,
+        {},
+        'GET'
+      );
+
       const roleToNav = (role) => {
         switch (role) {
           case 1:
-            if (res.userInfo.password === md5('123456')) {
+            if (res.userInfo.password === defaultPassword) {
               return HOME_PASSWORD.path;
             } else {
               return HOME_ACCOUNT_LIST.path;
             }
           case 5:
-            if (res.userInfo.password === md5('123456')) {
+            if (res.userInfo.password === defaultPassword) {
               return HOME_PASSWORD.path;
             } else {
               return HOME_REVIEW_LIST.path;
             }
           case 10:
-            if (res.userInfo.password === md5('123456')) {
+            if (res.userInfo.password === defaultPassword) {
               return HOME_PASSWORD.path;
             } else {
               return HOME_VERIFY_LIST.path;
             }
           case 15:
-            if (res.userInfo.password === md5('123456')) {
+            if (res.userInfo.password === defaultPassword) {
               return HOME_PASSWORD.path;
             } else {
               return HOME_WRITE_WELCOME.path;
