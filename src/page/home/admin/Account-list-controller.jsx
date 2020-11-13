@@ -221,14 +221,14 @@ export default (porps) => {
           className='table'
           loading={accountLoading}
           rowKey={(record) => record.uuid}
-          scroll={{ x: 1200 }}
+          // scroll={{ x: 1000 }}
         >
           <Column
             align='center'
             title='姓名'
             dataIndex='name'
             key=''
-            fixed='left'
+            // fixed='left'
           />
           <Column align='center' title='账号' dataIndex='userName' key='' />
           <Column align='center' title='电话号码' dataIndex='phone' key='' />
