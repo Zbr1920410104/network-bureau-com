@@ -14,7 +14,8 @@ import userAction from '@/redux/action/user';
 
 // 组件
 import moment from 'moment';
-import addressData from '@/components/home/staff/util/addressData';
+// import addressData from '@/components/home/staff/util/addressData';
+import position from '@/components/home/staff/util/addressData2';
 
 // 样式
 import '@/style/home/modify-modal.styl';
@@ -66,34 +67,41 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
 
           if (staffBasic.nativePlace) {
             let nativePlace = [];
-            let strength = staffBasic.nativePlace.length;
-            let indexProvince = staffBasic.nativePlace.indexOf('省');
-            if (indexProvince !== -1) {
-              nativePlace[0] = staffBasic.nativePlace.substring(
-                0,
-                indexProvince + 1
-              );
-              nativePlace[1] = staffBasic.nativePlace.substring(
-                indexProvince + 1,
-                strength
-              );
-            } else {
-              indexProvince = staffBasic.nativePlace.indexOf('区');
-              if (indexProvince !== -1) {
-                nativePlace[0] = staffBasic.nativePlace.substring(
-                  0,
-                  indexProvince + 1
-                );
-                nativePlace[1] = staffBasic.nativePlace.substring(
-                  indexProvince + 1,
-                  strength
-                );
-              } else {
-                nativePlace[0] = staffBasic.nativePlace;
-              }
+            let nativeArr = staffBasic.nativePlace.split(';');
+            let length = nativeArr.length;
+            nativePlace[0] = nativeArr[0];
+            nativePlace[1] = nativeArr[1];
+            if (length === 3) {
+              nativePlace[2] = nativeArr[2];
             }
             staffBasic.nativePlace = nativePlace;
+
+            // let indexProvince = staffBasic.nativePlace.indexOf('省');
+            // if (indexProvince !== -1) {
+            //   nativePlace[0] = staffBasic.nativePlace.substring(
+            //     0,
+            //     indexProvince + 1
+            //   );
+            //   nativePlace[1] = staffBasic.nativePlace.substring(
+            //     indexProvince + 1,
+            //     strength
+            //   );
+            // } else {
+            //   indexProvince = staffBasic.nativePlace.indexOf('区');
+            //   if (indexProvince !== -1) {
+            //     nativePlace[0] = staffBasic.nativePlace.substring(
+            //       0,
+            //       indexProvince + 1
+            //     );
+            //     nativePlace[1] = staffBasic.nativePlace.substring(
+            //       indexProvince + 1,
+            //       strength
+            //     );
+            //   } else {
+            //     nativePlace[0] = staffBasic.nativePlace;
+            //   }
           }
+
 
           delete staffBasic.isVerify;
           delete staffBasic.verifyRemarks;
@@ -126,7 +134,8 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
 
         value.nativePlace =
           value.nativePlace[0] +
-          (value.nativePlace[1] ? value.nativePlace[1] : '');
+          (value.nativePlace[1] ? `;${value.nativePlace[1]}` : '') +
+          (value.nativePlace[2] ? `;${value.nativePlace[2]}` : '');
 
         const res = await proxyFetch(MODIFY_STAFF_BASIC, value);
 
@@ -139,33 +148,33 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
     });
   };
 
-  let addr = [];
+  // let addr = [];
 
-  const province = Object.keys(addressData);
+  // const province = Object.keys(addressData);
 
-  for (let item in province) {
-    const key = province[item];
-    const cityList = [];
-    let provinceItem, cityItem;
-    if (addressData[key].length > 0) {
-      for (let city in addressData[key]) {
-        cityItem = {
-          value: addressData[key][city],
-          label: addressData[key][city],
-        };
+  // for (let item in province) {
+  //   const key = province[item];
+  //   const cityList = [];
+  //   let provinceItem, cityItem;
+  //   if (addressData[key].length > 0) {
+  //     for (let city in addressData[key]) {
+  //       cityItem = {
+  //         value: addressData[key][city],
+  //         label: addressData[key][city],
+  //       };
 
-        cityList.push(cityItem);
-      }
-    }
+  //       cityList.push(cityItem);
+  //     }
+  //   }
 
-    provinceItem = {
-      value: key,
-      label: key,
-      children: cityList,
-    };
+  //   provinceItem = {
+  //     value: key,
+  //     label: key,
+  //     children: cityList,
+  //   };
 
-    addr.push(provinceItem);
-  }
+  //   addr.push(provinceItem);
+  // }
 
   return (
     <div className='modify-modal-box'>
@@ -330,7 +339,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                     message: '请输入籍贯！',
                   },
                 ],
-              })(<Cascader options={addr} />)}
+              })(<Cascader options={position} />)}
             </Form.Item>
           </Col>
           <Col span={12} key='6'>
