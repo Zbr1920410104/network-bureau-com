@@ -29,6 +29,8 @@ export default (props) => {
       );
 
       if (staffBasic) {
+        let nativePlaceStr = staffBasic.nativePlace;
+        staffBasic.nativePlace = nativePlaceStr.replace(/;/g, '-')
         setStaffBasic(staffBasic);
       }
 

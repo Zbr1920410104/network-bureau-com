@@ -61,6 +61,8 @@ export default (props) => {
         );
 
         if (staffBasic) {
+          let nativePlaceStr = staffBasic.nativePlace;
+          staffBasic.nativePlace = nativePlaceStr.replace(/;/g, '-')
           setStaffBasic(staffBasic);
         }
 
@@ -169,7 +171,7 @@ export default (props) => {
                   onOk() {
                     handleSetSuccessStatus();
                   },
-                  onCancel() {},
+                  onCancel() { },
                 });
               }}
             >
