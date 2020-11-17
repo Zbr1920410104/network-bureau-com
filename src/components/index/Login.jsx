@@ -28,6 +28,31 @@ export default Form.create({ name: 'login' })((props) => {
     [name, setName] = useState(''),
     { loginLoading } = useSelector((state) => state.userStore),
     dispatch = useDispatch();
+  const debouncedUserTerm = useDebounce(user, 500);
+
+  // Hook
+  function useDebounce(value, delay) {
+    // 存储去抖动后的值
+    const [debouncedValue, setDebouncedValue] = useState(value);
+
+    useEffect(
+      () => {
+        // 在延迟delay之后更新去抖动后的值
+        const handler = setTimeout(() => {
+          setDebouncedValue(value);
+        }, delay);
+
+        // 如果值改变了取消timeout (同样在delay改变或者unmount时生效)
+        // 这就是我们通过延迟间隔内值没有被改变来达到防止值去抖动 清空timeout并且重新运行
+        return () => {
+          clearTimeout(handler);
+        };
+      },
+      [value, delay] // 只有当搜索值或者delay值发生改变时才会重新调用
+    );
+
+    return debouncedValue;
+  }
 
   const handleSubmitLogin = (e) => {
     e.preventDefault();
@@ -46,12 +71,13 @@ export default Form.create({ name: 'login' })((props) => {
 
   useEffect(() => {
     (async () => {
-      if (user) {
-        const userName = await proxyFetch(GET_USER_NAME, { user }, 'GET');
+      if (debouncedUserTerm) {
+        console.log('debouncedUserTerm=', debouncedUserTerm);
+        const userName = await proxyFetch(GET_USER_NAME, { user: debouncedUserTerm }, 'GET');
         setName(userName?.name);
       }
     })();
-  }, [user]);
+  }, [debouncedUserTerm]);
 
   return (
     <Form onSubmit={handleSubmitLogin}>
