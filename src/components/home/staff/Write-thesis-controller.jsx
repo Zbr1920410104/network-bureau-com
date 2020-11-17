@@ -305,7 +305,7 @@ export default (props) => {
                 <Descriptions.Item label='第一作者'>
                   {item.thesisFirstAuthor}
                 </Descriptions.Item>
-                <Descriptions.Item label='提交人作者次序'>
+                <Descriptions.Item label='本人排序'>
                   {item.thesisAuthorSequence}
                 </Descriptions.Item>
                 <Descriptions.Item label='上传/查看附件'>

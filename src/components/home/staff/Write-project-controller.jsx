@@ -280,7 +280,7 @@ export default (props) => {
                   </div>
                 }
               >
-                <Descriptions.Item label='项目类型'>
+                <Descriptions.Item label='参与方式'>
                   {item.type === 1 ? (
                     <span>主持项目</span>
                   ) : (

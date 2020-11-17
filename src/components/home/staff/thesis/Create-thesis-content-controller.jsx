@@ -130,13 +130,20 @@ export default Form.create({ name: 'writeThesis' })(({ form }) => {
         </Form.Item>
 
         <Form.Item
-          label='提交人作者次序'
+          label='本人排序'
           labelCol={{ span: 7 }}
           wrapperCol={{ span: 16 }}
         >
           {getFieldDecorator('thesisAuthorSequence', {
-            rules: [{ required: true, message: '请输入提交人作者次序' }],
-          })(<Input placeholder='提交人作者次序' />)}
+            rules: [{ required: true, message: '请选择本人排序' }],
+          })(<Select placeholder='本人排序'>
+            <Option value='第一作者'>第一作者</Option>
+            <Option value='第二作者'>第二作者</Option>
+            <Option value='第三作者'>第三作者</Option>
+            <Option value='第四作者'>第四作者</Option>
+            <Option value='第五作者'>第五作者</Option>
+            <Option value='第六作者'>第六作者</Option>
+          </Select>)}
         </Form.Item>
 
         <Form.Item

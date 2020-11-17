@@ -35,8 +35,8 @@ const { TextArea } = Input,
 
 export default (props) => {
   const { staffUuid, staffThesisUuid, staffThesisVerifyStatus } = useSelector(
-      (state) => state.userStore
-    ),
+    (state) => state.userStore
+  ),
     [verifyVisible, setVerifyVisible] = useState(false),
     [uploadThesisVisible, setUploadThesisVisible] = useState(false),
     [verifyThesisList, setVerifyThesisList] = useState([]),
@@ -250,7 +250,7 @@ export default (props) => {
                   onOk() {
                     handleSetSuccessStatus();
                   },
-                  onCancel() {},
+                  onCancel() { },
                 });
               }}
             >
@@ -279,15 +279,15 @@ export default (props) => {
         <div className='download-button-box'>
           <div className='inner-button-box'>
             {firstFileName === 'jpg' ||
-            firstFileName === 'jpeg' ||
-            firstFileName === 'png' ? (
-              <img
-                src={firstPreviewUrl}
-                alt='avatar'
-                style={{ width: '100%' }}
-                className='img'
-              />
-            ) : null}
+              firstFileName === 'jpeg' ||
+              firstFileName === 'png' ? (
+                <img
+                  src={firstPreviewUrl}
+                  alt='avatar'
+                  style={{ width: '100%' }}
+                  className='img'
+                />
+              ) : null}
             {firstVerifyThesisUrl ? (
               <Button
                 type='primary'
@@ -316,20 +316,20 @@ export default (props) => {
                 查看附件1
               </Button>
             ) : (
-              <Button disabled>附件1未上传</Button>
-            )}
+                <Button disabled>附件1未上传</Button>
+              )}
           </div>
           <div className='inner-button-box'>
             {secondFileName === 'jpg' ||
-            secondFileName === 'jpeg' ||
-            secondFileName === 'png' ? (
-              <img
-                src={secondPreviewUrl}
-                alt='avatar'
-                style={{ width: '100%' }}
-                className='img'
-              />
-            ) : null}
+              secondFileName === 'jpeg' ||
+              secondFileName === 'png' ? (
+                <img
+                  src={secondPreviewUrl}
+                  alt='avatar'
+                  style={{ width: '100%' }}
+                  className='img'
+                />
+              ) : null}
             {secondVerifyThesisUrl ? (
               <Button
                 type='primary'
@@ -358,20 +358,20 @@ export default (props) => {
                 查看附件2
               </Button>
             ) : (
-              <Button disabled>附件2未上传</Button>
-            )}
+                <Button disabled>附件2未上传</Button>
+              )}
           </div>
           <div className='inner-button-box'>
             {thirdFileName === 'jpg' ||
-            thirdFileName === 'jpeg' ||
-            thirdFileName === 'png' ? (
-              <img
-                src={thirdPreviewUrl}
-                alt='avatar'
-                style={{ width: '100%' }}
-                className='img'
-              />
-            ) : null}
+              thirdFileName === 'jpeg' ||
+              thirdFileName === 'png' ? (
+                <img
+                  src={thirdPreviewUrl}
+                  alt='avatar'
+                  style={{ width: '100%' }}
+                  className='img'
+                />
+              ) : null}
             {thirdVerifyThesisUrl ? (
               <Button
                 type='primary'
@@ -400,8 +400,8 @@ export default (props) => {
                 查看附件3
               </Button>
             ) : (
-              <Button disabled>附件3未上传</Button>
-            )}
+                <Button disabled>附件3未上传</Button>
+              )}
           </div>
         </div>
       </Modal>
@@ -415,9 +415,8 @@ export default (props) => {
                   <div>
                     <div className='verify-description-title'>
                       <div className='description-title-text'>
-                        <span>{`论文/专著${index + 1}:  ${
-                          item.thesisTitle
-                        }`}</span>
+                        <span>{`论文/专著${index + 1}:  ${item.thesisTitle
+                          }`}</span>
                         <Tag
                           className='content-tag'
                           color={verifyStatusToColor(item.isVerify)}
@@ -482,7 +481,7 @@ export default (props) => {
                 <Descriptions.Item label='第一作者'>
                   {item.thesisFirstAuthor}
                 </Descriptions.Item>
-                <Descriptions.Item label='提交人作者次序'>
+                <Descriptions.Item label='本人排序'>
                   {item.thesisAuthorSequence}
                 </Descriptions.Item>
                 <Descriptions.Item label='查看附件'>
@@ -504,8 +503,8 @@ export default (props) => {
               </Descriptions>
             ))
           ) : (
-            <span>未填写论文/专著</span>
-          )}
+              <span>未填写论文/专著</span>
+            )}
         </Skeleton>
       </div>
     </div>

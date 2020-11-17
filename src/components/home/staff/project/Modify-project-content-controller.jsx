@@ -78,7 +78,7 @@ export default Form.create({ name: 'modifyProject' })(({ form }) => {
         <Row gutter={12}>
           <Col span={12} key='1'>
             <Form.Item
-              label='项目类型'
+              label='参与方式'
               labelCol={{ span: 9 }}
               wrapperCol={{ span: 15 }}
             >
@@ -86,11 +86,11 @@ export default Form.create({ name: 'modifyProject' })(({ form }) => {
                 rules: [
                   {
                     required: true,
-                    message: '请选择项目类型！',
+                    message: '请选择参与方式！',
                   },
                 ],
               })(
-                <Select placeholder='项目类型'>
+                <Select placeholder='参与方式'>
                   <Option value={1}>主持项目</Option>
                   <Option value={2}>参与项目</Option>
                 </Select>
