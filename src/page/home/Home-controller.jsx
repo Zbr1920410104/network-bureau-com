@@ -110,7 +110,7 @@ const { Header, Content, Footer, Sider } = Layout;
 export default (props) => {
   const token = localStorage.getItem(`${LOCAL_STORAGE}-token`);
   // 各个路由控制
-  const { uuid, name, role } = useSelector((state) => state.userStore),
+  const { uuid, name } = useSelector((state) => state.userStore),
     history = useHistory(),
     dispatch = useDispatch();
 
@@ -182,20 +182,20 @@ export default (props) => {
     exact: true,
   });
 
-  const roleToText = (role) => {
-    switch (role) {
-      case 1:
-        return '超级管理员';
-      case 5:
-        return '评审员';
-      case 10:
-        return '统计员';
-      case 15:
-        return '普通员工';
-      default:
-        return '未知';
-    }
-  };
+  // const roleToText = (role) => {
+  //   switch (role) {
+  //     case 1:
+  //       return '超级管理员';
+  //     case 5:
+  //       return '评审员';
+  //     case 10:
+  //       return '统计员';
+  //     case 15:
+  //       return '普通员工';
+  //     default:
+  //       return '未知';
+  //   }
+  // };
 
   let content = null;
 
@@ -233,7 +233,7 @@ export default (props) => {
         </div>
         <div className='user-info'>
           <span>
-            欢迎:{name}({roleToText(role)})
+            欢迎：{name}
           </span>
         </div>
         <Nav />

@@ -41,9 +41,10 @@ import {
 const { Option } = Select,
   { TextArea } = Input,
   { confirm } = Modal;
+let id = 0, worksId = 0;
 
 export default Form.create({ name: 'staffBasic' })(({ form }) => {
-  const { getFieldDecorator } = form;
+  const { getFieldDecorator, getFieldValue, setFieldsValue } = form;
   const [isWritten, setIswritten] = useState(false),
     [depatmentList, setDepatmentList] = useState([]),
     [modifyBasicVisible, setModifyBasicVisible] = useState(false),
@@ -68,6 +69,31 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
           value.nativePlace[0] +
           (value.nativePlace[1] ? `;${value.nativePlace[1]}` : '') +
           (value.nativePlace[2] ? `;${value.nativePlace[2]}` : '');
+        console.log('value=', value);
+
+        // 处理学习经历填写的数据
+        let studyExperienceList = value.names.map((item, index) => {
+          if (index < value.names.length - 1)
+            return `${item['education']},${item['school']},${item['time'][0].format('YYYY/MM/DD')}-${item['time'][1].format('YYYY/MM/DD')};`;
+          else
+            return `${item['education']},${item['school']},${item['time'][0].format('YYYY/MM/DD')}-${item['time'][1].format('YYYY/MM/DD')}`;
+        });
+        value.studyExperience = '';
+        for (let studyExperienceItem in studyExperienceList) {
+          value.studyExperience += studyExperienceList[studyExperienceItem];
+        }
+
+        // 处理工作经历填写的数据
+        let workExperienceList = value.works.map((item, index) => {
+          if (index < value.works.length - 1)
+            return `${item['cooperation']},${item['post']},${item['time'][0].format('YYYY/MM/DD')}-${item['time'][1].format('YYYY/MM/DD')};`;
+          else
+            return `${item['cooperation']},${item['post']},${item['time'][0].format('YYYY/MM/DD')}-${item['time'][1].format('YYYY/MM/DD')}`;
+        });
+        value.workExperience = '';
+        for (let workExperienceItem in workExperienceList) {
+          value.workExperience += workExperienceList[workExperienceItem];
+        }
         const res = await proxyFetch(SAVE_STAFF_BASIC, value);
 
         if (res) {
@@ -93,11 +119,11 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
       if (isNeedRefresh) {
         setBasicLoading(true);
         const staffBasic = await proxyFetch(GET_STAFF_BASIC, {}, 'GET');
-        let nativePlaceStr = staffBasic.nativePlace;
-        staffBasic.nativePlace = nativePlaceStr.replace(/;/g, '-')
 
         if (staffBasic) {
           setIswritten(true);
+          let nativePlaceStr = staffBasic.nativePlace;
+          staffBasic.nativePlace = nativePlaceStr.replace(/;/g, '-');
           setStaffBasic(staffBasic);
           dispatch(userAction.setModifyBasic(false));
           setModifyBasicVisible(false);
@@ -125,33 +151,224 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
     setModifyBasicVisible(false);
   };
 
-  // let addr = [];
+  // 学习经历
 
-  // const province = Object.keys(addressData);
+  getFieldDecorator('keys', { initialValue: [] });
+  const keys = getFieldValue('keys');
 
-  // for (let item in province) {
-  //   const key = province[item];
-  //   const cityList = [];
-  //   let provinceItem, cityItem;
-  //   if (addressData[key].length > 0) {
-  //     for (let city in addressData[key]) {
-  //       cityItem = {
-  //         value: addressData[key][city],
-  //         label: addressData[key][city],
-  //       };
+  const remove = k => {
+    // can use data-binding to get
+    const keys = getFieldValue('keys');
+    // We need at least one passenger
+    if (keys.length === 1) {
+      return;
+    }
+    // can use data-binding to set
+    setFieldsValue({
+      keys: keys.filter(key => key !== k),
+    });
+  };
 
-  //       cityList.push(cityItem);
-  //     }
-  //   }
+  const add = () => {
+    // can use data-binding to get
+    const keys = getFieldValue('keys');
+    const nextKeys = keys.concat(id++);
+    // can use data-binding to set
+    // important! notify form to detect changes
+    setFieldsValue({
+      keys: nextKeys,
+    });
+  };
 
-  //   provinceItem = {
-  //     value: key,
-  //     label: key,
-  //     children: cityList,
-  //   };
+  // 工作经历
 
-  //   addr.push(provinceItem);
-  // }
+  getFieldDecorator('workKeys', { initialValue: [] });
+  const workKeys = getFieldValue('workKeys');
+
+  const removeWorks = k => {
+    // can use data-binding to get
+    const workKeys = getFieldValue('workKeys');
+    // We need at least one passenger
+    if (workKeys.length === 1) {
+      return;
+    }
+    // can use data-binding to set
+    setFieldsValue({
+      workKeys: workKeys.filter(key => key !== k),
+    });
+  };
+
+  const addWorks = () => {
+    // can use data-binding to get
+    const workKeys = getFieldValue('workKeys');
+    const nextKeys = workKeys.concat(worksId++);
+    // can use data-binding to set
+    // important! notify form to detect changes
+    setFieldsValue({
+      workKeys: nextKeys,
+    });
+  };
+
+  const strToDescription = (str) => {
+    let newStr = str.split(';');
+    let resStr = '';
+    for (let newStrItem in newStr) {
+      let newStrList = newStr[newStrItem].split(',');
+      for (let newStrItemItem in newStrList) {
+        resStr += newStrList[newStrItemItem] + ' ';
+      }
+      resStr += '\t';
+    }
+    return resStr;
+  }
+
+  const formItemLayoutWithOutLabel = {
+    wrapperCol: {
+      xs: { span: 24, offset: 0 },
+      sm: { span: 24, offset: 0 },
+    },
+  };
+  const formItems = keys.map((k, index) => (
+    <Row>
+      <Col span={6} key={`${k}01`}>
+        <Form.Item
+          labelCol={{ span: 2 }}
+          wrapperCol={{ span: 22 }}
+        >
+          {getFieldDecorator(`names[${k}]education`, {
+            validateTrigger: ['onChange', 'onBlur'],
+            rules: [
+              {
+                required: true,
+                message: "请选择学历！",
+              },
+            ],
+          })(
+            <Select placeholder="请选择学历" >
+              <Option value="高中及以下">高中及以下</Option>
+              <Option value="中专">中专</Option>
+              <Option value='大专'>大专</Option>
+              <Option value='本科'>本科</Option>
+              <Option value='硕士'>硕士</Option>
+              <Option value='博士'>博士</Option>
+            </Select>)}
+        </Form.Item>
+      </Col>
+      <Col span={7} key={`${k}02`} >
+        <Form.Item
+          labelCol={{ span: 2 }}
+          wrapperCol={{ span: 22 }}
+        >
+          {getFieldDecorator(`names[${k}]school`, {
+            validateTrigger: ['onChange', 'onBlur'],
+            rules: [
+              {
+                required: true,
+                message: "请输入学校名称！",
+              },
+            ],
+          })(
+            <Input placeholder="请输入学校名称" />)}
+        </Form.Item>
+      </Col>
+      <Col span={8} key={`${k}03`} >
+        <Form.Item
+          labelCol={{ span: 2 }}
+          wrapperCol={{ span: 22 }}
+        >
+          {getFieldDecorator(`names[${k}]time`, {
+            validateTrigger: ['onChange'],
+            rules: [
+              {
+                required: true,
+                message: "请选择时间！",
+              },
+            ],
+          })(
+            <DatePicker.RangePicker />)}
+        </Form.Item>
+      </Col>
+      <Col span={1} key={`${k}04`} >
+        {
+          keys.length > 1 ? (
+            <Icon
+              className="dynamic-delete-button"
+              type="minus-circle-o"
+              onClick={() => remove(k)}
+            />
+          ) : null
+        }
+      </Col>
+    </Row>
+  ));
+
+  const formWorkItems = workKeys.map((k, index) => (
+    <Row>
+      <Col span={6} key={`${k}11`}>
+        <Form.Item
+          labelCol={{ span: 2 }}
+          wrapperCol={{ span: 22 }}
+        >
+          {getFieldDecorator(`works[${k}]cooperation`, {
+            validateTrigger: ['onChange', 'onBlur'],
+            rules: [
+              {
+                required: true,
+                message: "请输入单位名称！",
+              },
+            ],
+          })(
+            <Input placeholder="请输入单位名称" />)}
+        </Form.Item>
+      </Col>
+      <Col span={7} key={`${k}12`} >
+        <Form.Item
+          labelCol={{ span: 2 }}
+          wrapperCol={{ span: 22 }}
+        >
+          {getFieldDecorator(`works[${k}]post`, {
+            validateTrigger: ['onChange', 'onBlur'],
+            rules: [
+              {
+                required: true,
+                message: "请输入职位！",
+              },
+            ],
+          })(
+            <Input placeholder="请输入职位" />)}
+        </Form.Item>
+      </Col>
+      <Col span={8} key={`${k}03`} >
+        <Form.Item
+          labelCol={{ span: 2 }}
+          wrapperCol={{ span: 22 }}
+        >
+          {getFieldDecorator(`works[${k}]time`, {
+            validateTrigger: ['onChange'],
+            rules: [
+              {
+                required: true,
+                message: "请选择时间！",
+              },
+            ],
+          })(
+            <DatePicker.RangePicker />)}
+        </Form.Item>
+      </Col>
+      <Col span={1} key={`${k}04`} >
+        {
+          workKeys.length > 1 ? (
+            <Icon
+              className="dynamic-delete-button"
+              type="minus-circle-o"
+              onClick={() => removeWorks(k)}
+            />
+          ) : null
+        }
+      </Col>
+    </Row>
+  ));
+
   return (
     <div className='write-basic-box'>
       <div className='basic-title-box'>
@@ -268,15 +485,14 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
               {staffBasic.researchDirection}
             </Descriptions.Item>
             <Descriptions.Item label='学习经历' span={3}>
-              {staffBasic.studyExperience}
+              {staffBasic.studyExperience ? strToDescription(staffBasic.studyExperience) : null}
             </Descriptions.Item>
             <Descriptions.Item label='工作经历' span={3}>
-              {staffBasic.workExperience}
+              {staffBasic.workExperience ? strToDescription(staffBasic.workExperience) : null}
             </Descriptions.Item>
           </Descriptions>
         ) : (
             <Form>
-              {/* 第一行 */}
               <Row>
                 <Col span={8} key='1'>
                   <Form.Item
@@ -320,7 +536,6 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                 </Col>
               </Row>
 
-              {/* 第二行 */}
               <Row>
                 <Col span={8} key='3'>
                   <Form.Item
@@ -437,7 +652,6 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                 </Col>
               </Row>
 
-              {/* 第三行 */}
               <Row>
                 <Col span={8} key='6'>
                   <Form.Item
@@ -497,7 +711,6 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                 </Col>
               </Row>
 
-              {/* 第四行 */}
               <Row>
                 <Col span={8} key='8'>
                   <Form.Item
@@ -565,7 +778,6 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                 </Col>
               </Row>
 
-              {/* 第五行 */}
               <Row>
                 <Col span={8} key='10'>
                   <Form.Item
@@ -632,7 +844,6 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                 </Col>
               </Row>
 
-              {/* 第六行 */}
               <Row>
                 <Col span={8} key='13'>
                   <Form.Item
@@ -667,7 +878,6 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                 </Col>
               </Row>
 
-              {/* 第七行 */}
               <Row>
                 <Col span={8} key='15'>
                   <Form.Item
@@ -722,7 +932,6 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                 </Col>
               </Row>
 
-              {/* 第八行 */}
               <Row>
                 <Col span={24} key='18'>
                   <Form.Item
@@ -730,19 +939,24 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                     labelCol={{ span: 2 }}
                     wrapperCol={{ span: 21 }}
                   >
-                    {getFieldDecorator('studyExperience', {
+                    {formItems}
+                    <Form.Item {...formItemLayoutWithOutLabel}>
+                      <Button type="dashed" onClick={add} style={{ width: '100%' }}>
+                        <Icon type="plus" />添加学习经历
+                      </Button>
+                    </Form.Item>
+                    {/* {getFieldDecorator('studyExperience', {
                       rules: [
                         {
                           required: true,
                           message: '请输入学习经历！',
                         },
                       ],
-                    })(<TextArea rows={4} placeholder='学习经历' />)}
+                    })(<TextArea rows={4} placeholder='学习经历' />)} */}
                   </Form.Item>
                 </Col>
               </Row>
 
-              {/* 第九行 */}
               <Row>
                 <Col span={24} key='19'>
                   <Form.Item
@@ -750,14 +964,20 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
                     labelCol={{ span: 2 }}
                     wrapperCol={{ span: 21 }}
                   >
-                    {getFieldDecorator('workExperience', {
+                    {formWorkItems}
+                    <Form.Item {...formItemLayoutWithOutLabel}>
+                      <Button type="dashed" onClick={addWorks} style={{ width: '100%' }}>
+                        <Icon type="plus" />添加工作经历
+                      </Button>
+                    </Form.Item>
+                    {/* {getFieldDecorator('workExperience', {
                       rules: [
                         {
                           required: true,
                           message: '请输入工作经历！',
                         },
                       ],
-                    })(<TextArea rows={4} placeholder='工作经历' />)}
+                    })(<TextArea rows={4} placeholder='工作经历' />)} */}
                   </Form.Item>
                 </Col>
               </Row>
