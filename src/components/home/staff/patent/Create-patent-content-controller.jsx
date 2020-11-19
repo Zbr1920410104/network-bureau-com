@@ -9,8 +9,9 @@ import proxyFetch from '@/util/request';
 import { CREATE_STAFF_PATENT } from '@/constants/api-constants';
 
 // 样式
-import { Form, Input, Select, Button } from 'antd';
-const { Option } = Select;
+import { Form, Input, Select, Button, DatePicker } from 'antd';
+const { Option } = Select,
+  { TextArea } = Input;
 
 export default Form.create({ name: 'writePatent' })(({ form }) => {
   const { getFieldDecorator, resetFields } = form,
@@ -92,22 +93,55 @@ export default Form.create({ name: 'writePatent' })(({ form }) => {
         </Form.Item>
 
         <Form.Item
-          label='授权国家和地区'
+          label='专利排位'
           labelCol={{ span: 7 }}
           wrapperCol={{ span: 16 }}
         >
-          {getFieldDecorator('patentNation', {
+          {getFieldDecorator('rank', {
             rules: [
               {
                 required: true,
-                message: '请输入授权国家和地区！',
+                message: '请选择专利排位！',
+              },
+            ],
+          })(
+            <Select placeholder='专利排位'>
+              <Option value='第一作者'>第一作者</Option>
+              <Option value='第二作者'>第二作者</Option>
+              <Option value='第三作者'>第三作者</Option>
+              <Option value='第四作者'>第四作者</Option>
+              <Option value='第五作者'>第五作者</Option>
+            </Select>
+          )}
+        </Form.Item>
+
+        <Form.Item
+          label='专利权人'
+          labelCol={{ span: 7 }}
+          wrapperCol={{ span: 16 }}
+        >
+          {getFieldDecorator('patentee', {
+            rules: [
+              {
+                required: true,
+                message: '请输入专利权人！',
               },
               {
-                message: '授权国家和地区过长！',
+                message: '专利权人过长！',
                 max: 32,
               },
             ],
-          })(<Input placeholder='请输入授权国家和地区' />)}
+          })(<Input placeholder='请输入专利权人' />)}
+        </Form.Item>
+
+        <Form.Item
+          label='专利公告日'
+          labelCol={{ span: 7 }}
+          wrapperCol={{ span: 16 }}
+        >
+          {getFieldDecorator('patentTime', {
+            rules: [{ required: true, message: '请选择专利公告日！' }],
+          })(<DatePicker placeholder='20XX-XX-XX' />)}
         </Form.Item>
 
         <Form.Item
@@ -127,6 +161,25 @@ export default Form.create({ name: 'writePatent' })(({ form }) => {
               },
             ],
           })(<Input placeholder='请输入授权号' />)}
+        </Form.Item>
+
+        <Form.Item
+          label='发明人（设计人）'
+          labelCol={{ span: 7 }}
+          wrapperCol={{ span: 16 }}
+        >
+          {getFieldDecorator('inventor', {
+            rules: [
+              {
+                required: true,
+                message: '请输入发明人（设计人）！',
+              },
+              {
+                message: '发明人（设计人）过长！',
+                max: 100,
+              },
+            ],
+          })(<TextArea rows={4} placeholder='发明人（设计人）' />)}
         </Form.Item>
 
         {/* 保存按钮 */}

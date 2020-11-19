@@ -18,7 +18,7 @@ import userAction from '@/redux/action/user';
 // 工具
 import verifyStatusToColor from '@/components/home/staff/util/verify-status-to-color';
 import scoreToColor from '@/components/home/staff/util/score-to-color';
-// import moment from 'moment';
+import moment from 'moment';
 
 // 样式
 import '@/style/home/staff/write-item.styl';
@@ -143,7 +143,7 @@ export default (props) => {
             onOk() {
               hideNewPatentModal();
             },
-            onCancel() {},
+            onCancel() { },
           });
         }}
         footer={null}
@@ -164,7 +164,7 @@ export default (props) => {
             onOk() {
               hideUploadPatentModal();
             },
-            onCancel() {},
+            onCancel() { },
           });
         }}
         okText='确定'
@@ -185,7 +185,7 @@ export default (props) => {
             onOk() {
               hideModifyPatentModal();
             },
-            onCancel() {},
+            onCancel() { },
           });
         }}
         footer={null}
@@ -252,7 +252,7 @@ export default (props) => {
                               onOk() {
                                 handleDelete(item.uuid);
                               },
-                              onCancel() {},
+                              onCancel() { },
                             });
                           }}
                         >
@@ -281,11 +281,20 @@ export default (props) => {
                 <Descriptions.Item label='专利类型'>
                   {item.patentType}
                 </Descriptions.Item>
-                <Descriptions.Item label='授权号' span={2}>
-                  {item.patentCode}
+                <Descriptions.Item label='排名'>
+                  {item.rank}
                 </Descriptions.Item>
-                <Descriptions.Item label='授权国家和地区' span={3}>
-                  {item.patentNation}
+                <Descriptions.Item label='专利权人'>
+                  {item.patentee}
+                </Descriptions.Item>
+                <Descriptions.Item label='专利公告日'>
+                  {item.patentTime ? moment(item.patentTime).format('YYYY-MM-DD') : null}
+                </Descriptions.Item>
+                <Descriptions.Item label='发明人（设计人）'>
+                  {item.inventor}
+                </Descriptions.Item>
+                <Descriptions.Item label='授权号'>
+                  {item.patentCode}
                 </Descriptions.Item>
                 <Descriptions.Item label='上传/查看附件' span={3}>
                   <Button
@@ -302,8 +311,8 @@ export default (props) => {
               </Descriptions>
             ))
           ) : (
-            <span>未填写专利</span>
-          )}
+              <span>未填写专利</span>
+            )}
         </Skeleton>
       </div>
     </div>

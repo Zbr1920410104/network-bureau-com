@@ -53,7 +53,7 @@ export default Form.create({ name: 'writeProject' })(({ form }) => {
   return (
     <div className='inner-form-box'>
       <Form>
-        <Row gutter={12}>
+        <Row gutter={24}>
           <Col span={12} key='1'>
             <Form.Item
               label='参与方式'
@@ -75,10 +75,34 @@ export default Form.create({ name: 'writeProject' })(({ form }) => {
               )}
             </Form.Item>
           </Col>
+          <Col span={12} key='2'>
+            <Form.Item
+              label='项目级别'
+              labelCol={{ span: 9 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('grade', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择项目级别！',
+                  },
+                ],
+              })(
+                <Select placeholder='项目级别'>
+                  <Option value={'国家级科研项目'}>国家级科研项目</Option>
+                  <Option value={'省部级科研项目'}>省部级科研项目</Option>
+                  <Option value={'市厅级项目'}>市厅级项目</Option>
+                  <Option value={'市局级项目'}>市局级项目</Option>
+                  <Option value={'横向科研项目'}>横向科研项目</Option>
+                </Select>
+              )}
+            </Form.Item>
+          </Col>
         </Row>
 
         <Row gutter={24}>
-          <Col span={12} key='2'>
+          <Col span={12} key='3'>
             <Form.Item
               label='项目名称'
               labelCol={{ span: 9 }}
@@ -98,7 +122,7 @@ export default Form.create({ name: 'writeProject' })(({ form }) => {
               })(<Input placeholder='请输入项目名称' />)}
             </Form.Item>
           </Col>
-          <Col span={12} key='3'>
+          <Col span={12} key='4'>
             <Form.Item
               label='项目编号'
               labelCol={{ span: 9 }}
@@ -121,7 +145,7 @@ export default Form.create({ name: 'writeProject' })(({ form }) => {
         </Row>
 
         <Row gutter={24}>
-          <Col span={12} key='4'>
+          <Col span={12} key='5'>
             <Form.Item
               label='项目来源'
               labelCol={{ span: 9 }}
@@ -141,7 +165,7 @@ export default Form.create({ name: 'writeProject' })(({ form }) => {
               })(<Input placeholder='请输入项目来源' />)}
             </Form.Item>
           </Col>
-          <Col span={12} key='5'>
+          <Col span={12} key='6'>
             <Form.Item
               label='项目经费'
               labelCol={{ span: 9 }}
@@ -166,7 +190,7 @@ export default Form.create({ name: 'writeProject' })(({ form }) => {
         </Row>
 
         <Row gutter={24}>
-          <Col span={12} key='6'>
+          <Col span={12} key='7'>
             <Form.Item
               label='开始时间'
               labelCol={{ span: 9 }}
@@ -182,7 +206,7 @@ export default Form.create({ name: 'writeProject' })(({ form }) => {
               })(<DatePicker placeholder='开始时间' style={{ width: 120 }} />)}
             </Form.Item>
           </Col>
-          <Col span={12} key='7'>
+          <Col span={12} key='8'>
             <Form.Item
               label='结束时间'
               labelCol={{ span: 9 }}
@@ -200,8 +224,8 @@ export default Form.create({ name: 'writeProject' })(({ form }) => {
           </Col>
         </Row>
 
-        <Row gutter={12}>
-          <Col span={12} key='8'>
+        <Row gutter={24}>
+          <Col span={12} key='9'>
             <Form.Item
               label='负责人'
               labelCol={{ span: 9 }}
@@ -221,6 +245,48 @@ export default Form.create({ name: 'writeProject' })(({ form }) => {
               })(<Input placeholder='请输入负责人' />)}
             </Form.Item>
           </Col>
+          <Col span={12} key='10'>
+            <Form.Item
+              label='是否验收'
+              labelCol={{ span: 9 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('isChecked', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择是否验收！',
+                  },
+                ],
+              })(
+                <Select placeholder='是否验收'>
+                  <Option value={'已验收'}>已验收</Option>
+                  <Option value={'未验收'}>未验收</Option>
+                </Select>
+              )}
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={24}>
+          <Form.Item
+            label='验收结论'
+            labelCol={{ span: 6 }}
+            wrapperCol={{ span: 17 }}
+          >
+            {getFieldDecorator('checkConclusion', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入验收结论！',
+                },
+                {
+                  message: '验收结论过长！',
+                  max: 500,
+                },
+              ],
+            })(<TextArea rows={3} placeholder='验收结论' />)}
+          </Form.Item>
         </Row>
 
         <Row gutter={24}>

@@ -462,6 +462,12 @@ export default (props) => {
                     <span>参与项目</span>
                   )}
                 </Descriptions.Item>
+                <Descriptions.Item label='项目级别'>
+                  {item.grade}
+                </Descriptions.Item>
+                <Descriptions.Item label='项目编号'>
+                  {item.code}
+                </Descriptions.Item>
                 <Descriptions.Item label='开始时间'>
                   {item.startTime
                     ? moment(item.startTime).format('YYYY-MM-DD')
@@ -472,8 +478,8 @@ export default (props) => {
                     ? moment(item.endTime).format('YYYY-MM-DD')
                     : ''}
                 </Descriptions.Item>
-                <Descriptions.Item label='项目编号'>
-                  {item.code}
+                <Descriptions.Item label='负责人'>
+                  {item.controller}
                 </Descriptions.Item>
                 <Descriptions.Item label='项目来源'>
                   {item.resource}
@@ -481,8 +487,11 @@ export default (props) => {
                 <Descriptions.Item label='项目经费'>
                   {`${item.funds}万元`}
                 </Descriptions.Item>
-                <Descriptions.Item label='负责人'>
-                  {item.controller}
+                <Descriptions.Item label='是否验收'>
+                  {item.isChecked}
+                </Descriptions.Item>
+                <Descriptions.Item label='验收结论' span={3}>
+                  {item.checkConclusion}
                 </Descriptions.Item>
                 <Descriptions.Item label='参与人名单' span={2}>
                   {item.participant}

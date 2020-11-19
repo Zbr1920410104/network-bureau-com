@@ -143,7 +143,7 @@ export default (props) => {
             onOk() {
               hideNewProjectModal();
             },
-            onCancel() {},
+            onCancel() { },
           });
         }}
         footer={null}
@@ -166,7 +166,7 @@ export default (props) => {
             onOk() {
               hideUploadProjectModal();
             },
-            onCancel() {},
+            onCancel() { },
           });
         }}
         okText='确定'
@@ -188,7 +188,7 @@ export default (props) => {
             onOk() {
               hideModifyProjectModal();
             },
-            onCancel() {},
+            onCancel() { },
           });
         }}
         okText='确定'
@@ -254,7 +254,7 @@ export default (props) => {
                               onOk() {
                                 handleDelete(item.uuid);
                               },
-                              onCancel() {},
+                              onCancel() { },
                             });
                           }}
                         >
@@ -284,8 +284,14 @@ export default (props) => {
                   {item.type === 1 ? (
                     <span>主持项目</span>
                   ) : (
-                    <span>参与项目</span>
-                  )}
+                      <span>参与项目</span>
+                    )}
+                </Descriptions.Item>
+                <Descriptions.Item label='项目级别'>
+                  {item.grade}
+                </Descriptions.Item>
+                <Descriptions.Item label='项目编号'>
+                  {item.code}
                 </Descriptions.Item>
                 <Descriptions.Item label='开始时间'>
                   {item.startTime
@@ -297,8 +303,8 @@ export default (props) => {
                     ? moment(item.endTime).format('YYYY-MM-DD')
                     : ''}
                 </Descriptions.Item>
-                <Descriptions.Item label='项目编号'>
-                  {item.code}
+                <Descriptions.Item label='负责人'>
+                  {item.controller}
                 </Descriptions.Item>
                 <Descriptions.Item label='项目来源'>
                   {item.resource}
@@ -306,10 +312,13 @@ export default (props) => {
                 <Descriptions.Item label='项目经费'>
                   {`${item.funds}万元`}
                 </Descriptions.Item>
-                <Descriptions.Item label='负责人'>
-                  {item.controller}
+                <Descriptions.Item label='是否验收'>
+                  {item.isChecked}
                 </Descriptions.Item>
-                <Descriptions.Item label='参与人名单' span={2}>
+                <Descriptions.Item label='验收结论' span={3}>
+                  {item.checkConclusion}
+                </Descriptions.Item>
+                <Descriptions.Item label='参与人名单' span={3}>
                   {item.participant}
                 </Descriptions.Item>
                 <Descriptions.Item label='主要研究内容' span={3}>
@@ -330,8 +339,8 @@ export default (props) => {
               </Descriptions>
             ))
           ) : (
-            <span>未填写项目</span>
-          )}
+              <span>未填写项目</span>
+            )}
         </Skeleton>
       </div>
       {/* <Table

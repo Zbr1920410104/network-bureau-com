@@ -279,15 +279,15 @@ export default Form.create({ name: 'uploadCopyright' })(({ form }) => {
           })(
             <div>
               {firstFileName === 'jpg' ||
-              firstFileName === 'jpeg' ||
-              firstFileName === 'png' ? (
-                <img
-                  src={firstPreviewUrl}
-                  alt='avatar'
-                  style={{ width: '100%' }}
-                  className='img'
-                />
-              ) : null}
+                firstFileName === 'jpeg' ||
+                firstFileName === 'png' ? (
+                  <img
+                    src={firstPreviewUrl}
+                    alt='avatar'
+                    style={{ width: '100%' }}
+                    className='img'
+                  />
+                ) : null}
               <Upload
                 showUploadList={false}
                 // 进行将图片格式和大小判断
@@ -323,15 +323,15 @@ export default Form.create({ name: 'uploadCopyright' })(({ form }) => {
                     </Button>
                   </div>
                 ) : (
-                  <Button
-                    className='button'
-                    size='large'
-                    loading={copyrightLoading}
-                  >
-                    点击文件上传压缩文件
-                    <Icon type='inbox' />
-                  </Button>
-                )}
+                    <Button
+                      className='button'
+                      size='large'
+                      loading={copyrightLoading}
+                    >
+                      点击上传图片/压缩文件
+                      <Icon type='inbox' />
+                    </Button>
+                  )}
               </Upload>
             </div>
           )}
@@ -350,15 +350,15 @@ export default Form.create({ name: 'uploadCopyright' })(({ form }) => {
           })(
             <div>
               {secondFileName === 'jpg' ||
-              secondFileName === 'jpeg' ||
-              secondFileName === 'png' ? (
-                <img
-                  src={secondPreviewUrl}
-                  alt='avatar'
-                  style={{ width: '100%' }}
-                  className='img'
-                />
-              ) : null}
+                secondFileName === 'jpeg' ||
+                secondFileName === 'png' ? (
+                  <img
+                    src={secondPreviewUrl}
+                    alt='avatar'
+                    style={{ width: '100%' }}
+                    className='img'
+                  />
+                ) : null}
               <Upload
                 showUploadList={false}
                 // 进行将图片格式和大小判断
@@ -394,15 +394,15 @@ export default Form.create({ name: 'uploadCopyright' })(({ form }) => {
                     </Button>
                   </div>
                 ) : (
-                  <Button
-                    className='button'
-                    size='large'
-                    loading={copyrightLoading}
-                  >
-                    点击文件上传图片文件
-                    <Icon type='inbox' />
-                  </Button>
-                )}
+                    <Button
+                      className='button'
+                      size='large'
+                      loading={copyrightLoading}
+                    >
+                      点击上传图片文件
+                      <Icon type='inbox' />
+                    </Button>
+                  )}
               </Upload>
             </div>
           )}
@@ -421,15 +421,15 @@ export default Form.create({ name: 'uploadCopyright' })(({ form }) => {
           })(
             <div>
               {thirdFileName === 'jpg' ||
-              thirdFileName === 'jpeg' ||
-              thirdFileName === 'png' ? (
-                <img
-                  src={thirdPreviewUrl}
-                  alt='avatar'
-                  style={{ width: '100%' }}
-                  className='img'
-                />
-              ) : null}
+                thirdFileName === 'jpeg' ||
+                thirdFileName === 'png' ? (
+                  <img
+                    src={thirdPreviewUrl}
+                    alt='avatar'
+                    style={{ width: '100%' }}
+                    className='img'
+                  />
+                ) : null}
               <Upload
                 showUploadList={false}
                 // 进行将图片格式和大小判断
@@ -465,15 +465,15 @@ export default Form.create({ name: 'uploadCopyright' })(({ form }) => {
                     </Button>
                   </div>
                 ) : (
-                  <Button
-                    className='button'
-                    size='large'
-                    loading={copyrightLoading}
-                  >
-                    点击文件上传图片文件
-                    <Icon type='inbox' />
-                  </Button>
-                )}
+                    <Button
+                      className='button'
+                      size='large'
+                      loading={copyrightLoading}
+                    >
+                      点击上传图片文件
+                      <Icon type='inbox' />
+                    </Button>
+                  )}
               </Upload>
             </div>
           )}
