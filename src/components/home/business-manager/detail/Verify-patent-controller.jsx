@@ -15,7 +15,7 @@ import userAction from '@/redux/action/user';
 
 // 工具
 import verifyStatusToColor from '@/components/home/business-manager/detail/util/verify-status-to-color';
-// import moment from 'moment';
+import moment from 'moment';
 
 // 样式
 import '@/style/home/business-manager/verify-item-detail.styl';
@@ -35,8 +35,8 @@ const { TextArea } = Input,
 
 export default (props) => {
   const { staffUuid, staffPatentUuid, staffPatentVerifyStatus } = useSelector(
-      (state) => state.userStore
-    ),
+    (state) => state.userStore
+  ),
     [verifyVisible, setVerifyVisible] = useState(false),
     [verifyPatentList, setVerifyPatentList] = useState([]),
     [verifyPatentLoading, setVerifyPatentLoading] = useState(false),
@@ -249,7 +249,7 @@ export default (props) => {
                   onOk() {
                     handleSetSuccessStatus();
                   },
-                  onCancel() {},
+                  onCancel() { },
                 });
               }}
             >
@@ -278,15 +278,15 @@ export default (props) => {
         <div className='download-button-box'>
           <div className='inner-button-box'>
             {firstFileName === 'jpg' ||
-            firstFileName === 'jpeg' ||
-            firstFileName === 'png' ? (
-              <img
-                src={firstPreviewUrl}
-                alt='avatar'
-                style={{ width: '100%' }}
-                className='img'
-              />
-            ) : null}
+              firstFileName === 'jpeg' ||
+              firstFileName === 'png' ? (
+                <img
+                  src={firstPreviewUrl}
+                  alt='avatar'
+                  style={{ width: '100%' }}
+                  className='img'
+                />
+              ) : null}
             {firstVerifyPatentUrl ? (
               <Button
                 type='primary'
@@ -315,20 +315,20 @@ export default (props) => {
                 查看附件1
               </Button>
             ) : (
-              <Button disabled>附件1未上传</Button>
-            )}
+                <Button disabled>附件1未上传</Button>
+              )}
           </div>
           <div className='inner-button-box'>
             {secondFileName === 'jpg' ||
-            secondFileName === 'jpeg' ||
-            secondFileName === 'png' ? (
-              <img
-                src={secondPreviewUrl}
-                alt='avatar'
-                style={{ width: '100%' }}
-                className='img'
-              />
-            ) : null}
+              secondFileName === 'jpeg' ||
+              secondFileName === 'png' ? (
+                <img
+                  src={secondPreviewUrl}
+                  alt='avatar'
+                  style={{ width: '100%' }}
+                  className='img'
+                />
+              ) : null}
             {secondVerifyPatentUrl ? (
               <Button
                 type='primary'
@@ -357,20 +357,20 @@ export default (props) => {
                 查看附件2
               </Button>
             ) : (
-              <Button disabled>附件2未上传</Button>
-            )}
+                <Button disabled>附件2未上传</Button>
+              )}
           </div>
           <div className='inner-button-box'>
             {thirdFileName === 'jpg' ||
-            thirdFileName === 'jpeg' ||
-            thirdFileName === 'png' ? (
-              <img
-                src={thirdPreviewUrl}
-                alt='avatar'
-                style={{ width: '100%' }}
-                className='img'
-              />
-            ) : null}
+              thirdFileName === 'jpeg' ||
+              thirdFileName === 'png' ? (
+                <img
+                  src={thirdPreviewUrl}
+                  alt='avatar'
+                  style={{ width: '100%' }}
+                  className='img'
+                />
+              ) : null}
             {thirdVerifyPatentUrl ? (
               <Button
                 type='primary'
@@ -399,8 +399,8 @@ export default (props) => {
                 查看附件3
               </Button>
             ) : (
-              <Button disabled>附件3未上传</Button>
-            )}
+                <Button disabled>附件3未上传</Button>
+              )}
           </div>
         </div>
       </Modal>
@@ -458,11 +458,20 @@ export default (props) => {
                 <Descriptions.Item label='专利类型'>
                   {item.patentType}
                 </Descriptions.Item>
-                <Descriptions.Item label='授权号' span={2}>
-                  {item.patentCode}
+                <Descriptions.Item label='排名'>
+                  {item.rank}
                 </Descriptions.Item>
-                <Descriptions.Item label='授权国家和地区' span={3}>
-                  {item.patentNation}
+                <Descriptions.Item label='专利权人'>
+                  {item.patentee}
+                </Descriptions.Item>
+                <Descriptions.Item label='专利公告日'>
+                  {item.patentTime ? moment(item.patentTime).format('YYYY-MM-DD') : null}
+                </Descriptions.Item>
+                <Descriptions.Item label='发明人（设计人）'>
+                  {item.inventor}
+                </Descriptions.Item>
+                <Descriptions.Item label='授权号'>
+                  {item.patentCode}
                 </Descriptions.Item>
                 <Descriptions.Item label='查看附件'>
                   <Button
@@ -483,8 +492,8 @@ export default (props) => {
               </Descriptions>
             ))
           ) : (
-            <span>未填写专利</span>
-          )}
+              <span>未填写专利</span>
+            )}
         </Skeleton>
       </div>
     </div>

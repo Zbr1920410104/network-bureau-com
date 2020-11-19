@@ -13,7 +13,7 @@ import userAction from '@/redux/action/user';
 
 // 工具
 import scoreToColor from '@/components/home/review-manager/detail/util/score-to-color';
-// import moment from 'moment';
+import moment from 'moment';
 
 import ReviewPatentContent from '@/components/home/review-manager/patent/Review-patent-content-controller.jsx';
 
@@ -364,11 +364,20 @@ export default (props) => {
                 <Descriptions.Item label='专利类型'>
                   {item.patentType}
                 </Descriptions.Item>
-                <Descriptions.Item label='授权号' span={2}>
-                  {item.patentCode}
+                <Descriptions.Item label='排名'>
+                  {item.rank}
                 </Descriptions.Item>
-                <Descriptions.Item label='授权国家和地区' span={3}>
-                  {item.patentNation}
+                <Descriptions.Item label='专利权人'>
+                  {item.patentee}
+                </Descriptions.Item>
+                <Descriptions.Item label='专利公告日'>
+                  {item.patentTime ? moment(item.patentTime).format('YYYY-MM-DD') : null}
+                </Descriptions.Item>
+                <Descriptions.Item label='发明人（设计人）'>
+                  {item.inventor}
+                </Descriptions.Item>
+                <Descriptions.Item label='授权号'>
+                  {item.patentCode}
                 </Descriptions.Item>
                 <Descriptions.Item label='查看附件'>
                   <Button
