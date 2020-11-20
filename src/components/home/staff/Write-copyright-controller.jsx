@@ -18,7 +18,7 @@ import userAction from '@/redux/action/user';
 // 工具
 import verifyStatusToColor from '@/components/home/staff/util/verify-status-to-color';
 import scoreToColor from '@/components/home/staff/util/score-to-color';
-// import moment from 'moment';
+import moment from 'moment';
 
 // 样式
 import '@/style/home/staff/write-detail.styl';
@@ -36,15 +36,15 @@ export default (props) => {
     dispatch = useDispatch(),
     [uploadCopyrightVisible, setUploadCopyrightVisible] = useState(false);
 
-    const showUploadCopyrightModal = (uuid) => {
-      dispatch(userAction.setStaffCopyrightUuid(uuid));
-      setUploadCopyrightVisible(true);
-    };
-  
-    const hideUploadCopyrightModal = () => {
-      dispatch(userAction.setStaffCopyrightUuid(''));
-      setUploadCopyrightVisible(false);
-    };
+  const showUploadCopyrightModal = (uuid) => {
+    dispatch(userAction.setStaffCopyrightUuid(uuid));
+    setUploadCopyrightVisible(true);
+  };
+
+  const hideUploadCopyrightModal = () => {
+    dispatch(userAction.setStaffCopyrightUuid(''));
+    setUploadCopyrightVisible(false);
+  };
 
   const showNewCopyrightModal = () => {
     setNewCopyrightVisible(true);
@@ -84,6 +84,7 @@ export default (props) => {
         );
 
         if (writeCopyrightList) {
+          console.log('writeCopyrightList=', writeCopyrightList);
           setUploadCopyrightVisible(false);
           setNewCopyrightVisible(false);
           setModifyCopyrightVisible(false);
@@ -142,7 +143,7 @@ export default (props) => {
             onOk() {
               hideNewCopyrightModal();
             },
-            onCancel() {},
+            onCancel() { },
           });
         }}
         footer={null}
@@ -165,7 +166,7 @@ export default (props) => {
             onOk() {
               hideUploadCopyrightModal();
             },
-            onCancel() {},
+            onCancel() { },
           });
         }}
         okText='确定'
@@ -186,7 +187,7 @@ export default (props) => {
             onOk() {
               hideModifyCopyrightModal();
             },
-            onCancel() {},
+            onCancel() { },
           });
         }}
         footer={null}
@@ -205,9 +206,8 @@ export default (props) => {
                   <div>
                     <div className='write-description-title'>
                       <div className='description-title-text'>
-                        <span>{`软件著作权${index + 1}:  ${
-                          item.copyrightName
-                        }`}</span>
+                        <span>{`软件著作权${index + 1}:  ${item.copyrightName
+                          }`}</span>
                         <Tag
                           className='content-tag'
                           color={verifyStatusToColor(item.isVerify)}
@@ -255,7 +255,7 @@ export default (props) => {
                               onOk() {
                                 handleDelete(item.uuid);
                               },
-                              onCancel() {},
+                              onCancel() { },
                             });
                           }}
                         >
@@ -290,7 +290,19 @@ export default (props) => {
                 <Descriptions.Item label='授权范围'>
                   {item.copyrightArrange}
                 </Descriptions.Item>
-                <Descriptions.Item label='上传/查看附件'span={3}>
+                <Descriptions.Item label='开发完成时间'>
+                  {item.completeTime ? moment(item.completeTime).format('YYYY-MM-DD') : null}
+                </Descriptions.Item>
+                <Descriptions.Item label='发表时间'>
+                  {item.publishTime ? moment(item.publishTime).format('YYYY-MM-DD') : null}
+                </Descriptions.Item>
+                <Descriptions.Item label='软件著作权权人'>
+                  {item.copyrightOwner}
+                </Descriptions.Item>
+                <Descriptions.Item label='软著排位'>
+                  {item.rank}
+                </Descriptions.Item>
+                <Descriptions.Item label='上传/查看附件' span={3}>
                   <Button
                     type='link'
                     onClick={() => {
@@ -305,8 +317,8 @@ export default (props) => {
               </Descriptions>
             ))
           ) : (
-            <span>未填写软件著作权</span>
-          )}
+              <span>未填写软件著作权</span>
+            )}
         </Skeleton>
       </div>
       {/* <Table

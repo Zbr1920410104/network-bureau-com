@@ -15,6 +15,7 @@ import userAction from '@/redux/action/user';
 
 // 工具
 import verifyStatusToColor from '@/components/home/business-manager/detail/util/verify-status-to-color';
+import moment from 'moment';
 
 import {
   Icon,
@@ -250,7 +251,7 @@ export default (props) => {
                   onOk() {
                     handleSetSuccessStatus();
                   },
-                  onCancel() {},
+                  onCancel() { },
                 });
               }}
             >
@@ -279,15 +280,15 @@ export default (props) => {
         <div className='download-button-box'>
           <div className='inner-button-box'>
             {firstFileName === 'jpg' ||
-            firstFileName === 'jpeg' ||
-            firstFileName === 'png' ? (
-              <img
-                src={firstPreviewUrl}
-                alt='avatar'
-                style={{ width: '100%' }}
-                className='img'
-              />
-            ) : null}
+              firstFileName === 'jpeg' ||
+              firstFileName === 'png' ? (
+                <img
+                  src={firstPreviewUrl}
+                  alt='avatar'
+                  style={{ width: '100%' }}
+                  className='img'
+                />
+              ) : null}
             {firstVerifyCopyrightUrl ? (
               <Button
                 type='primary'
@@ -316,20 +317,20 @@ export default (props) => {
                 查看附件1
               </Button>
             ) : (
-              <Button disabled>附件1未上传</Button>
-            )}
+                <Button disabled>附件1未上传</Button>
+              )}
           </div>
           <div className='inner-button-box'>
             {secondFileName === 'jpg' ||
-            secondFileName === 'jpeg' ||
-            secondFileName === 'png' ? (
-              <img
-                src={secondPreviewUrl}
-                alt='avatar'
-                style={{ width: '100%' }}
-                className='img'
-              />
-            ) : null}
+              secondFileName === 'jpeg' ||
+              secondFileName === 'png' ? (
+                <img
+                  src={secondPreviewUrl}
+                  alt='avatar'
+                  style={{ width: '100%' }}
+                  className='img'
+                />
+              ) : null}
             {secondVerifyCopyrightUrl ? (
               <Button
                 type='primary'
@@ -358,20 +359,20 @@ export default (props) => {
                 查看附件2
               </Button>
             ) : (
-              <Button disabled>附件2未上传</Button>
-            )}
+                <Button disabled>附件2未上传</Button>
+              )}
           </div>
           <div className='inner-button-box'>
             {thirdFileName === 'jpg' ||
-            thirdFileName === 'jpeg' ||
-            thirdFileName === 'png' ? (
-              <img
-                src={thirdPreviewUrl}
-                alt='avatar'
-                style={{ width: '100%' }}
-                className='img'
-              />
-            ) : null}
+              thirdFileName === 'jpeg' ||
+              thirdFileName === 'png' ? (
+                <img
+                  src={thirdPreviewUrl}
+                  alt='avatar'
+                  style={{ width: '100%' }}
+                  className='img'
+                />
+              ) : null}
             {thirdVerifyCopyrightUrl ? (
               <Button
                 type='primary'
@@ -400,8 +401,8 @@ export default (props) => {
                 查看附件3
               </Button>
             ) : (
-              <Button disabled>附件3未上传</Button>
-            )}
+                <Button disabled>附件3未上传</Button>
+              )}
           </div>
         </div>
       </Modal>
@@ -415,9 +416,8 @@ export default (props) => {
                   <div>
                     <div className='verify-description-title'>
                       <div className='description-title-text'>
-                        <span>{`软件著作权${index + 1}:  ${
-                          item.copyrightName
-                        }`}</span>
+                        <span>{`软件著作权${index + 1}:  ${item.copyrightName
+                          }`}</span>
                         <Tag
                           className='content-tag'
                           color={verifyStatusToColor(item.isVerify)}
@@ -467,6 +467,18 @@ export default (props) => {
                 <Descriptions.Item label='授权范围'>
                   {item.copyrightArrange}
                 </Descriptions.Item>
+                <Descriptions.Item label='开发完成时间'>
+                  {item.completeTime ? moment(item.completeTime).format('YYYY-MM-DD') : null}
+                </Descriptions.Item>
+                <Descriptions.Item label='发表时间'>
+                  {item.publishTime ? moment(item.publishTime).format('YYYY-MM-DD') : null}
+                </Descriptions.Item>
+                <Descriptions.Item label='软件著作权权人'>
+                  {item.copyrightOwner}
+                </Descriptions.Item>
+                <Descriptions.Item label='软著排位'>
+                  {item.rank}
+                </Descriptions.Item>
                 <Descriptions.Item label='查看附件'>
                   <Button
                     type='link'
@@ -486,8 +498,8 @@ export default (props) => {
               </Descriptions>
             ))
           ) : (
-            <span>未填写软件著作权</span>
-          )}
+              <span>未填写软件著作权</span>
+            )}
         </Skeleton>
       </div>
     </div>

@@ -9,7 +9,7 @@ import proxyFetch from '@/util/request';
 import { CREATE_STAFF_COPYRIGHT } from '@/constants/api-constants';
 
 // 样式
-import { Form, Input, Select, Button } from 'antd';
+import { Form, Input, Select, Button, DatePicker } from 'antd';
 const { Option } = Select;
 
 export default Form.create({ name: 'writeCopyright' })(({ form }) => {
@@ -126,6 +126,69 @@ export default Form.create({ name: 'writeCopyright' })(({ form }) => {
               },
             ],
           })(<Input placeholder='请输入登记号' />)}
+        </Form.Item>
+
+        <Form.Item
+          label='开发完成时间'
+          labelCol={{ span: 7 }}
+          wrapperCol={{ span: 16 }}
+        >
+          {getFieldDecorator('completeTime', {
+            rules: [{ required: true, message: '请选择开发完成时间！' }],
+          })(<DatePicker placeholder='20XX-XX-XX' />)}
+        </Form.Item>
+
+        <Form.Item
+          label='发表时间'
+          labelCol={{ span: 7 }}
+          wrapperCol={{ span: 16 }}
+        >
+          {getFieldDecorator('publishTime', {
+            rules: [{ required: true, message: '请选择发表时间！' }],
+          })(<DatePicker placeholder='20XX-XX-XX' />)}
+        </Form.Item>
+
+        <Form.Item
+          label='著作权人'
+          labelCol={{ span: 7 }}
+          wrapperCol={{ span: 16 }}
+        >
+          {getFieldDecorator('copyrightOwner', {
+            rules: [
+              {
+                required: true,
+                message: '请输入著作权人！',
+              },
+              {
+                message: '著作权人过长！',
+                max: 32,
+              },
+            ],
+          })(<Input placeholder='请输入著作权人' />)}
+        </Form.Item>
+
+        <Form.Item
+          label='本人排序'
+          labelCol={{ span: 7 }}
+          wrapperCol={{ span: 16 }}
+        >
+          {getFieldDecorator('rank', {
+            rules: [
+              {
+                required: true,
+                message: '请选择本人排序！',
+              },
+            ],
+          })(
+            <Select placeholder='本人排序'>
+              <Option value='第一作者'>第一作者</Option>
+              <Option value='第二作者'>第二作者</Option>
+              <Option value='第三作者'>第三作者</Option>
+              <Option value='第四作者'>第四作者</Option>
+              <Option value='第五作者'>第五作者</Option>
+              <Option value='通讯作者'>通讯作者</Option>
+            </Select>
+          )}
         </Form.Item>
 
         {/* 保存按钮 */}
