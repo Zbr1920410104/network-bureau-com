@@ -457,27 +457,20 @@ export default (props) => {
                   </div>
                 }
               >
-                <Descriptions.Item label='类型'>
-                  {item.thesisType}
-                </Descriptions.Item>
                 <Descriptions.Item label='发表时间'>
                   {item.thesisTime
                     ? moment(item.thesisTime).format('YYYY-MM-DD')
                     : ''}
                 </Descriptions.Item>
-                {item.thesisType === '论文' ? (
-                  <>
-                    <Descriptions.Item label='发表期刊名称'>
-                      {item.thesisJournal}
-                    </Descriptions.Item>
-                    <Descriptions.Item label='期刊级别'>
-                      {item.thesisGrade}
-                    </Descriptions.Item>
-                    <Descriptions.Item label='论文索引号'>
-                      {item.thesisCode}
-                    </Descriptions.Item>
-                  </>
-                ) : null}
+                <Descriptions.Item label='发表期刊名称'>
+                  {item.thesisJournal}
+                </Descriptions.Item>
+                <Descriptions.Item label='期刊级别'>
+                  {item.thesisGrade}
+                </Descriptions.Item>
+                <Descriptions.Item label='论文索引号'>
+                  {item.thesisCode}
+                </Descriptions.Item>
                 <Descriptions.Item label='第一作者'>
                   {item.thesisFirstAuthor}
                 </Descriptions.Item>

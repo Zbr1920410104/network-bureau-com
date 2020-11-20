@@ -142,7 +142,7 @@ export default (props) => {
             onOk() {
               hideNewThesisModal();
             },
-            onCancel() {},
+            onCancel() { },
           });
         }}
         footer={null}
@@ -165,7 +165,7 @@ export default (props) => {
             onOk() {
               hideModifyThesisModal();
             },
-            onCancel() {},
+            onCancel() { },
           });
         }}
         okText='确定'
@@ -187,7 +187,7 @@ export default (props) => {
             onOk() {
               hideUploadThesisModal();
             },
-            onCancel() {},
+            onCancel() { },
           });
         }}
         okText='保存'
@@ -205,9 +205,8 @@ export default (props) => {
                   <div>
                     <div className='write-description-title'>
                       <div className='description-title-text'>
-                        <span>{`论文/专著${index + 1}:  ${
-                          item.thesisTitle
-                        }`}</span>
+                        <span>{`论文/专著${index + 1}:  ${item.thesisTitle
+                          }`}</span>
                         <Tag
                           className='content-tag'
                           color={verifyStatusToColor(item.isVerify)}
@@ -255,7 +254,7 @@ export default (props) => {
                               onOk() {
                                 handleDelete(item.uuid);
                               },
-                              onCancel() {},
+                              onCancel() { },
                             });
                           }}
                         >
@@ -281,27 +280,20 @@ export default (props) => {
                   </div>
                 }
               >
-                <Descriptions.Item label='类型'>
-                  {item.thesisType}
-                </Descriptions.Item>
                 <Descriptions.Item label='发表时间'>
                   {item.thesisTime
                     ? moment(item.thesisTime).format('YYYY-MM-DD')
                     : ''}
                 </Descriptions.Item>
-                {item.thesisType === '论文' ? (
-                  <>
-                    <Descriptions.Item label='发表期刊名称'>
-                      {item.thesisJournal}
-                    </Descriptions.Item>
-                    <Descriptions.Item label='期刊级别'>
-                      {item.thesisGrade}
-                    </Descriptions.Item>
-                    <Descriptions.Item label='论文索引号'>
-                      {item.thesisCode}
-                    </Descriptions.Item>
-                  </>
-                ) : null}
+                <Descriptions.Item label='发表期刊名称'>
+                  {item.thesisJournal}
+                </Descriptions.Item>
+                <Descriptions.Item label='期刊级别'>
+                  {item.thesisGrade}
+                </Descriptions.Item>
+                <Descriptions.Item label='论文索引号'>
+                  {item.thesisCode}
+                </Descriptions.Item>
                 <Descriptions.Item label='第一作者'>
                   {item.thesisFirstAuthor}
                 </Descriptions.Item>
@@ -323,8 +315,8 @@ export default (props) => {
               </Descriptions>
             ))
           ) : (
-            <span>未填写论文/专著</span>
-          )}
+              <span>未填写论文/专著</span>
+            )}
         </Skeleton>
       </div>
     </div>

@@ -52,20 +52,6 @@ export default Form.create({ name: 'writeThesis' })(({ form }) => {
   return (
     <div className='inner-form-box'>
       <Form>
-        <Form.Item
-          label='类型'
-          labelCol={{ span: 7 }}
-          wrapperCol={{ span: 16 }}
-        >
-          {getFieldDecorator('thesisType', {
-            rules: [{ required: true, message: '请选择类型!' }],
-          })(
-            <Select placeholder='类型'>
-              <Option value='论文'>论文</Option>
-              <Option value='专著'>专著</Option>
-            </Select>
-          )}
-        </Form.Item>
 
         <Form.Item
           label='标题'
@@ -93,11 +79,7 @@ export default Form.create({ name: 'writeThesis' })(({ form }) => {
           wrapperCol={{ span: 16 }}
         >
           {getFieldDecorator('thesisJournal', {
-            rules: [
-              form.getFieldValue('thesisType') === '论文'
-                ? { required: true, message: '请输入发表期刊名称' }
-                : {},
-            ],
+            rules: [{ required: true, message: '请输入发表期刊名称' }],
           })(<Input placeholder='发表期刊名称' />)}
         </Form.Item>
 
@@ -107,11 +89,7 @@ export default Form.create({ name: 'writeThesis' })(({ form }) => {
           wrapperCol={{ span: 16 }}
         >
           {getFieldDecorator('thesisGrade', {
-            rules: [
-              form.getFieldValue('thesisType') === '论文'
-                ? { required: true, message: '请输入期刊级别' }
-                : {},
-            ],
+            rules: [{ required: true, message: '请输入期刊级别' }],
           })(<Input placeholder='期刊级别' />)}
         </Form.Item>
 
@@ -121,11 +99,7 @@ export default Form.create({ name: 'writeThesis' })(({ form }) => {
           wrapperCol={{ span: 16 }}
         >
           {getFieldDecorator('thesisCode', {
-            rules: [
-              form.getFieldValue('thesisType') === '论文'
-                ? { required: true, message: '请输入论文索引号' }
-                : {},
-            ],
+            rules: [ { required: true, message: '请输入论文索引号' }],
           })(<Input placeholder='论文索引号' />)}
         </Form.Item>
 

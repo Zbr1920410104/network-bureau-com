@@ -180,7 +180,7 @@ export default (props) => {
             onOk() {
               hideReviewThesisModal();
             },
-            onCancel() {},
+            onCancel() { },
           });
         }}
         footer={null}
@@ -196,15 +196,15 @@ export default (props) => {
         <div className='download-button-box'>
           <div className='inner-button-box'>
             {firstFileName === 'jpg' ||
-            firstFileName === 'jpeg' ||
-            firstFileName === 'png' ? (
-              <img
-                src={firstPreviewUrl}
-                alt='avatar'
-                style={{ width: '100%' }}
-                className='img'
-              />
-            ) : null}
+              firstFileName === 'jpeg' ||
+              firstFileName === 'png' ? (
+                <img
+                  src={firstPreviewUrl}
+                  alt='avatar'
+                  style={{ width: '100%' }}
+                  className='img'
+                />
+              ) : null}
             {firstReviewThesisUrl ? (
               <Button
                 type='primary'
@@ -233,20 +233,20 @@ export default (props) => {
                 查看附件1
               </Button>
             ) : (
-              <Button disabled>附件1未上传</Button>
-            )}
+                <Button disabled>附件1未上传</Button>
+              )}
           </div>
           <div className='inner-button-box'>
             {secondFileName === 'jpg' ||
-            secondFileName === 'jpeg' ||
-            secondFileName === 'png' ? (
-              <img
-                src={secondPreviewUrl}
-                alt='avatar'
-                style={{ width: '100%' }}
-                className='img'
-              />
-            ) : null}
+              secondFileName === 'jpeg' ||
+              secondFileName === 'png' ? (
+                <img
+                  src={secondPreviewUrl}
+                  alt='avatar'
+                  style={{ width: '100%' }}
+                  className='img'
+                />
+              ) : null}
             {secondReviewThesisUrl ? (
               <Button
                 type='primary'
@@ -275,20 +275,20 @@ export default (props) => {
                 查看附件2
               </Button>
             ) : (
-              <Button disabled>附件2未上传</Button>
-            )}
+                <Button disabled>附件2未上传</Button>
+              )}
           </div>
           <div className='inner-button-box'>
             {thirdFileName === 'jpg' ||
-            thirdFileName === 'jpeg' ||
-            thirdFileName === 'png' ? (
-              <img
-                src={thirdPreviewUrl}
-                alt='avatar'
-                style={{ width: '100%' }}
-                className='img'
-              />
-            ) : null}
+              thirdFileName === 'jpeg' ||
+              thirdFileName === 'png' ? (
+                <img
+                  src={thirdPreviewUrl}
+                  alt='avatar'
+                  style={{ width: '100%' }}
+                  className='img'
+                />
+              ) : null}
             {thirdReviewThesisUrl ? (
               <Button
                 type='primary'
@@ -317,8 +317,8 @@ export default (props) => {
                 查看附件3
               </Button>
             ) : (
-              <Button disabled>附件3未上传</Button>
-            )}
+                <Button disabled>附件3未上传</Button>
+              )}
           </div>
         </div>
       </Modal>
@@ -331,9 +331,8 @@ export default (props) => {
                 title={
                   <div className='review-description-title'>
                     <div className='description-title-text'>
-                      <span>{`论文/专著${index + 1}:  ${
-                        item.thesisTitle
-                      }`}</span>
+                      <span>{`论文/专著${index + 1}:  ${item.thesisTitle
+                        }`}</span>
                       <Tag
                         className='content-tag'
                         color={scoreToColor(item.score)}
@@ -364,27 +363,20 @@ export default (props) => {
                   </div>
                 }
               >
-                <Descriptions.Item label='类型'>
-                  {item.thesisType}
-                </Descriptions.Item>
                 <Descriptions.Item label='发表时间'>
                   {item.thesisTime
                     ? moment(item.thesisTime).format('YYYY-MM-DD')
                     : ''}
                 </Descriptions.Item>
-                {item.thesisType === '论文' ? (
-                  <>
-                    <Descriptions.Item label='发表期刊名称'>
-                      {item.thesisJournal}
-                    </Descriptions.Item>
-                    <Descriptions.Item label='期刊级别'>
-                      {item.thesisGrade}
-                    </Descriptions.Item>
-                    <Descriptions.Item label='论文索引号'>
-                      {item.thesisCode}
-                    </Descriptions.Item>
-                  </>
-                ) : null}
+                <Descriptions.Item label='发表期刊名称'>
+                  {item.thesisJournal}
+                </Descriptions.Item>
+                <Descriptions.Item label='期刊级别'>
+                  {item.thesisGrade}
+                </Descriptions.Item>
+                <Descriptions.Item label='论文索引号'>
+                  {item.thesisCode}
+                </Descriptions.Item>
                 <Descriptions.Item label='第一作者'>
                   {item.thesisFirstAuthor}
                 </Descriptions.Item>
@@ -395,7 +387,7 @@ export default (props) => {
                   <Button
                     type='link'
                     onClick={() => {
-                      showUploadThesisModal( item.firstUrl,
+                      showUploadThesisModal(item.firstUrl,
                         item.secondUrl,
                         item.thirdUrl);
                     }}
@@ -408,8 +400,8 @@ export default (props) => {
               </Descriptions>
             ))
           ) : (
-            <span>未填写论文/专著</span>
-          )}
+              <span>未填写论文/专著</span>
+            )}
         </Skeleton>
       </div>
     </div>
