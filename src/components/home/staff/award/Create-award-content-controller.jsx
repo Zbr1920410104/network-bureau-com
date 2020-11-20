@@ -7,10 +7,10 @@ import userAction from '@/redux/action/user';
 // 请求
 import proxyFetch from '@/util/request';
 import { CREATE_STAFF_AWARD } from '@/constants/api-constants';
+import award from '@/components/home/staff/util/award';
 
 // 样式
-import { Form, Input, Select, Button, DatePicker } from 'antd';
-const { Option } = Select;
+import { Form, Input, Button, DatePicker, Cascader } from 'antd';
 
 export default Form.create({ name: 'writeAward' })(({ form }) => {
   const { getFieldDecorator, resetFields } = form,
@@ -28,6 +28,8 @@ export default Form.create({ name: 'writeAward' })(({ form }) => {
     form.validateFields(async (err, value) => {
       if (!err) {
         setSaveDataLoading(true);
+
+        value.awardType = value.awardType[0] + `-${value.awardType[1]}`;
 
         const res = await proxyFetch(CREATE_STAFF_AWARD, value);
 
@@ -59,10 +61,7 @@ export default Form.create({ name: 'writeAward' })(({ form }) => {
           {getFieldDecorator('awardType', {
             rules: [{ required: true, message: '请选择奖项类型' }],
           })(
-            <Select placeholder='奖项类型'>
-              <Option value='个人'>个人</Option>
-              <Option value='团体'>团体</Option>
-            </Select>
+            <Cascader options={award} />
           )}
         </Form.Item>
 
@@ -113,16 +112,30 @@ export default Form.create({ name: 'writeAward' })(({ form }) => {
         >
           {getFieldDecorator('awardNameList', {
             rules: [
-              form.getFieldValue('awardType') === '团体'
+              form.getFieldValue('awardType') && form.getFieldValue('awardType')[0] === '团体'
                 ? { required: true, message: '请输入获奖名单(团体)' }
                 : {},
             ],
           })(
             <Input
               placeholder='获奖名单(团体)'
-              disabled={form.getFieldValue('awardType') === '个人'}
+              disabled={form.getFieldValue('awardType') ? form.getFieldValue('awardType')[0] === '个人' : false}
             />
           )}
+        </Form.Item>
+
+        <Form.Item
+          label='排名'
+          labelCol={{ span: 7 }}
+          wrapperCol={{ span: 16 }}
+        >
+          {getFieldDecorator('awardRank', {
+            rules: [
+              form.getFieldValue('awardType') && form.getFieldValue('awardType')[0] === '团体'
+                ? { required: true, message: '请输入排名' }
+                : {},
+            ],
+          })(<Input placeholder='排名' disabled={form.getFieldValue('awardType') ? form.getFieldValue('awardType')[0] === '个人' : false} />)}
         </Form.Item>
 
         {/* 保存按钮 */}

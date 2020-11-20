@@ -172,15 +172,15 @@ export default (props) => {
         <div className='download-button-box'>
           <div className='inner-button-box'>
             {firstFileName === 'jpg' ||
-            firstFileName === 'jpeg' ||
-            firstFileName === 'png' ? (
-              <img
-                src={firstPreviewUrl}
-                alt='avatar'
-                style={{ width: '100%' }}
-                className='img'
-              />
-            ) : null}
+              firstFileName === 'jpeg' ||
+              firstFileName === 'png' ? (
+                <img
+                  src={firstPreviewUrl}
+                  alt='avatar'
+                  style={{ width: '100%' }}
+                  className='img'
+                />
+              ) : null}
             {firstReviewAwardUrl ? (
               <Button
                 type='primary'
@@ -209,20 +209,20 @@ export default (props) => {
                 查看附件1
               </Button>
             ) : (
-              <Button disabled>附件1未上传</Button>
-            )}
+                <Button disabled>附件1未上传</Button>
+              )}
           </div>
           <div className='inner-button-box'>
             {secondFileName === 'jpg' ||
-            secondFileName === 'jpeg' ||
-            secondFileName === 'png' ? (
-              <img
-                src={secondPreviewUrl}
-                alt='avatar'
-                style={{ width: '100%' }}
-                className='img'
-              />
-            ) : null}
+              secondFileName === 'jpeg' ||
+              secondFileName === 'png' ? (
+                <img
+                  src={secondPreviewUrl}
+                  alt='avatar'
+                  style={{ width: '100%' }}
+                  className='img'
+                />
+              ) : null}
             {secondReviewAwardUrl ? (
               <Button
                 type='primary'
@@ -251,20 +251,20 @@ export default (props) => {
                 查看附件2
               </Button>
             ) : (
-              <Button disabled>附件2未上传</Button>
-            )}
+                <Button disabled>附件2未上传</Button>
+              )}
           </div>
           <div className='inner-button-box'>
             {thirdFileName === 'jpg' ||
-            thirdFileName === 'jpeg' ||
-            thirdFileName === 'png' ? (
-              <img
-                src={thirdPreviewUrl}
-                alt='avatar'
-                style={{ width: '100%' }}
-                className='img'
-              />
-            ) : null}
+              thirdFileName === 'jpeg' ||
+              thirdFileName === 'png' ? (
+                <img
+                  src={thirdPreviewUrl}
+                  alt='avatar'
+                  style={{ width: '100%' }}
+                  className='img'
+                />
+              ) : null}
             {thirdReviewAwardUrl ? (
               <Button
                 type='primary'
@@ -293,8 +293,8 @@ export default (props) => {
                 查看附件3
               </Button>
             ) : (
-              <Button disabled>附件3未上传</Button>
-            )}
+                <Button disabled>附件3未上传</Button>
+              )}
           </div>
         </div>
       </Modal>
@@ -311,7 +311,7 @@ export default (props) => {
             onOk() {
               hideReviewAwardModal();
             },
-            onCancel() {},
+            onCancel() { },
           });
         }}
         footer={null}
@@ -358,7 +358,7 @@ export default (props) => {
                   </div>
                 }
               >
-                <Descriptions.Item label='奖项类型'>
+                <Descriptions.Item label='奖项类型' span={2}>
                   {item.awardType}
                 </Descriptions.Item>
                 <Descriptions.Item label='获奖时间'>
@@ -372,6 +372,11 @@ export default (props) => {
                 <Descriptions.Item label='颁奖部门'>
                   {item.awardDepartment}
                 </Descriptions.Item>
+                {item.awardRank ? (
+                  <Descriptions.Item label='排名' >
+                    {item.awardRank}
+                  </Descriptions.Item>
+                ) : null}
                 {item.awardNameList ? (
                   <Descriptions.Item label='获奖名单' span={2}>
                     {item.awardNameList}
@@ -396,8 +401,8 @@ export default (props) => {
               </Descriptions>
             ))
           ) : (
-            <span>未填写奖项</span>
-          )}
+              <span>未填写奖项</span>
+            )}
         </Skeleton>
       </div>
     </div>

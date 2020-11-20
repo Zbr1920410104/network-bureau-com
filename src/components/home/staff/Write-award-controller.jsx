@@ -139,7 +139,7 @@ export default (props) => {
             onOk() {
               hideNewAwardModal();
             },
-            onCancel() {},
+            onCancel() { },
           });
         }}
         footer={null}
@@ -162,7 +162,7 @@ export default (props) => {
             onOk() {
               hideModifyAwardModal();
             },
-            onCancel() {},
+            onCancel() { },
           });
         }}
         okText='确定'
@@ -184,7 +184,7 @@ export default (props) => {
             onOk() {
               hideUploadAwardModal();
             },
-            onCancel() {},
+            onCancel() { },
           });
         }}
         okText='确定'
@@ -250,7 +250,7 @@ export default (props) => {
                               onOk() {
                                 handleDelete(item.uuid);
                               },
-                              onCancel() {},
+                              onCancel() { },
                             });
                           }}
                         >
@@ -276,22 +276,27 @@ export default (props) => {
                   </div>
                 }
               >
-                <Descriptions.Item label='奖项类型'>
+                <Descriptions.Item label='奖项类型' span={2}>
                   {item.awardType}
+                </Descriptions.Item>
+                <Descriptions.Item label='奖项级别'>
+                  {item.awardGrade}
                 </Descriptions.Item>
                 <Descriptions.Item label='获奖时间'>
                   {item.awardTime
                     ? moment(item.awardTime).format('YYYY-MM-DD')
                     : ''}
                 </Descriptions.Item>
-                <Descriptions.Item label='奖项级别'>
-                  {item.awardGrade}
-                </Descriptions.Item>
                 <Descriptions.Item label='颁奖部门'>
                   {item.awardDepartment}
                 </Descriptions.Item>
+                {item.awardRank ? (
+                  <Descriptions.Item label='排名'>
+                    {item.awardRank}
+                  </Descriptions.Item>
+                ) : null}
                 {item.awardNameList ? (
-                  <Descriptions.Item label='获奖名单' span={2}>
+                  <Descriptions.Item label='获奖名单' span={3}>
                     {item.awardNameList}
                   </Descriptions.Item>
                 ) : null}
@@ -310,8 +315,8 @@ export default (props) => {
               </Descriptions>
             ))
           ) : (
-            <span>未填写奖项</span>
-          )}
+              <span>未填写奖项</span>
+            )}
         </Skeleton>
       </div>
     </div>

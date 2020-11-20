@@ -84,7 +84,6 @@ export default (props) => {
         );
 
         if (writeCopyrightList) {
-          console.log('writeCopyrightList=', writeCopyrightList);
           setUploadCopyrightVisible(false);
           setNewCopyrightVisible(false);
           setModifyCopyrightVisible(false);

@@ -399,7 +399,7 @@ export default (props) => {
                 <Descriptions.Item label='验收结论' span={3}>
                   {item.checkConclusion}
                 </Descriptions.Item>
-                <Descriptions.Item label='参与人名单' span={2}>
+                <Descriptions.Item label='参与人名单' span={3}>
                   {item.participant}
                 </Descriptions.Item>
                 <Descriptions.Item label='主要研究内容' span={3}>

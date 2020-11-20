@@ -13,10 +13,10 @@ import {
 
 // 组件
 import moment from 'moment';
+import award from '@/components/home/staff/util/award';
 
 // 样式
-import { Form, Input, Select, Button, DatePicker } from 'antd';
-const { Option } = Select;
+import { Form, Input, Cascader, Button, DatePicker } from 'antd';
 
 export default Form.create({ name: 'modifyAward' })(({ form }) => {
   const { getFieldDecorator, setFieldsValue } = form,
@@ -38,6 +38,12 @@ export default Form.create({ name: 'modifyAward' })(({ form }) => {
           if (staffAward.awardTime) {
             staffAward.awardTime = moment(staffAward.awardTime);
           }
+
+          if (staffAward.awardType) {
+            let typeArr = staffAward.awardType.split('-');
+            staffAward.awardType = typeArr;
+          }
+
 
           setFieldsValue(staffAward);
           dispatch(userAction.setChangeAward(false));
@@ -80,10 +86,7 @@ export default Form.create({ name: 'modifyAward' })(({ form }) => {
           {getFieldDecorator('awardType', {
             rules: [{ required: true, message: '请选择奖项类型' }],
           })(
-            <Select placeholder='奖项类型'>
-              <Option value='个人'>个人</Option>
-              <Option value='团体'>团体</Option>
-            </Select>
+            <Cascader options={award} />
           )}
         </Form.Item>
 
@@ -134,16 +137,30 @@ export default Form.create({ name: 'modifyAward' })(({ form }) => {
         >
           {getFieldDecorator('awardNameList', {
             rules: [
-              form.getFieldValue('awardType') === '团体'
+              form.getFieldValue('awardType') && form.getFieldValue('awardType')[0] === '团体'
                 ? { required: true, message: '请输入获奖名单(团体)' }
                 : {},
             ],
           })(
             <Input
               placeholder='获奖名单(团体)'
-              disabled={form.getFieldValue('awardType') === '个人'}
+              disabled={form.getFieldValue('awardType') ? form.getFieldValue('awardType')[0] === '个人' : false}
             />
           )}
+        </Form.Item>
+
+        <Form.Item
+          label='排名'
+          labelCol={{ span: 7 }}
+          wrapperCol={{ span: 16 }}
+        >
+          {getFieldDecorator('awardRank', {
+            rules: [
+              form.getFieldValue('awardType') && form.getFieldValue('awardType')[0] === '团体'
+                ? { required: true, message: '请输入排名' }
+                : {},
+            ],
+          })(<Input placeholder='排名' disabled={form.getFieldValue('awardType') ? form.getFieldValue('awardType')[0] === '个人' : false} />)}
         </Form.Item>
 
         {/* 保存按钮 */}
