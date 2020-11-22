@@ -115,7 +115,7 @@ export default (props) => {
       <div className='item-title-box'>
         <div className='title-left-box'>
           <Icon type='book' className='icon' />
-          <span>论文/专著</span>
+          <span>论文</span>
           <Tag className='content-tag' color={scoreToColor(score)}>
             {`总评分:${score}`}
           </Tag>
@@ -126,11 +126,11 @@ export default (props) => {
           style={{ marginBottom: 16 }}
           onClick={showNewThesisModal}
         >
-          新增论文/专著
+          新增论文
         </Button>
       </div>
       <Modal
-        title='新增论文/专著'
+        title='新增论文'
         visible={newThesisVisible}
         onCancel={() => {
           confirm({
@@ -152,7 +152,7 @@ export default (props) => {
         <CreateThesisContent />
       </Modal>
       <Modal
-        title='修改论文/专著'
+        title='修改论文'
         visible={modifyThesisVisible}
         footer={null}
         onCancel={() => {
@@ -205,7 +205,7 @@ export default (props) => {
                   <div>
                     <div className='write-description-title'>
                       <div className='description-title-text'>
-                        <span>{`论文/专著${index + 1}:  ${item.thesisTitle
+                        <span>{`论文${index + 1}:  ${item.thesisTitle
                           }`}</span>
                         <Tag
                           className='content-tag'
@@ -246,9 +246,9 @@ export default (props) => {
                           disabled={item.isVerify === '核实通过'}
                           onClick={() => {
                             confirm({
-                              title: '删除论文/专著?',
+                              title: '删除论文?',
                               okType: 'primary',
-                              content: '确认要删除论文/专著?',
+                              content: '确认要删除论文?',
                               okText: '确认',
                               cancelText: '取消',
                               onOk() {
@@ -315,7 +315,7 @@ export default (props) => {
               </Descriptions>
             ))
           ) : (
-              <span>未填写论文/专著</span>
+              <span>未填写论文</span>
             )}
         </Skeleton>
       </div>

@@ -3,8 +3,10 @@ import React, { useState, useEffect } from "react";
 // 请求
 import proxyFetch from "@/util/request";
 import {
-  GET_REVIEW_THESIS_LIST,
+  GET_VERIFY_BOOK_LIST,
   GET_FILE_URL,
+  SET_VERIFY_BOOK_FAIL_STATUS,
+  SET_VERIFY_BOOK_SUCCESS_STATUS,
 } from "@/constants/api-constants";
 
 // redux
@@ -12,103 +14,102 @@ import { useSelector, useDispatch } from "react-redux";
 import userAction from "@/redux/action/user";
 
 // 工具
-import scoreToColor from "@/components/home/review-manager/detail/util/score-to-color";
+import verifyStatusToColor from "@/components/home/business-manager/detail/util/verify-status-to-color";
 import moment from "moment";
 
-import ReviewThesisContent from "@/components/home/review-manager/thesis/Review-thesis-content-controller.jsx";
-
 // 样式
-import "@/style/home/review-manager/review-item-detail.styl";
-import { Icon, Button, Modal, Descriptions, Skeleton, Tag } from "antd";
-const { confirm } = Modal;
+import "@/style/home/business-manager/verify-item-detail.styl";
+import {
+  Icon,
+  Button,
+  Modal,
+  Input,
+  Descriptions,
+  Skeleton,
+  Tag,
+  message,
+  Alert,
+} from "antd";
+const { TextArea } = Input,
+  { confirm } = Modal;
 
 export default (props) => {
-  const { staffUuid, reviewThesis } = useSelector((state) => state.userStore),
-    [reviewThesisVisible, setReviewThesisVisible] = useState(false),
-    [uploadThesisVisible, setUploadThesisVisible] = useState(false),
-    [reviewThesisList, setReviewThesisList] = useState([]),
+  const { staffUuid, staffBookUuid, staffBookVerifyStatus } = useSelector(
+      (state) => state.userStore
+    ),
+    [verifyVisible, setVerifyVisible] = useState(false),
+    [uploadBookVisible, setUploadBookVisible] = useState(false),
+    [verifyBookList, setVerifyBookList] = useState([]),
     [firstFileName, setFirstFileName] = useState(""),
     [secondFileName, setSecondFileName] = useState(""),
     [thirdFileName, setThirdFileName] = useState(""),
-    [firstReviewThesisUrl, setFirstReviewThesisUrl] = useState(""),
-    [secondReviewThesisUrl, setSecondReviewThesisUrl] = useState(""),
-    [thirdReviewThesisUrl, setThirdReviewThesisUrl] = useState(""),
+    [firstVerifyBookUrl, setFirstVerifyBookUrl] = useState(""),
+    [secondVerifyBookUrl, setSecondVerifyBookUrl] = useState(""),
+    [thirdVerifyBookUrl, setThirdVerifyBookUrl] = useState(""),
     [firstPreviewUrl, setFirstPreviewUrl] = useState(""),
     [secondPreviewUrl, setSecondPreviewUrl] = useState(""),
     [thirdPreviewUrl, setThirdPreviewUrl] = useState(""),
     [getFileLoading, setGetFileLoading] = useState(true),
-    [reviewThesisLoading, setReviewThesisLoading] = useState(false),
-    [score, setScore] = useState(0),
+    [verifyBookLoading, setVerifyBookLoading] = useState(false),
+    dispatch = useDispatch(),
     [isNeedRefresh, setIsNeedRefresh] = useState(true),
-    dispatch = useDispatch();
+    [statusLoading, setStatusLoading] = useState(false),
+    [verifyRemarks, setVerifyRemarks] = useState("");
 
-  const showReviewThesisModal = (uuid) => {
-    dispatch(userAction.setStaffThesisUuid(uuid));
-    setReviewThesisVisible(true);
+  const showVerifyModal = (uuid, isVerify, verifyRemarks) => {
+    setVerifyRemarks(verifyRemarks);
+    dispatch(userAction.setStaffBookUuid(uuid));
+    dispatch(userAction.setStaffBookVerifyStatus(isVerify));
+    setVerifyVisible(true);
   };
 
-  const hideReviewThesisModal = () => {
-    dispatch(userAction.setStaffThesisUuid(""));
-    setReviewThesisVisible(false);
+  const hideVerifyModal = () => {
+    setVerifyVisible(false);
+    setVerifyRemarks("");
   };
 
-  const showUploadThesisModal = (firstUrl, secondUrl, thirdUrl) => {
-    setFirstReviewThesisUrl(firstUrl);
-    setSecondReviewThesisUrl(secondUrl);
-    setThirdReviewThesisUrl(thirdUrl);
-    setUploadThesisVisible(true);
+  const showUploadBookModal = (firstUrl, secondUrl, thirdUrl) => {
+    setFirstVerifyBookUrl(firstUrl);
+    setSecondVerifyBookUrl(secondUrl);
+    setThirdVerifyBookUrl(thirdUrl);
+    setUploadBookVisible(true);
   };
 
-  const hideUploadThesisModal = () => {
-    setUploadThesisVisible(false);
+  const hideUploadBookModal = () => {
+    setUploadBookVisible(false);
   };
 
   useEffect(() => {
     (async () => {
       if (isNeedRefresh) {
-        setReviewThesisLoading(true);
+        setVerifyBookLoading(true);
 
-        const reviewThesisList = await proxyFetch(
-          GET_REVIEW_THESIS_LIST,
+        const verifyBookList = await proxyFetch(
+          GET_VERIFY_BOOK_LIST,
           { staffUuid },
           "GET"
         );
 
-        if (reviewThesisList) {
-          setReviewThesisList(reviewThesisList);
-          setUploadThesisVisible(false);
-          setReviewThesisVisible(false);
-          dispatch(userAction.setReviewThesis(false));
+        if (verifyBookList) {
+          setVerifyBookList(verifyBookList);
+          setUploadBookVisible(false);
+          setVerifyVisible(false);
         }
 
-        let tempScore = 0;
-        const sum = reviewThesisList.reduce((accumulator, currentValue) => {
-          return accumulator + currentValue.score;
-        }, tempScore);
-        setScore(sum.toFixed(2));
-
         setIsNeedRefresh(false);
-        setReviewThesisLoading(false);
+        setVerifyBookLoading(false);
       }
     })();
-  }, [isNeedRefresh, staffUuid, dispatch]);
+  }, [isNeedRefresh, staffUuid]);
 
   useEffect(() => {
-    if (reviewThesis) {
-      setIsNeedRefresh(true);
-      dispatch(userAction.setReviewThesis(false));
-    }
-  }, [reviewThesis, dispatch]);
-
-  useEffect(() => {
-    if (firstReviewThesisUrl) {
+    if (firstVerifyBookUrl) {
       (async () => {
         setGetFileLoading(true);
-
         // 附件1的url处理
         const firstPreviewUrl = await proxyFetch(
           GET_FILE_URL,
-          { fileUrl: firstReviewThesisUrl },
+          { fileUrl: firstVerifyBookUrl },
           "GET"
         );
 
@@ -121,10 +122,10 @@ export default (props) => {
 
         // 附件2的url处理
         let secondPreviewUrl = "";
-        if (secondReviewThesisUrl) {
+        if (secondVerifyBookUrl) {
           secondPreviewUrl = await proxyFetch(
             GET_FILE_URL,
-            { fileUrl: secondReviewThesisUrl },
+            { fileUrl: secondVerifyBookUrl },
             "GET"
           );
 
@@ -138,10 +139,10 @@ export default (props) => {
 
         // 附件3的url处理
         let thirdPreviewUrl = "";
-        if (thirdReviewThesisUrl) {
+        if (thirdVerifyBookUrl) {
           thirdPreviewUrl = await proxyFetch(
             GET_FILE_URL,
-            { fileUrl: thirdReviewThesisUrl },
+            { fileUrl: thirdVerifyBookUrl },
             "GET"
           );
 
@@ -152,45 +153,127 @@ export default (props) => {
           setThirdFileName(thirdFileName.split(".")[1].toLowerCase());
         }
         setThirdPreviewUrl(thirdPreviewUrl);
-
         setGetFileLoading(false);
       })();
     }
-  }, [firstReviewThesisUrl, secondReviewThesisUrl, thirdReviewThesisUrl]);
+  }, [firstVerifyBookUrl, secondVerifyBookUrl, thirdVerifyBookUrl]);
+
+  const handleSetFailStatus = () => {
+    if (verifyRemarks) {
+      (async () => {
+        setStatusLoading(true);
+
+        const res = await proxyFetch(SET_VERIFY_BOOK_FAIL_STATUS, {
+          uuid: staffBookUuid,
+          verifyRemarks,
+          staffUuid,
+        });
+
+        setStatusLoading(false);
+        if (res) {
+          setVerifyRemarks("");
+          setIsNeedRefresh(true);
+          setVerifyVisible(false);
+        }
+      })();
+    } else {
+      message.error("请输入未通过审核实理由!");
+    }
+  };
+
+  const handleSetSuccessStatus = () => {
+    (async () => {
+      setStatusLoading(true);
+
+      const res = await proxyFetch(SET_VERIFY_BOOK_SUCCESS_STATUS, {
+        uuid: staffBookUuid,
+        staffUuid,
+      });
+
+      setStatusLoading(false);
+      if (res) {
+        setVerifyRemarks("");
+        setIsNeedRefresh(true);
+        setVerifyVisible(false);
+      }
+    })();
+  };
 
   return (
-    <div className="review-item-detail-box">
+    <div className="verify-item-detail-box">
       <div className="detail-title-box">
-        <Icon type="book" className="icon" />
-        <span>专著</span>
-        <Tag className="content-tag" color={scoreToColor(score)}>
-          {score || score === 0 ? `总评分:${score}` : "未评分"}
-        </Tag>
+        <div className="title-left-box">
+          <Icon type="book" className="icon" />
+          <span>专著</span>
+        </div>
+        <Modal
+          title="请核实"
+          visible={verifyVisible}
+          onCancel={() => {
+            hideVerifyModal();
+            dispatch(userAction.setStaffBookVerifyStatus(""));
+          }}
+          footer={null}
+        >
+          <div className="button-box">
+            <Button
+              type="primary"
+              disabled={staffBookVerifyStatus !== "未核实"}
+              className={
+                staffBookVerifyStatus !== "未核实" ? "" : "fail-button"
+              }
+              loading={statusLoading}
+              onClick={handleSetFailStatus}
+            >
+              核实未通过
+            </Button>
+            <Button
+              type="primary"
+              loading={statusLoading}
+              disabled={staffBookVerifyStatus !== "未核实"}
+              className={
+                staffBookVerifyStatus !== "未核实" ? "" : "success-button"
+              }
+              onClick={() => {
+                confirm({
+                  title: "确认核实通过?",
+                  okType: "primary",
+                  content: (
+                    <div className="text-box">
+                      <span>我已核实完该</span>
+                      <span className="important-text">专著</span>
+                      <span>的信息,确认通过?</span>
+                    </div>
+                  ),
+                  okText: "确认",
+                  cancelText: "取消",
+                  onOk() {
+                    handleSetSuccessStatus();
+                  },
+                  onCancel() {},
+                });
+              }}
+            >
+              核实通过
+            </Button>
+          </div>
+          <TextArea
+            rows={3}
+            disabled={staffBookVerifyStatus !== "未核实"}
+            onChange={(e) => {
+              setVerifyRemarks(e.target.value);
+            }}
+            value={verifyRemarks}
+            maxLength="100"
+            placeholder="请输入核实意见及不通过理由"
+            className="modal-textArea-box"
+          />
+        </Modal>
       </div>
       <Modal
-        title="评分"
-        visible={reviewThesisVisible}
-        onCancel={() => {
-          confirm({
-            title: "确认离开?",
-            okType: "primary",
-            content: "离开填写内容将不会保存!",
-            okText: "确认",
-            cancelText: "取消",
-            onOk() {
-              hideReviewThesisModal();
-            },
-            onCancel() {},
-          });
-        }}
-        footer={null}
-      >
-        <ReviewThesisContent />
-      </Modal>
-      <Modal
         title="查看附件"
-        visible={uploadThesisVisible}
-        onCancel={hideUploadThesisModal}
+        visible={uploadBookVisible}
+        onCancel={hideUploadBookModal}
         footer={null}
       >
         <div className="download-button-box">
@@ -205,7 +288,7 @@ export default (props) => {
                 className="img"
               />
             ) : null}
-            {firstReviewThesisUrl ? (
+            {firstVerifyBookUrl ? (
               <Button
                 type="primary"
                 size="large"
@@ -247,7 +330,7 @@ export default (props) => {
                 className="img"
               />
             ) : null}
-            {secondReviewThesisUrl ? (
+            {secondVerifyBookUrl ? (
               <Button
                 type="primary"
                 size="large"
@@ -289,7 +372,7 @@ export default (props) => {
                 className="img"
               />
             ) : null}
-            {thirdReviewThesisUrl ? (
+            {thirdVerifyBookUrl ? (
               <Button
                 type="primary"
                 size="large"
@@ -322,78 +405,77 @@ export default (props) => {
           </div>
         </div>
       </Modal>
-      <div className="review-description-box">
-        <Skeleton loading={reviewThesisLoading}>
-          {reviewThesisList?.length ? (
-            reviewThesisList.map((item, index) => (
+      <div className="verify-description-box">
+        <Skeleton loading={verifyBookLoading}>
+          {verifyBookList?.length ? (
+            verifyBookList.map((item, index) => (
               <Descriptions
                 key={item.uuid}
                 title={
-                  <div className="review-description-title">
-                    <div className="description-title-text">
-                      <span>{`论文${index + 1}:  ${item.thesisTitle}`}</span>
-                      <Tag
-                        className="content-tag"
-                        color={
-                          item.isVerify !== "核实通过"
-                            ? "purple"
-                            : scoreToColor(item.score)
-                        }
-                      >
-                        {item.score || item.score === 0
-                          ? `评分:${item.score}`
-                          : item.isVerify !== "核实通过"
-                          ? "未核实"
-                          : "未评分"}
-                      </Tag>
-                      {/* <span>
-                        {item.reviewTime
-                          ? moment(item.reviewTime).format(
+                  <div>
+                    <div className="verify-description-title">
+                      <div className="description-title-text">
+                        <span>{`专著${index + 1}:  ${item.name}`}</span>
+                        <Tag
+                          className="content-tag"
+                          color={verifyStatusToColor(item.isVerify)}
+                        >
+                          {item.isVerify}
+                        </Tag>
+                        {/* <span>{`最近填写/修改于: ${
+                        item.currentVerifyTime
+                          ? moment(item.currentVerifyTime).format(
                               'YYYY-MM-DD h:mm:ss a'
                             )
-                          : ''}
-                      </span> */}
+                          : ''
+                      }`}</span> */}
+                      </div>
+                      <div className="description-title-button">
+                        <Button
+                          type="link"
+                          icon="edit"
+                          className="opinion-button"
+                          onClick={() =>
+                            showVerifyModal(
+                              item.uuid,
+                              item.isVerify,
+                              item.verifyRemarks
+                            )
+                          }
+                        >
+                          核实
+                        </Button>
+                      </div>
                     </div>
-                    <div className="description-title-button">
-                      <Button
-                        icon="radar-chart"
-                        type="link"
-                        disabled={item.isVerify !== "核实通过"}
-                        onClick={() => {
-                          showReviewThesisModal(item.uuid);
-                        }}
-                      >
-                        评分
-                      </Button>
-                    </div>
+                    {item.reviewRemarks ? (
+                      <Alert
+                        type="warning"
+                        description={`评审建议: ${item.reviewRemarks}`}
+                      />
+                    ) : null}
                   </div>
                 }
               >
-                <Descriptions.Item label="发表时间">
-                  {item.thesisTime
-                    ? moment(item.thesisTime).format("YYYY-MM-DD")
-                    : ""}
+                <Descriptions.Item label="著作ISBN号">
+                  {item.copyrightOwner}
                 </Descriptions.Item>
-                <Descriptions.Item label="发表期刊名称">
-                  {item.thesisJournal}
+                <Descriptions.Item label="著作发表时间">
+                  {item.time ? moment(item.time).format("YYYY-MM-DD") : ""}
                 </Descriptions.Item>
-                <Descriptions.Item label="期刊级别">
-                  {item.thesisGrade}
+                <Descriptions.Item label="著作出版社">
+                  {item.publisher}
                 </Descriptions.Item>
-                <Descriptions.Item label="论文索引号">
-                  {item.thesisCode}
+                <Descriptions.Item label="编辑排名">
+                  {item.rank}
                 </Descriptions.Item>
-                <Descriptions.Item label="第一作者">
-                  {item.thesisFirstAuthor}
-                </Descriptions.Item>
-                <Descriptions.Item label="本人排序">
-                  {item.thesisAuthorSequence}
+                <Descriptions.Item label="著作主编">
+                  {item.chiefEditor}
                 </Descriptions.Item>
                 <Descriptions.Item label="查看附件">
                   <Button
                     type="link"
                     onClick={() => {
-                      showUploadThesisModal(
+                      showUploadBookModal(
                         item.firstUrl,
                         item.secondUrl,
                         item.thirdUrl
@@ -408,7 +490,7 @@ export default (props) => {
               </Descriptions>
             ))
           ) : (
-            <span>未填写论文</span>
+            <span>未填写专著</span>
           )}
         </Skeleton>
       </div>

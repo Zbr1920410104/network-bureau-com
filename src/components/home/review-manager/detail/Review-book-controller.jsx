@@ -2,10 +2,7 @@ import React, { useState, useEffect } from "react";
 
 // 请求
 import proxyFetch from "@/util/request";
-import {
-  GET_REVIEW_PROJECT_LIST,
-  GET_FILE_URL,
-} from "@/constants/api-constants";
+import { GET_REVIEW_BOOK_LIST, GET_FILE_URL } from "@/constants/api-constants";
 
 // redux
 import { useSelector, useDispatch } from "react-redux";
@@ -15,92 +12,100 @@ import userAction from "@/redux/action/user";
 import scoreToColor from "@/components/home/review-manager/detail/util/score-to-color";
 import moment from "moment";
 
-import ReviewProjectContent from "@/components/home/review-manager/project/Review-project-content-controller.jsx";
+import ReviewBookContent from "@/components/home/review-manager/book/Review-book-content-controller.jsx";
 
 // 样式
 import "@/style/home/review-manager/review-item-detail.styl";
-import { Button, Modal, Icon, Skeleton, Descriptions, Tag } from "antd";
+import { Icon, Button, Modal, Descriptions, Skeleton, Tag } from "antd";
 const { confirm } = Modal;
 
 export default (props) => {
-  const { staffUuid, reviewProject } = useSelector((state) => state.userStore),
-    [reviewProjectVisible, setReviewProjectVisible] = useState(false),
-    [reviewProjectList, setReviewProjectList] = useState([]),
-    [reviewProjectLoading, setReviewProjectLoading] = useState(false),
-    [score, setScore] = useState(0),
-    [isNeedRefresh, setIsNeedRefresh] = useState(true),
+  const { staffUuid, reviewBook } = useSelector((state) => state.userStore),
+    [reviewBookVisible, setReviewBookVisible] = useState(false),
+    [uploadBookVisible, setUploadBookVisible] = useState(false),
+    [reviewBookList, setReviewBookList] = useState([]),
     [firstFileName, setFirstFileName] = useState(""),
     [secondFileName, setSecondFileName] = useState(""),
     [thirdFileName, setThirdFileName] = useState(""),
-    [firstReviewProjectUrl, setFirstReviewProjectUrl] = useState(""),
-    [secondReviewProjectUrl, setSecondReviewProjectUrl] = useState(""),
-    [thirdReviewProjectUrl, setThirdReviewProjectUrl] = useState(""),
+    [firstReviewBookUrl, setFirstReviewBookUrl] = useState(""),
+    [secondReviewBookUrl, setSecondReviewBookUrl] = useState(""),
+    [thirdReviewBookUrl, setThirdReviewBookUrl] = useState(""),
     [firstPreviewUrl, setFirstPreviewUrl] = useState(""),
     [secondPreviewUrl, setSecondPreviewUrl] = useState(""),
     [thirdPreviewUrl, setThirdPreviewUrl] = useState(""),
     [getFileLoading, setGetFileLoading] = useState(true),
-    [uploadProjectVisible, setUploadProjectVisible] = useState(false),
+    [reviewBookLoading, setReviewBookLoading] = useState(false),
+    [score, setScore] = useState(0),
+    [isNeedRefresh, setIsNeedRefresh] = useState(true),
     dispatch = useDispatch();
 
-  const showReviewProjectModal = (uuid) => {
-    dispatch(userAction.setStaffProjectUuid(uuid));
-    setReviewProjectVisible(true);
+  const showReviewBookModal = (uuid) => {
+    dispatch(userAction.setStaffBookUuid(uuid));
+    setReviewBookVisible(true);
   };
 
-  const hideReviewProjectModal = () => {
-    dispatch(userAction.setStaffProjectUuid(""));
-    setReviewProjectVisible(false);
+  const hideReviewBookModal = () => {
+    dispatch(userAction.setStaffBookUuid(""));
+    setReviewBookVisible(false);
   };
 
-  const showUploadProjectModal = (firstUrl, secondUrl, thirdUrl) => {
-    setFirstReviewProjectUrl(firstUrl);
-    setSecondReviewProjectUrl(secondUrl);
-    setThirdReviewProjectUrl(thirdUrl);
-    setUploadProjectVisible(true);
+  const showUploadBookModal = (firstUrl, secondUrl, thirdUrl) => {
+    setFirstReviewBookUrl(firstUrl);
+    setSecondReviewBookUrl(secondUrl);
+    setThirdReviewBookUrl(thirdUrl);
+    setUploadBookVisible(true);
   };
 
-  const hideUploadProjectModal = () => {
-    setUploadProjectVisible(false);
+  const hideUploadBookModal = () => {
+    setUploadBookVisible(false);
   };
 
   useEffect(() => {
     (async () => {
       if (isNeedRefresh) {
-        setReviewProjectLoading(true);
+        setReviewBookLoading(true);
 
-        const reviewProjectList = await proxyFetch(
-          GET_REVIEW_PROJECT_LIST,
+        const reviewBookList = await proxyFetch(
+          GET_REVIEW_BOOK_LIST,
           { staffUuid },
           "GET"
         );
 
-        if (reviewProjectList) {
-          setReviewProjectList(reviewProjectList);
-          setReviewProjectVisible(false);
-          dispatch(userAction.setReviewProject(false));
+        if (reviewBookList) {
+          setReviewBookList(reviewBookList);
+          setUploadBookVisible(false);
+          setReviewBookVisible(false);
+          dispatch(userAction.setReviewBook(false));
         }
 
         let tempScore = 0;
-        const sum = reviewProjectList.reduce((accumulator, currentValue) => {
+        const sum = reviewBookList.reduce((accumulator, currentValue) => {
           return accumulator + currentValue.score;
         }, tempScore);
         setScore(sum.toFixed(2));
 
         setIsNeedRefresh(false);
-        setReviewProjectLoading(false);
+        setReviewBookLoading(false);
       }
     })();
   }, [isNeedRefresh, staffUuid, dispatch]);
 
   useEffect(() => {
-    if (firstReviewProjectUrl) {
+    if (reviewBook) {
+      setIsNeedRefresh(true);
+      dispatch(userAction.setReviewBook(false));
+    }
+  }, [reviewBook, dispatch]);
+
+  useEffect(() => {
+    if (firstReviewBookUrl) {
       (async () => {
         setGetFileLoading(true);
 
         // 附件1的url处理
         const firstPreviewUrl = await proxyFetch(
           GET_FILE_URL,
-          { fileUrl: firstReviewProjectUrl },
+          { fileUrl: firstReviewBookUrl },
           "GET"
         );
 
@@ -113,10 +118,10 @@ export default (props) => {
 
         // 附件2的url处理
         let secondPreviewUrl = "";
-        if (secondReviewProjectUrl) {
+        if (secondReviewBookUrl) {
           secondPreviewUrl = await proxyFetch(
             GET_FILE_URL,
-            { fileUrl: secondReviewProjectUrl },
+            { fileUrl: secondReviewBookUrl },
             "GET"
           );
 
@@ -130,10 +135,10 @@ export default (props) => {
 
         // 附件3的url处理
         let thirdPreviewUrl = "";
-        if (thirdReviewProjectUrl) {
+        if (thirdReviewBookUrl) {
           thirdPreviewUrl = await proxyFetch(
             GET_FILE_URL,
-            { fileUrl: thirdReviewProjectUrl },
+            { fileUrl: thirdReviewBookUrl },
             "GET"
           );
 
@@ -148,28 +153,41 @@ export default (props) => {
         setGetFileLoading(false);
       })();
     }
-  }, [firstReviewProjectUrl, secondReviewProjectUrl, thirdReviewProjectUrl]);
-
-  useEffect(() => {
-    if (reviewProject) {
-      setIsNeedRefresh(true);
-      dispatch(userAction.setReviewAward(false));
-    }
-  }, [reviewProject, dispatch]);
+  }, [firstReviewBookUrl, secondReviewBookUrl, thirdReviewBookUrl]);
 
   return (
     <div className="review-item-detail-box">
       <div className="detail-title-box">
-        <Icon type="file-done" className="icon" />
-        <span>项目</span>
+        <Icon type="book" className="icon" />
+        <span>专著</span>
         <Tag className="content-tag" color={scoreToColor(score)}>
           {score || score === 0 ? `总评分:${score}` : "未评分"}
         </Tag>
       </div>
       <Modal
+        title="评分"
+        visible={reviewBookVisible}
+        onCancel={() => {
+          confirm({
+            title: "确认离开?",
+            okType: "primary",
+            content: "离开填写内容将不会保存!",
+            okText: "确认",
+            cancelText: "取消",
+            onOk() {
+              hideReviewBookModal();
+            },
+            onCancel() {},
+          });
+        }}
+        footer={null}
+      >
+        <ReviewBookContent />
+      </Modal>
+      <Modal
         title="查看附件"
-        visible={uploadProjectVisible}
-        onCancel={hideUploadProjectModal}
+        visible={uploadBookVisible}
+        onCancel={hideUploadBookModal}
         footer={null}
       >
         <div className="download-button-box">
@@ -184,7 +202,7 @@ export default (props) => {
                 className="img"
               />
             ) : null}
-            {firstReviewProjectUrl ? (
+            {firstReviewBookUrl ? (
               <Button
                 type="primary"
                 size="large"
@@ -226,7 +244,7 @@ export default (props) => {
                 className="img"
               />
             ) : null}
-            {secondReviewProjectUrl ? (
+            {secondReviewBookUrl ? (
               <Button
                 type="primary"
                 size="large"
@@ -268,7 +286,7 @@ export default (props) => {
                 className="img"
               />
             ) : null}
-            {thirdReviewProjectUrl ? (
+            {thirdReviewBookUrl ? (
               <Button
                 type="primary"
                 size="large"
@@ -301,36 +319,16 @@ export default (props) => {
           </div>
         </div>
       </Modal>
-      <Modal
-        title="评分"
-        visible={reviewProjectVisible}
-        onCancel={() => {
-          confirm({
-            title: "确认离开?",
-            okType: "primary",
-            content: "离开填写内容将不会保存!",
-            okText: "确认",
-            cancelText: "取消",
-            onOk() {
-              hideReviewProjectModal();
-            },
-            onCancel() {},
-          });
-        }}
-        footer={null}
-      >
-        <ReviewProjectContent />
-      </Modal>
       <div className="review-description-box">
-        <Skeleton loading={reviewProjectLoading}>
-          {reviewProjectList?.length ? (
-            reviewProjectList.map((item, index) => (
+        <Skeleton loading={reviewBookLoading}>
+          {reviewBookList?.length ? (
+            reviewBookList.map((item, index) => (
               <Descriptions
                 key={item.uuid}
                 title={
                   <div className="review-description-title">
                     <div className="description-title-text">
-                      <span>{`项目${index + 1}:  ${item.name}`}</span>
+                      <span>{`专著${index + 1}:  ${item.name}`}</span>
                       <Tag
                         className="content-tag"
                         color={
@@ -346,8 +344,8 @@ export default (props) => {
                           : "未评分"}
                       </Tag>
                       {/* <span>
-                        {item.verifyTime
-                          ? moment(item.verifyTime).format(
+                        {item.reviewTime
+                          ? moment(item.reviewTime).format(
                               'YYYY-MM-DD h:mm:ss a'
                             )
                           : ''}
@@ -359,7 +357,7 @@ export default (props) => {
                         type="link"
                         disabled={item.isVerify !== "核实通过"}
                         onClick={() => {
-                          showReviewProjectModal(item.uuid);
+                          showReviewBookModal(item.uuid);
                         }}
                       >
                         评分
@@ -368,55 +366,26 @@ export default (props) => {
                   </div>
                 }
               >
-                <Descriptions.Item label="参与方式">
-                  {item.type === 1 ? (
-                    <span>主持项目</span>
-                  ) : (
-                    <span>参与项目</span>
-                  )}
+                <Descriptions.Item label="著作ISBN号">
+                  {item.copyrightOwner}
                 </Descriptions.Item>
-                <Descriptions.Item label="项目级别">
-                  {item.grade}
+                <Descriptions.Item label="著作发表时间">
+                  {item.time ? moment(item.time).format("YYYY-MM-DD") : ""}
                 </Descriptions.Item>
-                <Descriptions.Item label="项目编号">
-                  {item.code}
+                <Descriptions.Item label="著作出版社">
+                  {item.publisher}
                 </Descriptions.Item>
-                <Descriptions.Item label="开始时间">
-                  {item.startTime
-                    ? moment(item.startTime).format("YYYY-MM-DD")
-                    : ""}
+                <Descriptions.Item label="编辑排名">
+                  {item.rank}
                 </Descriptions.Item>
-                <Descriptions.Item label="结束时间">
-                  {item.endTime
-                    ? moment(item.endTime).format("YYYY-MM-DD")
-                    : ""}
-                </Descriptions.Item>
-                <Descriptions.Item label="负责人">
-                  {item.controller}
-                </Descriptions.Item>
-                <Descriptions.Item label="项目来源">
-                  {item.resource}
-                </Descriptions.Item>
-                <Descriptions.Item label="项目经费">
-                  {`${item.funds}万元`}
-                </Descriptions.Item>
-                <Descriptions.Item label="是否验收">
-                  {item.isChecked}
-                </Descriptions.Item>
-                <Descriptions.Item label="验收结论" span={3}>
-                  {item.checkConclusion}
-                </Descriptions.Item>
-                <Descriptions.Item label="参与人名单" span={3}>
-                  {item.participant}
-                </Descriptions.Item>
-                <Descriptions.Item label="主要研究内容" span={3}>
-                  {item.content}
+                <Descriptions.Item label="著作主编">
+                  {item.chiefEditor}
                 </Descriptions.Item>
                 <Descriptions.Item label="查看附件">
                   <Button
                     type="link"
                     onClick={() => {
-                      showUploadProjectModal(
+                      showUploadBookModal(
                         item.firstUrl,
                         item.secondUrl,
                         item.thirdUrl
@@ -431,7 +400,7 @@ export default (props) => {
               </Descriptions>
             ))
           ) : (
-            <span>未填写项目</span>
+            <span>未填写专著</span>
           )}
         </Skeleton>
       </div>

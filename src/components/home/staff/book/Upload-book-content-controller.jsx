@@ -5,8 +5,8 @@ import proxyFetch, { proxyFileFetch } from '@/util/request';
 import {
   UPLOAD_FILE,
   GET_FILE_URL,
-  SELECT_UPLOAD_THESIS,
-  SAVE_UPLOAD_THESIS,
+  SELECT_UPLOAD_BOOK,
+  SAVE_UPLOAD_BOOK,
 } from '@/constants/api-constants';
 
 // redux
@@ -17,10 +17,10 @@ import userAction from '@/redux/action/user';
 import { Form, Upload, Button, Icon, Alert, message } from 'antd';
 import '@/style/home/staff/write-inner-modal.styl';
 
-export default Form.create({ name: 'uploadThesis' })(({ form }) => {
+export default Form.create({ name: 'uploadBook' })(({ form }) => {
   const { getFieldDecorator, setFieldsValue, getFieldValue } = form,
-    { staffThesisUuid } = useSelector((state) => state.userStore),
-    [thesisLoading, setThesisLoading] = useState(false),
+    { staffBookUuid } = useSelector((state) => state.userStore),
+    [bookLoading, setBookLoading] = useState(false),
     [isNeedUrlFresh, setIsNeedUrlFresh] = useState(false),
     [firstPreviewUrl, setFirstPreviewUrl] = useState(''),
     [secondPreviewUrl, setSecondPreviewUrl] = useState(''),
@@ -30,32 +30,32 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
     [thirdFileName, setThirdFileName] = useState(''),
     [saveDataLoading, setSaveDataLoading] = useState(false),
     dispatch = useDispatch(),
-    firstFormThesisUrl =
+    firstFormBookUrl =
       getFieldValue('firstUrl') && getFieldValue('firstUrl')[0],
-    secondFormThesisUrl =
+    secondFormBookUrl =
       getFieldValue('secondUrl') && getFieldValue('secondUrl')[0],
-    thirdFormThesisUrl =
+    thirdFormBookUrl =
       getFieldValue('thirdUrl') && getFieldValue('thirdUrl')[0];
 
   // 将已有的数据回显
   useEffect(() => {
-    if (staffThesisUuid) {
+    if (staffBookUuid) {
       (async () => {
-        let writeThesis = await proxyFetch(
-          SELECT_UPLOAD_THESIS,
-          { uuid: staffThesisUuid },
+        let writeBook = await proxyFetch(
+          SELECT_UPLOAD_BOOK,
+          { uuid: staffBookUuid },
           'GET'
         );
 
         // 数据回显
-        if (writeThesis && writeThesis.firstUrl) {
+        if (writeBook && writeBook.firstUrl) {
           // 数据处理
-          setFieldsValue({ firstUrl: [writeThesis.firstUrl] });
+          setFieldsValue({ firstUrl: [writeBook.firstUrl] });
           setFieldsValue({
-            secondUrl: [writeThesis.secondUrl],
+            secondUrl: [writeBook.secondUrl],
           });
           setFieldsValue({
-            thirdUrl: [writeThesis.thirdUrl],
+            thirdUrl: [writeBook.thirdUrl],
           });
           setIsNeedUrlFresh(true);
         } else {
@@ -65,7 +65,7 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
         }
       })();
     }
-  }, [staffThesisUuid, setFieldsValue]);
+  }, [staffBookUuid, setFieldsValue]);
 
   /**
    * 上传头像
@@ -74,16 +74,16 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
   const handleUploadFirstFile = async (file) => {
     if (handleBeforeUpload(file)) {
       // loading
-      setThesisLoading(true);
+      setBookLoading(true);
 
       // 参数需要加上oss的文件夹位置
       const fileUrl = await proxyFileFetch(UPLOAD_FILE, {
         file: file.file,
-        folderName: 'write/thesis',
+        folderName: 'write/book',
       });
 
       // loading
-      setThesisLoading(false);
+      setBookLoading(false);
 
       if (fileUrl) {
         // 设置form
@@ -96,16 +96,16 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
   const handleUploadSecondFile = async (file) => {
     if (handleBeforeUpload(file)) {
       // loading
-      setThesisLoading(true);
+      setBookLoading(true);
 
       // 参数需要加上oss的文件夹位置
       const fileUrl = await proxyFileFetch(UPLOAD_FILE, {
         file: file.file,
-        folderName: 'write/thesis',
+        folderName: 'write/book',
       });
 
       // loading
-      setThesisLoading(false);
+      setBookLoading(false);
 
       if (fileUrl) {
         // 设置form
@@ -118,16 +118,16 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
   const handleUploadThirdFile = async (file) => {
     if (handleBeforeUpload(file)) {
       // loading
-      setThesisLoading(true);
+      setBookLoading(true);
 
       // 参数需要加上oss的文件夹位置
       const fileUrl = await proxyFileFetch(UPLOAD_FILE, {
         file: file.file,
-        folderName: 'write/thesis',
+        folderName: 'write/book',
       });
 
       // loading
-      setThesisLoading(false);
+      setBookLoading(false);
 
       if (fileUrl) {
         // 设置form
@@ -138,17 +138,17 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
   };
 
   useEffect(() => {
-    if (firstFormThesisUrl && isNeedUrlFresh) {
+    if (firstFormBookUrl && isNeedUrlFresh) {
       (async () => {
-        setThesisLoading(true);
+        setBookLoading(true);
 
         const firstPreviewUrl = await proxyFetch(
           GET_FILE_URL,
-          { fileUrl: firstFormThesisUrl },
+          { fileUrl: firstFormBookUrl },
           'GET'
         );
 
-        setThesisLoading(false);
+        setBookLoading(false);
         // 切换下载的url
         setFirstPreviewUrl(firstPreviewUrl);
         const firstUrlArr = firstPreviewUrl.split('?');
@@ -159,20 +159,20 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
         setIsNeedUrlFresh(false);
       })();
     }
-  }, [firstFormThesisUrl, isNeedUrlFresh]);
+  }, [firstFormBookUrl, isNeedUrlFresh]);
 
   useEffect(() => {
-    if (secondFormThesisUrl && isNeedUrlFresh) {
+    if (secondFormBookUrl && isNeedUrlFresh) {
       (async () => {
-        setThesisLoading(true);
+        setBookLoading(true);
 
         const secondPreviewUrl = await proxyFetch(
           GET_FILE_URL,
-          { fileUrl: secondFormThesisUrl },
+          { fileUrl: secondFormBookUrl },
           'GET'
         );
 
-        setThesisLoading(false);
+        setBookLoading(false);
         // 切换下载的url
         setSecondPreviewUrl(secondPreviewUrl);
         const secondUrlArr = secondPreviewUrl.split('?');
@@ -183,20 +183,20 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
         setIsNeedUrlFresh(false);
       })();
     }
-  }, [secondFormThesisUrl, isNeedUrlFresh]);
+  }, [secondFormBookUrl, isNeedUrlFresh]);
 
   useEffect(() => {
-    if (thirdFormThesisUrl && isNeedUrlFresh) {
+    if (thirdFormBookUrl && isNeedUrlFresh) {
       (async () => {
-        setThesisLoading(true);
+        setBookLoading(true);
 
         const thirdPreviewUrl = await proxyFetch(
           GET_FILE_URL,
-          { fileUrl: thirdFormThesisUrl },
+          { fileUrl: thirdFormBookUrl },
           'GET'
         );
 
-        setThesisLoading(false);
+        setBookLoading(false);
         // 切换下载的url
         setThirdPreviewUrl(thirdPreviewUrl);
         const thirdUrlArr = thirdPreviewUrl.split('?');
@@ -207,7 +207,7 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
         setIsNeedUrlFresh(false);
       })();
     }
-  }, [thirdFormThesisUrl, isNeedUrlFresh]);
+  }, [thirdFormBookUrl, isNeedUrlFresh]);
 
   /**
    * 提交事件
@@ -217,19 +217,19 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
 
     // 表单判断
     form.validateFields(async (err, value) => {
-      if (staffThesisUuid) {
+      if (staffBookUuid) {
         if (!err) {
-          value.uuid = staffThesisUuid;
+          value.uuid = staffBookUuid;
           value.firstUrl = value.firstUrl[0];
           value.secondUrl = value.secondUrl ? value.secondUrl[0] : '';
           value.thirdUrl = value.thirdUrl ? value.thirdUrl[0] : '';
 
           setSaveDataLoading(true);
-          const res = await proxyFetch(SAVE_UPLOAD_THESIS, value);
+          const res = await proxyFetch(SAVE_UPLOAD_BOOK, value);
           setSaveDataLoading(false);
 
           if (res) {
-            dispatch(userAction.setChangeThesis(true));
+            dispatch(userAction.setChangeBook(true));
           }
         }
       }
@@ -240,7 +240,7 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
     <div className='inner-form-box'>
       <Alert
         className='inner-alert'
-        message='上传论文附件注意事项'
+        message='上传专著附件注意事项'
         description={
           <div className='text-box'>
             <span>
@@ -254,7 +254,7 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
             <span>
               (压缩文件)，请尽量上传图片或文档，并按照从上至下的顺序上传(
             </span>
-            <span className='important-text'>论文附件1必须上传</span>
+            <span className='important-text'>专著附件1必须上传</span>
             <span>)，当需要上传的文件超过三个时，请</span>
             <span className='important-text'>压缩打包</span>
             <span>后上传。确保全部上传完毕后点击下方</span>
@@ -266,7 +266,7 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
       />
       <Form>
         <Form.Item
-          label='论文附件1'
+          label='专著附件1'
           labelCol={{ span: 7 }}
           wrapperCol={{ span: 16 }}
         >
@@ -275,7 +275,7 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
             getValueFromEvent: (e) => {
               return e && e.fileList;
             },
-            rules: [{ required: true, message: '请上传论文附件1!' }],
+            rules: [{ required: true, message: '请上传专著附件1!' }],
           })(
             <div>
               {firstFileName === 'jpg' ||
@@ -293,7 +293,7 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
                 // 进行将图片格式和大小判断
                 customRequest={handleUploadFirstFile}
               >
-                {firstPreviewUrl && !thesisLoading ? (
+                {firstPreviewUrl && !bookLoading ? (
                   <div>
                     <Button
                       className='half-button'
@@ -326,7 +326,7 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
                   <Button
                     className='button'
                     size='large'
-                    loading={thesisLoading}
+                    loading={bookLoading}
                   >
                     点击上传文件
                     <Icon type='inbox' />
@@ -338,7 +338,7 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
         </Form.Item>
 
         <Form.Item
-          label='论文附件2'
+          label='专著附件2'
           labelCol={{ span: 7 }}
           wrapperCol={{ span: 16 }}
         >
@@ -364,7 +364,7 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
                 // 进行将图片格式和大小判断
                 customRequest={handleUploadSecondFile}
               >
-                {secondPreviewUrl && !thesisLoading ? (
+                {secondPreviewUrl && !bookLoading ? (
                   <div>
                     <Button
                       className='half-button'
@@ -397,7 +397,7 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
                   <Button
                     className='button'
                     size='large'
-                    loading={thesisLoading}
+                    loading={bookLoading}
                   >
                     点击上传文件
                     <Icon type='inbox' />
@@ -409,7 +409,7 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
         </Form.Item>
 
         <Form.Item
-          label='论文附件3'
+          label='专著附件3'
           labelCol={{ span: 7 }}
           wrapperCol={{ span: 16 }}
         >
@@ -435,7 +435,7 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
                 // 进行将图片格式和大小判断
                 customRequest={handleUploadThirdFile}
               >
-                {thirdPreviewUrl && !thesisLoading ? (
+                {thirdPreviewUrl && !bookLoading ? (
                   <div>
                     <Button
                       className='half-button'
@@ -468,7 +468,7 @@ export default Form.create({ name: 'uploadThesis' })(({ form }) => {
                   <Button
                     className='button'
                     size='large'
-                    loading={thesisLoading}
+                    loading={bookLoading}
                   >
                     点击上传文件
                     <Icon type='inbox' />

@@ -1,4 +1,4 @@
-import { handleActions } from 'redux-actions';
+import { handleActions } from "redux-actions";
 
 export default handleActions(
   {
@@ -144,6 +144,18 @@ export default handleActions(
         staffThesisUuid: result,
       };
     },
+    setChangeBook(state, { payload: result }) {
+      return {
+        ...state,
+        changeBook: result,
+      };
+    },
+    setStaffBookUuid(state, { payload: result }) {
+      return {
+        ...state,
+        staffBookUuid: result,
+      };
+    },
     setProjectRefresh(state, { payload: result }) {
       return {
         ...state,
@@ -180,6 +192,12 @@ export default handleActions(
         thesisRefresh: result,
       };
     },
+    setBookRefresh(state, { payload: result }) {
+      return {
+        ...state,
+        bookRefresh: result,
+      };
+    },
     // 评审员打分
     setReviewProject(state, { payload: result }) {
       return {
@@ -209,6 +227,12 @@ export default handleActions(
       return {
         ...state,
         reviewThesis: result,
+      };
+    },
+    setReviewBook(state, { payload: result }) {
+      return {
+        ...state,
+        reviewBook: result,
       };
     },
     // 统计员核实
@@ -242,6 +266,12 @@ export default handleActions(
         staffAwardVerifyStatus: result,
       };
     },
+    setStaffBookVerifyStatus(state, { payload: result }) {
+      return {
+        ...state,
+        staffBookVerifyStatus: result,
+      };
+    },
   },
   {
     loginLoading: false,
@@ -258,11 +288,13 @@ export default handleActions(
     changeCopyright: false,
     changeAward: false,
     changeThesis: false,
-    staffProjectUuid: '',
-    staffPatentUuid: '',
-    staffCopyrightUuid: '',
-    staffAwardUuid: '',
-    staffThesisUuid: '',
+    changeBook: false,
+    staffProjectUuid: "",
+    staffPatentUuid: "",
+    staffCopyrightUuid: "",
+    staffAwardUuid: "",
+    staffThesisUuid: "",
+    staffBookUuid: "",
     projectRefresh: false,
     basicRefresh: false,
     copyrightRefresh: false,
@@ -270,28 +302,30 @@ export default handleActions(
     awardRefresh: false,
     thesisRefresh: false,
     // 统计员
-    staffProjectVerifyStatus: '',
-    staffPatentVerifyStatus: '',
-    staffCopyrightVerifyStatus: '',
-    staffThesisVerifyStatus: '',
-    staffAwardVerifyStatus: '',
+    staffProjectVerifyStatus: "",
+    staffPatentVerifyStatus: "",
+    staffCopyrightVerifyStatus: "",
+    staffThesisVerifyStatus: "",
+    staffAwardVerifyStatus: "",
+    staffBookVerifyStatus: "",
     // 评审员
     reviewProject: false,
     reviewPatent: false,
     reviewCopyright: false,
     reviewAward: false,
     reviewThesis: false,
-    accountUuid: '',
-    uuid: '',
-    userName: '',
-    phone: '',
-    name: '',
-    department: '',
-    departmentUuid: '',
-    isCancel: '',
+    reviewBook: false,
+    accountUuid: "",
+    uuid: "",
+    userName: "",
+    phone: "",
+    name: "",
+    department: "",
+    departmentUuid: "",
+    isCancel: "",
     role: 0,
-    password: '',
-    staffUuid: '',
+    password: "",
+    staffUuid: "",
     verifyItem: [],
   }
 );

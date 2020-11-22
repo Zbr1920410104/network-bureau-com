@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 // localStorage
-import { LOCAL_STORAGE } from '@/constants/app-constants';
+import { LOCAL_STORAGE } from "@/constants/app-constants";
 
 // 请求
-import proxyFetch from '@/util/request';
+import proxyFetch from "@/util/request";
 import {
   GET_STAFF_VERIFY_INFO,
   GET_STAFF_WRITE_STATUS_LIST,
   GET_STAFF_VERIFY_STATUS_LIST,
   GET_STAFF_EXPORT_INFO_URL,
-} from '@/constants/api-constants';
+} from "@/constants/api-constants";
 
 // redux
-import { useDispatch } from 'react-redux';
-import userAction from '@/redux/action/user';
+import { useDispatch } from "react-redux";
+import userAction from "@/redux/action/user";
 
 // 路由
-import { HOME_VERIFY_DETAIL } from '@/constants/route-constants';
-import { useHistory } from 'react-router-dom';
+import { HOME_VERIFY_DETAIL } from "@/constants/route-constants";
+import { useHistory } from "react-router-dom";
 
-import moment from 'moment';
+import moment from "moment";
 
 // 样式
 import {
@@ -36,20 +36,21 @@ import {
   Col,
   Radio,
   Icon,
-} from 'antd';
-import '@/style/home/business-manager/verify-list.styl';
+} from "antd";
+import "@/style/home/business-manager/verify-list.styl";
 const { Option } = Select,
   { Column } = Table,
   { Search } = Input;
 
 export default (props) => {
   const plainOptions = [
-    'basic',
-    'project',
-    'patent',
-    'copyright',
-    'award',
-    'thesis',
+    "basic",
+    "project",
+    "patent",
+    "copyright",
+    "award",
+    "thesis",
+    "book",
   ];
   const localStorageVerifyItem = localStorage.getItem(
       `${LOCAL_STORAGE}-verifyItem`
@@ -60,15 +61,15 @@ export default (props) => {
     [verifyItemVisible, setVerifyItemVisible] = useState(false),
     [staffLoading, setStaffLoading] = useState(false),
     [verifyStatus, setVerifyStatus] = useState(0),
-    [name, setName] = useState(''),
+    [name, setName] = useState(""),
     [isNeedRefresh, setIsNeedRefresh] = useState(true),
     [exportOneVisible, setExportOneVisible] = useState(false),
-    [exportList, setExportList] = useState([0, 1, 2, 3, 4, 5]),
+    [exportList, setExportList] = useState([0, 1, 2, 3, 4, 5, 6]),
     [checkedList, setCheckedList] = useState(
-      localStorageVerifyItem ? localStorageVerifyItem.split(',') : plainOptions
+      localStorageVerifyItem ? localStorageVerifyItem.split(",") : plainOptions
     ),
     [checkAll, setCheckAll] = useState(true),
-    [exportType, setExportType] = useState(''),
+    [exportType, setExportType] = useState(""),
     dispatch = useDispatch();
 
   const showExportAllModal = () => {
@@ -84,19 +85,19 @@ export default (props) => {
   };
 
   const handleExportInfo = async () => {
-    let tempUrl = '';
+    let tempUrl = "";
 
-    if (exportType === '填写状态') {
+    if (exportType === "填写状态") {
       tempUrl = await proxyFetch(
         GET_STAFF_WRITE_STATUS_LIST,
         { verifyStatus, name },
-        'GET'
+        "GET"
       );
-    } else if (exportType === '核实状态') {
+    } else if (exportType === "核实状态") {
       tempUrl = await proxyFetch(
         GET_STAFF_VERIFY_STATUS_LIST,
         { verifyStatus, name },
-        'GET'
+        "GET"
       );
     }
 
@@ -111,7 +112,7 @@ export default (props) => {
 
   const hideVerifyItemModal = () => {
     if (!checkedList.length) {
-      message.error('请选择需要审核的内容!');
+      message.error("请选择需要审核的内容!");
     } else {
       setVerifyItemVisible(false);
     }
@@ -127,9 +128,9 @@ export default (props) => {
 
   const showError = () => {
     Modal.error({
-      title: '无法核实',
-      content: '员工未填写完毕无法进行核实',
-      okText: '确认',
+      title: "无法核实",
+      content: "当前无法进行核实",
+      okText: "确认",
     });
   };
 
@@ -140,12 +141,13 @@ export default (props) => {
   const onCheckAllChange = (e) => {
     if (e.target.checked) {
       setCheckedList([
-        'basic',
-        'project',
-        'patent',
-        'copyright',
-        'award',
-        'thesis',
+        "basic",
+        "project",
+        "patent",
+        "copyright",
+        "award",
+        "thesis",
+        "book",
       ]);
     } else {
       setCheckedList([]);
@@ -161,7 +163,7 @@ export default (props) => {
         const staffVerifyInfo = await proxyFetch(
           GET_STAFF_VERIFY_INFO,
           { verifyStatus, name },
-          'GET'
+          "GET"
         );
 
         setStaffVerifyInfo(staffVerifyInfo);
@@ -201,34 +203,34 @@ export default (props) => {
   };
 
   return (
-    <div className='verify-list-box'>
-      <p className='title-box'>
+    <div className="verify-list-box">
+      <p className="title-box">
         <span>查看信息列表</span>
       </p>
-      <div className='subtitle-box'>
-        <p className='subtitle-title'>查看人员填写信息</p>
+      <div className="subtitle-box">
+        <p className="subtitle-title">查看人员填写信息</p>
       </div>
-      <div className='list-content-box'>
-        <div className='list-title-box'>
+      <div className="list-content-box">
+        <div className="list-title-box">
           <Select
-            placeholder='分类查看'
-            className='list-select'
-            defaultValue='0'
+            placeholder="分类查看"
+            className="list-select"
+            defaultValue="0"
             onChange={(e) => {
               setVerifyStatus(e);
-              setName('');
+              setName("");
               setIsNeedRefresh(true);
             }}
           >
-            <Option value='0'>全部</Option>
-            <Option value='未提交'>未提交</Option>
-            <Option value='待核实'>待核实</Option>
-            <Option value='核实通过'>核实通过</Option>
-            <Option value='核实未通过'>核实未通过</Option>
+            <Option value="0">全部</Option>
+            <Option value="未提交">未提交</Option>
+            <Option value="待核实">待核实</Option>
+            <Option value="核实通过">核实通过</Option>
+            <Option value="核实未通过">核实未通过</Option>
           </Select>
           <Search
-            className='search'
-            placeholder='请输入姓名/账号'
+            className="search"
+            placeholder="请输入姓名/账号"
             enterButton
             onSearch={(e) => {
               setName(e);
@@ -236,42 +238,43 @@ export default (props) => {
             }}
           />
           <Button
-            type='primary'
-            className='export-all-button'
+            type="primary"
+            className="export-all-button"
             onClick={showVerifyItemModal}
           >
             选择审核内容
           </Button>
           <Button
-            type='primary'
-            className='export-all-button'
+            type="primary"
+            className="export-all-button"
             onClick={showExportAllModal}
           >
             导出填写/核实状态信息
           </Button>
           <Button
-            type='primary'
-            className='export-all-button'
+            type="primary"
+            className="export-all-button"
             onClick={showExportOneModal}
           >
             导出当前员工信息
           </Button>
           <Modal
-            title='导出当前员工信息'
+            title="导出当前员工信息"
             visible={exportOneVisible}
             onOk={handleExportStaff}
             onCancel={hideExportOneModal}
-            okText='确定'
-            cancelText='取消'
+            okText="确定"
+            cancelText="取消"
           >
             <Checkbox.Group
               options={[
-                { label: '基本信息', value: 0 },
-                { label: '项目', value: 1 },
-                { label: '专利', value: 2 },
-                { label: '软件著作权', value: 3 },
-                { label: '奖项', value: 4 },
-                { label: '论文/专著', value: 5 },
+                { label: "基本信息", value: 0 },
+                { label: "项目", value: 1 },
+                { label: "专利", value: 2 },
+                { label: "软件著作权", value: 3 },
+                { label: "奖项", value: 4 },
+                { label: "论文", value: 5 },
+                { label: "专著", value: 6 },
               ]}
               value={exportList}
               onChange={(e) => {
@@ -280,49 +283,50 @@ export default (props) => {
             />
           </Modal>
           <Modal
-            title='批量导出信息'
+            title="批量导出信息"
             visible={exportAllVisible}
             onOk={handleExportInfo}
             onCancel={hideExportAllModal}
-            okText='确定'
-            cancelText='取消'
+            okText="确定"
+            cancelText="取消"
           >
             <Radio.Group
-              style={{ width: '100%' }}
+              style={{ width: "100%" }}
               onChange={(e) => {
                 setExportType(e.target.value);
               }}
             >
               <Row>
                 <Col span={12}>
-                  <Radio value='填写状态'>填写状态</Radio>
+                  <Radio value="填写状态">填写状态</Radio>
                 </Col>
                 <Col span={12}>
-                  <Radio value='核实状态'>核实状态</Radio>
+                  <Radio value="核实状态">核实状态</Radio>
                 </Col>
               </Row>
             </Radio.Group>
           </Modal>
           <Modal
-            title='选择审核的内容'
+            title="选择审核的内容"
             visible={verifyItemVisible}
             onOk={hideVerifyItemModal}
             onCancel={hideVerifyItemModal}
-            okText='确定'
-            cancelText='取消'
+            okText="确定"
+            cancelText="取消"
           >
-            <div className='verify-item-select-box'>
+            <div className="verify-item-select-box">
               <Checkbox onChange={onCheckAllChange} checked={checkAll}>
                 全选
               </Checkbox>
               <Checkbox.Group
                 options={[
-                  { label: '基本信息', value: 'basic' },
-                  { label: '项目', value: 'project' },
-                  { label: '专利', value: 'patent' },
-                  { label: '软件著作权', value: 'copyright' },
-                  { label: '奖项', value: 'award' },
-                  { label: '论文/专著', value: 'thesis' },
+                  { label: "基本信息", value: "basic" },
+                  { label: "项目", value: "project" },
+                  { label: "专利", value: "patent" },
+                  { label: "软件著作权", value: "copyright" },
+                  { label: "奖项", value: "award" },
+                  { label: "论文", value: "thesis" },
+                  { label: "专著", value: "book" },
                 ]}
                 defaultValue={[]}
                 value={checkedList}
@@ -336,65 +340,65 @@ export default (props) => {
         <Skeleton loading={staffLoading}>
           <Table
             dataSource={staffVerifyInfo}
-            className='table'
+            className="table"
             rowKey={(record) => record.uuid}
           >
-            <Column align='center' title='账号' dataIndex='userName' key='' />
-            <Column align='center' title='姓名' dataIndex='name' key='' />
-            <Column align='center' title='科室' dataIndex='department' key='' />
+            <Column align="center" title="账号" dataIndex="userName" key="" />
+            <Column align="center" title="姓名" dataIndex="name" key="" />
+            <Column align="center" title="科室" dataIndex="department" key="" />
             <Column
-              align='center'
-              title='最后修改时间'
-              dataIndex='currentWriteTime'
-              key=''
+              align="center"
+              title="最后修改时间"
+              dataIndex="currentWriteTime"
+              key=""
               render={(text, record) => (
                 <span>
                   {record.currentWriteTime
                     ? moment(record.currentWriteTime).format(
-                        'YYYY-MM-DD h:mm:ss a'
+                        "YYYY-MM-DD h:mm:ss a"
                       )
-                    : ''}
+                    : ""}
                 </span>
               )}
             />
             <Column
-              align='center'
-              title='核实状态'
-              dataIndex='verifyStatus'
-              key=''
+              align="center"
+              title="核实状态"
+              dataIndex="verifyStatus"
+              key=""
               render={(text, record) => (
                 <div>
                   <span>{record.verifyStatus}</span>
-                  {record.verifyStatus === '核实通过' ? (
+                  {record.verifyStatus === "核实通过" ? (
                     <Icon
-                      type='check-circle'
-                      theme='twoTone'
-                      twoToneColor='#52c41a'
-                      className='icon'
+                      type="check-circle"
+                      theme="twoTone"
+                      twoToneColor="#52c41a"
+                      className="icon"
                     />
-                  ) : record.verifyStatus === '核实不通过' ? (
+                  ) : record.verifyStatus === "核实不通过" ? (
                     <Icon
-                      type='close-circle'
-                      theme='twoTone'
-                      twoToneColor='#f5222d'
-                      className='icon'
+                      type="close-circle"
+                      theme="twoTone"
+                      twoToneColor="#f5222d"
+                      className="icon"
                     />
                   ) : null}
                 </div>
               )}
             />
             <Column
-              align='center'
-              title='核实'
-              dataIndex=''
-              key=''
+              align="center"
+              title="核实"
+              dataIndex=""
+              key=""
               render={(text, record) => (
                 <Button
-                  type='link'
+                  type="link"
                   onClick={() => {
                     if (
-                      record.verifyStatus === '待核实' ||
-                      record.verifyStatus === '核实通过'
+                      record.verifyStatus === "待核实"
+                      // || record.verifyStatus === "核实通过"
                     ) {
                       handleSuccess(record.uuid);
                     } else {

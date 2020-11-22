@@ -204,7 +204,7 @@ export default (props) => {
       <div className='detail-title-box'>
         <div className='title-left-box'>
           <Icon type='book' className='icon' />
-          <span>论文/专著</span>
+          <span>论文</span>
         </div>
         <Modal
           title='请核实'
@@ -241,7 +241,7 @@ export default (props) => {
                   content: (
                     <div className='text-box'>
                       <span>我已核实完该</span>
-                      <span className='important-text'>论文/专著</span>
+                      <span className='important-text'>论文</span>
                       <span>的信息,确认通过?</span>
                     </div>
                   ),
@@ -415,7 +415,7 @@ export default (props) => {
                   <div>
                     <div className='verify-description-title'>
                       <div className='description-title-text'>
-                        <span>{`论文/专著${index + 1}:  ${item.thesisTitle
+                        <span>{`论文${index + 1}:  ${item.thesisTitle
                           }`}</span>
                         <Tag
                           className='content-tag'
@@ -496,7 +496,7 @@ export default (props) => {
               </Descriptions>
             ))
           ) : (
-              <span>未填写论文/专著</span>
+              <span>未填写论文</span>
             )}
         </Skeleton>
       </div>

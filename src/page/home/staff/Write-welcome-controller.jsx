@@ -70,8 +70,11 @@ export default (props) => {
         <span>{`奖项得分:${
           record.awardScoreSum !== null ? record.awardScoreSum : '未评分  '
         }`}</span>
-        <span>{`论文/专著得分:${
+        <span>{`论文得分:${
           record.thesisScoreSum !== null ? record.thesisScoreSum : '未评分  '
+        }`}</span>
+         <span>{`专著得分:${
+          record.bookScoreSum !== null ? record.bookScoreSum : '未评分  '
         }`}</span>
       </div>
     );
@@ -128,7 +131,8 @@ export default (props) => {
               { label: '专利', value: 2 },
               { label: '软件著作权', value: 3 },
               { label: '奖项', value: 4 },
-              { label: '论文/专著', value: 5 },
+              { label: '论文', value: 5 },
+              { label: '专著', value: 5 },
             ]}
             value={exportList}
             onChange={(e) => {

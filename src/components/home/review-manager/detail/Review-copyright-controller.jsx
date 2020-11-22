@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 // 请求
-import proxyFetch from '@/util/request';
+import proxyFetch from "@/util/request";
 import {
   GET_FILE_URL,
   GET_REVIEW_COPYRIGHT_LIST,
-} from '@/constants/api-constants';
+} from "@/constants/api-constants";
 
 // redux
-import { useSelector, useDispatch } from 'react-redux';
-import userAction from '@/redux/action/user';
+import { useSelector, useDispatch } from "react-redux";
+import userAction from "@/redux/action/user";
 
 // 工具
-import scoreToColor from '@/components/home/review-manager/detail/util/score-to-color';
-import moment from 'moment';
+import scoreToColor from "@/components/home/review-manager/detail/util/score-to-color";
+import moment from "moment";
 
-import ReviewCopyrightContent from '@/components/home/review-manager/copyright/Review-copyright-content-controller.jsx';
+import ReviewCopyrightContent from "@/components/home/review-manager/copyright/Review-copyright-content-controller.jsx";
 
 // 样式
-import '@/style/home/review-manager/review-item-detail.styl';
-import { Modal, Button, Icon, Descriptions, Skeleton, Tag } from 'antd';
+import "@/style/home/review-manager/review-item-detail.styl";
+import { Modal, Button, Icon, Descriptions, Skeleton, Tag } from "antd";
 const { confirm } = Modal;
 
 export default (props) => {
@@ -29,15 +29,15 @@ export default (props) => {
     [reviewCopyrightLoading, setReviewCopyrightLoading] = useState(false),
     [score, setScore] = useState(0),
     [isNeedRefresh, setIsNeedRefresh] = useState(true),
-    [firstFileName, setFirstFileName] = useState(''),
-    [secondFileName, setSecondFileName] = useState(''),
-    [thirdFileName, setThirdFileName] = useState(''),
-    [firstReviewCopyrightUrl, setFirstReviewCopyrightUrl] = useState(''),
-    [secondReviewCopyrightUrl, setSecondReviewCopyrightUrl] = useState(''),
-    [thirdReviewCopyrightUrl, setThirdReviewCopyrightUrl] = useState(''),
-    [firstPreviewUrl, setFirstPreviewUrl] = useState(''),
-    [secondPreviewUrl, setSecondPreviewUrl] = useState(''),
-    [thirdPreviewUrl, setThirdPreviewUrl] = useState(''),
+    [firstFileName, setFirstFileName] = useState(""),
+    [secondFileName, setSecondFileName] = useState(""),
+    [thirdFileName, setThirdFileName] = useState(""),
+    [firstReviewCopyrightUrl, setFirstReviewCopyrightUrl] = useState(""),
+    [secondReviewCopyrightUrl, setSecondReviewCopyrightUrl] = useState(""),
+    [thirdReviewCopyrightUrl, setThirdReviewCopyrightUrl] = useState(""),
+    [firstPreviewUrl, setFirstPreviewUrl] = useState(""),
+    [secondPreviewUrl, setSecondPreviewUrl] = useState(""),
+    [thirdPreviewUrl, setThirdPreviewUrl] = useState(""),
     [getFileLoading, setGetFileLoading] = useState(true),
     [uploadCopyrightVisible, setUploadCopyrightVisible] = useState(false),
     dispatch = useDispatch();
@@ -48,7 +48,7 @@ export default (props) => {
   };
 
   const hideReviewCopyrightModal = () => {
-    dispatch(userAction.setStaffCopyrightUuid(''));
+    dispatch(userAction.setStaffCopyrightUuid(""));
     setReviewCopyrightVisible(false);
   };
 
@@ -71,7 +71,7 @@ export default (props) => {
         const reviewCopyrightList = await proxyFetch(
           GET_REVIEW_COPYRIGHT_LIST,
           { staffUuid },
-          'GET'
+          "GET"
         );
 
         if (reviewCopyrightList) {
@@ -101,54 +101,58 @@ export default (props) => {
         const firstPreviewUrl = await proxyFetch(
           GET_FILE_URL,
           { fileUrl: firstReviewCopyrightUrl },
-          'GET'
+          "GET"
         );
 
         setFirstPreviewUrl(firstPreviewUrl);
-        const firstUrlArr = firstPreviewUrl.split('?');
+        const firstUrlArr = firstPreviewUrl.split("?");
         const firstUrlArrList = firstUrlArr[0],
-          firstAppU = firstUrlArrList.split('/');
+          firstAppU = firstUrlArrList.split("/");
         const firstFileName = firstAppU[firstAppU.length - 1];
-        setFirstFileName(firstFileName.split('.')[1].toLowerCase());
+        setFirstFileName(firstFileName.split(".")[1].toLowerCase());
 
         // 附件2的url处理
-        let secondPreviewUrl = '';
+        let secondPreviewUrl = "";
         if (secondReviewCopyrightUrl) {
           secondPreviewUrl = await proxyFetch(
             GET_FILE_URL,
             { fileUrl: secondReviewCopyrightUrl },
-            'GET'
+            "GET"
           );
 
-          const secondUrlArr = secondPreviewUrl.split('?');
+          const secondUrlArr = secondPreviewUrl.split("?");
           const secondUrlArrList = secondUrlArr[0],
-            secondAppU = secondUrlArrList.split('/');
+            secondAppU = secondUrlArrList.split("/");
           const secondFileName = secondAppU[secondAppU.length - 1];
-          setSecondFileName(secondFileName.split('.')[1].toLowerCase());
+          setSecondFileName(secondFileName.split(".")[1].toLowerCase());
         }
         setSecondPreviewUrl(secondPreviewUrl);
 
         // 附件3的url处理
-        let thirdPreviewUrl = '';
+        let thirdPreviewUrl = "";
         if (thirdReviewCopyrightUrl) {
           thirdPreviewUrl = await proxyFetch(
             GET_FILE_URL,
             { fileUrl: thirdReviewCopyrightUrl },
-            'GET'
+            "GET"
           );
 
-          const thirdUrlArr = thirdPreviewUrl.split('?');
+          const thirdUrlArr = thirdPreviewUrl.split("?");
           const thirdUrlArrList = thirdUrlArr[0],
-            thirdAppU = thirdUrlArrList.split('/');
+            thirdAppU = thirdUrlArrList.split("/");
           const thirdFileName = thirdAppU[thirdAppU.length - 1];
-          setThirdFileName(thirdFileName.split('.')[1].toLowerCase());
+          setThirdFileName(thirdFileName.split(".")[1].toLowerCase());
         }
         setThirdPreviewUrl(thirdPreviewUrl);
 
         setGetFileLoading(false);
       })();
     }
-  }, [firstReviewCopyrightUrl, secondReviewCopyrightUrl, thirdReviewCopyrightUrl]);
+  }, [
+    firstReviewCopyrightUrl,
+    secondReviewCopyrightUrl,
+    thirdReviewCopyrightUrl,
+  ]);
 
   useEffect(() => {
     if (reviewCopyright) {
@@ -158,28 +162,28 @@ export default (props) => {
   }, [reviewCopyright, dispatch]);
 
   return (
-    <div className='review-item-detail-box'>
-      <div className='detail-title-box'>
-        <Icon type='audit' className='icon' />
+    <div className="review-item-detail-box">
+      <div className="detail-title-box">
+        <Icon type="audit" className="icon" />
         <span>软件著作权</span>
-        <Tag className='content-tag' color={scoreToColor(score)}>
-          {score || score === 0 ? `总评分:${score}` : '未评分'}
+        <Tag className="content-tag" color={scoreToColor(score)}>
+          {score || score === 0 ? `总评分:${score}` : "未评分"}
         </Tag>
       </div>
       <Modal
-        title='评分'
+        title="评分"
         visible={reviewCopyrightVisible}
         onCancel={() => {
           confirm({
-            title: '确认离开?',
-            okType: 'primary',
-            content: '离开填写内容将不会保存!',
-            okText: '确认',
-            cancelText: '取消',
+            title: "确认离开?",
+            okType: "primary",
+            content: "离开填写内容将不会保存!",
+            okText: "确认",
+            cancelText: "取消",
             onOk() {
               hideReviewCopyrightModal();
             },
-            onCancel() { },
+            onCancel() {},
           });
         }}
         footer={null}
@@ -187,37 +191,37 @@ export default (props) => {
         <ReviewCopyrightContent />
       </Modal>
       <Modal
-        title='查看附件'
+        title="查看附件"
         visible={uploadCopyrightVisible}
         onCancel={hideUploadCopyrightModal}
         footer={null}
       >
-        <div className='download-button-box'>
-          <div className='inner-button-box'>
-            {firstFileName === 'jpg' ||
-              firstFileName === 'jpeg' ||
-              firstFileName === 'png' ? (
-                <img
-                  src={firstPreviewUrl}
-                  alt='avatar'
-                  style={{ width: '100%' }}
-                  className='img'
-                />
-              ) : null}
+        <div className="download-button-box">
+          <div className="inner-button-box">
+            {firstFileName === "jpg" ||
+            firstFileName === "jpeg" ||
+            firstFileName === "png" ? (
+              <img
+                src={firstPreviewUrl}
+                alt="avatar"
+                style={{ width: "100%" }}
+                className="img"
+              />
+            ) : null}
             {firstReviewCopyrightUrl ? (
               <Button
-                type='primary'
-                size='large'
-                className='download-button'
-                icon='download'
+                type="primary"
+                size="large"
+                className="download-button"
+                icon="download"
                 loading={getFileLoading}
                 onClick={(e) => {
                   e.stopPropagation();
                   if (
-                    firstFileName === 'doc' ||
-                    firstFileName === 'docx' ||
-                    firstFileName === 'xls' ||
-                    firstFileName === 'xlsx'
+                    firstFileName === "doc" ||
+                    firstFileName === "docx" ||
+                    firstFileName === "xls" ||
+                    firstFileName === "xlsx"
                   ) {
                     window.open(
                       `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
@@ -225,41 +229,41 @@ export default (props) => {
                       )}`
                     );
                   } else {
-                    window.open(firstPreviewUrl, '_blank');
+                    window.open(firstPreviewUrl, "_blank");
                   }
                 }}
               >
                 查看附件1
               </Button>
             ) : (
-                <Button disabled>附件1未上传</Button>
-              )}
+              <Button disabled>附件1未上传</Button>
+            )}
           </div>
-          <div className='inner-button-box'>
-            {secondFileName === 'jpg' ||
-              secondFileName === 'jpeg' ||
-              secondFileName === 'png' ? (
-                <img
-                  src={secondPreviewUrl}
-                  alt='avatar'
-                  style={{ width: '100%' }}
-                  className='img'
-                />
-              ) : null}
+          <div className="inner-button-box">
+            {secondFileName === "jpg" ||
+            secondFileName === "jpeg" ||
+            secondFileName === "png" ? (
+              <img
+                src={secondPreviewUrl}
+                alt="avatar"
+                style={{ width: "100%" }}
+                className="img"
+              />
+            ) : null}
             {secondReviewCopyrightUrl ? (
               <Button
-                type='primary'
-                size='large'
-                className='download-button'
-                icon='download'
+                type="primary"
+                size="large"
+                className="download-button"
+                icon="download"
                 loading={getFileLoading}
                 onClick={(e) => {
                   e.stopPropagation();
                   if (
-                    secondFileName === 'doc' ||
-                    secondFileName === 'docx' ||
-                    secondFileName === 'xls' ||
-                    secondFileName === 'xlsx'
+                    secondFileName === "doc" ||
+                    secondFileName === "docx" ||
+                    secondFileName === "xls" ||
+                    secondFileName === "xlsx"
                   ) {
                     window.open(
                       `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
@@ -267,41 +271,41 @@ export default (props) => {
                       )}`
                     );
                   } else {
-                    window.open(secondPreviewUrl, '_blank');
+                    window.open(secondPreviewUrl, "_blank");
                   }
                 }}
               >
                 查看附件2
               </Button>
             ) : (
-                <Button disabled>附件2未上传</Button>
-              )}
+              <Button disabled>附件2未上传</Button>
+            )}
           </div>
-          <div className='inner-button-box'>
-            {thirdFileName === 'jpg' ||
-              thirdFileName === 'jpeg' ||
-              thirdFileName === 'png' ? (
-                <img
-                  src={thirdPreviewUrl}
-                  alt='avatar'
-                  style={{ width: '100%' }}
-                  className='img'
-                />
-              ) : null}
+          <div className="inner-button-box">
+            {thirdFileName === "jpg" ||
+            thirdFileName === "jpeg" ||
+            thirdFileName === "png" ? (
+              <img
+                src={thirdPreviewUrl}
+                alt="avatar"
+                style={{ width: "100%" }}
+                className="img"
+              />
+            ) : null}
             {thirdReviewCopyrightUrl ? (
               <Button
-                type='primary'
-                size='large'
-                className='download-button'
-                icon='download'
+                type="primary"
+                size="large"
+                className="download-button"
+                icon="download"
                 loading={getFileLoading}
                 onClick={(e) => {
                   e.stopPropagation();
                   if (
-                    thirdFileName === 'doc' ||
-                    thirdFileName === 'docx' ||
-                    thirdFileName === 'xls' ||
-                    thirdFileName === 'xlsx'
+                    thirdFileName === "doc" ||
+                    thirdFileName === "docx" ||
+                    thirdFileName === "xls" ||
+                    thirdFileName === "xlsx"
                   ) {
                     window.open(
                       `http://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
@@ -309,36 +313,43 @@ export default (props) => {
                       )}`
                     );
                   } else {
-                    window.open(thirdPreviewUrl, '_blank');
+                    window.open(thirdPreviewUrl, "_blank");
                   }
                 }}
               >
                 查看附件3
               </Button>
             ) : (
-                <Button disabled>附件3未上传</Button>
-              )}
+              <Button disabled>附件3未上传</Button>
+            )}
           </div>
         </div>
       </Modal>
-      <div className='review-description-box'>
+      <div className="review-description-box">
         <Skeleton loading={reviewCopyrightLoading}>
           {reviewCopyrightList?.length ? (
             reviewCopyrightList.map((item, index) => (
               <Descriptions
                 key={item.uuid}
                 title={
-                  <div className='review-description-title'>
-                    <div className='description-title-text'>
-                      <span>{`软件著作权${index + 1}:  ${item.copyrightName
-                        }`}</span>
+                  <div className="review-description-title">
+                    <div className="description-title-text">
+                      <span>{`软件著作权${index + 1}:  ${
+                        item.copyrightName
+                      }`}</span>
                       <Tag
-                        className='content-tag'
-                        color={scoreToColor(item.score)}
+                        className="content-tag"
+                        color={
+                          item.isVerify !== "核实通过"
+                            ? "purple"
+                            : scoreToColor(item.score)
+                        }
                       >
                         {item.score || item.score === 0
                           ? `评分:${item.score}`
-                          : '未评分'}
+                          : item.isVerify !== "核实通过"
+                          ? "未核实"
+                          : "未评分"}
                       </Tag>
                       {/* <span>
                         {item.reviewTime
@@ -348,10 +359,11 @@ export default (props) => {
                           : ''}
                       </span> */}
                     </div>
-                    <div className='description-title-button'>
+                    <div className="description-title-button">
                       <Button
-                        icon='radar-chart'
-                        type='link'
+                        icon="radar-chart"
+                        type="link"
+                        disabled={item.isVerify !== "核实通过"}
                         onClick={() => {
                           showReviewCopyrightModal(item.uuid);
                         }}
@@ -362,30 +374,34 @@ export default (props) => {
                   </div>
                 }
               >
-                <Descriptions.Item label='权利取得方式'>
+                <Descriptions.Item label="权利取得方式">
                   {item.copyrightType}
                 </Descriptions.Item>
-                <Descriptions.Item label='登记号'>
+                <Descriptions.Item label="登记号">
                   {item.copyrightCode}
                 </Descriptions.Item>
-                <Descriptions.Item label='授权范围'>
+                <Descriptions.Item label="授权范围">
                   {item.copyrightArrange}
                 </Descriptions.Item>
-                <Descriptions.Item label='开发完成时间'>
-                  {item.completeTime ? moment(item.completeTime).format('YYYY-MM-DD') : null}
+                <Descriptions.Item label="开发完成时间">
+                  {item.completeTime
+                    ? moment(item.completeTime).format("YYYY-MM-DD")
+                    : null}
                 </Descriptions.Item>
-                <Descriptions.Item label='发表时间'>
-                  {item.publishTime ? moment(item.publishTime).format('YYYY-MM-DD') : null}
+                <Descriptions.Item label="发表时间">
+                  {item.publishTime
+                    ? moment(item.publishTime).format("YYYY-MM-DD")
+                    : null}
                 </Descriptions.Item>
-                <Descriptions.Item label='软件著作权权人'>
+                <Descriptions.Item label="软件著作权权人">
                   {item.copyrightOwner}
                 </Descriptions.Item>
-                <Descriptions.Item label='软著排位'>
+                <Descriptions.Item label="软著排位">
                   {item.rank}
                 </Descriptions.Item>
-                <Descriptions.Item label='查看附件'>
+                <Descriptions.Item label="查看附件">
                   <Button
-                    type='link'
+                    type="link"
                     onClick={() => {
                       showUploadCopyrightModal(
                         item.firstUrl,
@@ -393,17 +409,17 @@ export default (props) => {
                         item.thirdUrl
                       );
                     }}
-                    className='link-button'
+                    className="link-button"
                   >
-                    <Icon type='download' />
+                    <Icon type="download" />
                     <span>查看</span>
                   </Button>
                 </Descriptions.Item>
               </Descriptions>
             ))
           ) : (
-              <span>未填写软件著作权</span>
-            )}
+            <span>未填写软件著作权</span>
+          )}
         </Skeleton>
       </div>
     </div>

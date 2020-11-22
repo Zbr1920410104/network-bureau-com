@@ -1,6 +1,6 @@
-import * as DominConfigs from './domin-constants';
+import * as DominConfigs from "./domin-constants";
 
-export const UPLOAD_TO_QiNiu = 'https://upload-z2.qiniup.com'; // 上传七牛
+export const UPLOAD_TO_QiNiu = "https://upload-z2.qiniup.com"; // 上传七牛
 
 /**
  * 用户
@@ -66,6 +66,13 @@ export const GET_WRITE_THESIS_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.
 export const GET_STAFF_THESIS_BY_UUID = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getStaffThesisByUuid`;
 export const MODIFY_STAFF_THESIS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/modifyStaffThesis`;
 export const DELETE_THESIS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/deleteThesis`;
+
+export const CREATE_STAFF_BOOK = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/createStaffBook`;
+export const GET_WRITE_BOOK_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getWriteBookList`;
+export const GET_STAFF_BOOK_BY_UUID = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getStaffBookByUuid`;
+export const MODIFY_STAFF_BOOK = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/modifyStaffBook`;
+export const DELETE_BOOK = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/deleteBook`;
+
 export const SELECT_UPLOAD_PROJECT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/selectUploadProject`;
 export const SAVE_UPLOAD_PROJECT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/saveUploadProject`;
 export const SELECT_UPLOAD_PATENT = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/selectUploadPatent`;
@@ -76,6 +83,8 @@ export const SELECT_UPLOAD_AWARD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OP
 export const SAVE_UPLOAD_AWARD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/saveUploadAward`;
 export const SELECT_UPLOAD_THESIS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/selectUploadThesis`;
 export const SAVE_UPLOAD_THESIS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/saveUploadThesis`;
+export const SELECT_UPLOAD_BOOK = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/selectUploadBook`;
+export const SAVE_UPLOAD_BOOK = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/saveUploadBook`;
 export const FINISH_STAFF_WRITE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/finishStaffWrite`;
 export const GET_PERSONAL_EXPORT_INFO_URL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_STAFF}/getPersonalExportInfoUrl`;
 
@@ -89,6 +98,8 @@ export const GET_VERIFY_PATENT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART
 export const GET_VERIFY_PROJECT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getVerifyProjectList`;
 export const GET_VERIFY_AWARD_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getVerifyAwardList`;
 export const GET_VERIFY_THESIS_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getVerifyThesisList`;
+export const GET_VERIFY_BOOK_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getVerifyBookList`;
+
 export const SET_VERIFY_BASIC_FAIL_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyBasicFailStatus`;
 export const SET_VERIFY_BASIC_SUCCESS_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyBasicSuccessStatus`;
 export const SET_VERIFY_PROJECT_FAIL_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyProjectFailStatus`;
@@ -101,6 +112,9 @@ export const SET_VERIFY_AWARD_FAIL_STATUS = `${DominConfigs.DOMAIN}${DominConfig
 export const SET_VERIFY_AWARD_SUCCESS_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyAwardSuccessStatus`;
 export const SET_VERIFY_THESIS_FAIL_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyThesisFailStatus`;
 export const SET_VERIFY_THESIS_SUCCESS_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyThesisSuccessStatus`;
+export const SET_VERIFY_BOOK_FAIL_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyBookFailStatus`;
+export const SET_VERIFY_BOOK_SUCCESS_STATUS = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/setVerifyBookSuccessStatus`;
+
 export const FINISH_BUSINESS_MANAGER_VERIFY = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/finishBusinessManagerVerify`;
 export const GET_STAFF_WRITE_STATUS_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getStaffWriteStatusList`;
 export const GET_STAFF_VERIFY_STATUS_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_BUSINESS_MANAGER}/getStaffVerifyStatusList`;
@@ -117,6 +131,8 @@ export const GET_REVIEW_PATENT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART
 export const GET_REVIEW_PROJECT_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getReviewProjectList`;
 export const GET_REVIEW_AWARD_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getReviewAwardList`;
 export const GET_REVIEW_THESIS_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getReviewThesisList`;
+export const GET_REVIEW_BOOK_LIST = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getReviewBookList`;
+
 export const GET_PROJECT_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getProjectScore`;
 export const SET_PROJECT_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/setProjectScore`;
 export const GET_PATENT_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getPatentScore`;
@@ -127,6 +143,9 @@ export const GET_AWARD_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_RE
 export const SET_AWARD_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/setAwardScore`;
 export const GET_THESIS_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getThesisScore`;
 export const SET_THESIS_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/setThesisScore`;
+export const GET_BOOK_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getBookScore`;
+export const SET_BOOK_SCORE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/setBookScore`;
+
 export const FINISH_REVIEW_MANAGER_REVIEW = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/finishReviewManagerReview`;
 export const EXPORT_ALL_STAFF_INFO_EXCEL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/exportAllStaffInfoExcel`;
 export const GE_REVIEW_MANAGER_EXPORT_INFO_URL = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_REVIEW_MANAGER}/getReviewManagerExportInfoUrl`;
