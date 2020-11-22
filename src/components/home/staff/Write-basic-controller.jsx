@@ -40,8 +40,7 @@ import {
 } from "antd";
 const { Option } = Select,
   { confirm } = Modal;
-let id = 0,
-  worksId = 0;
+let id = 0, worksId = 0, skillsId = 0, professionalPromotionId = 0, currentProfessionId = 0;
 
 export default Form.create({ name: "staffBasic" })(({ form }) => {
   const { getFieldDecorator, getFieldValue, setFieldsValue } = form;
@@ -105,6 +104,42 @@ export default Form.create({ name: "staffBasic" })(({ form }) => {
         for (let workExperienceItem in workExperienceList) {
           value.workExperience += workExperienceList[workExperienceItem];
         }
+
+        let skillsList = value.skills.map((item, index) => {
+          if (index < value.skills.length - 1)
+            return `${item};`;
+          else
+            return `${item}`;
+        });
+
+        for (let skillsItem in skillsList) {
+          value.skills += skillsList[skillsItem];
+        }
+
+        // 处理晋升信息填写的数据
+        let professionalPromotionList = value.professionalPromotion.map((item, index) => {
+          if (index < value.professionalPromotion.length - 1)
+            return `${item["profession"]},${item["cooperation"]},${item["time"].format("YYYY/MM/DD")},${item["promotionTime"].format("YYYY/MM/DD")};`;
+          else
+            return `${item["profession"]},${item["cooperation"]},${item["time"].format("YYYY/MM/DD")},${item["promotionTime"].format("YYYY/MM/DD")}`;
+        });
+        value.professionalPromotion = "";
+        for (let professionalPromotionItem in professionalPromotionList) {
+          value.professionalPromotion += professionalPromotionList[professionalPromotionItem];
+        }
+
+        // 处理现聘职称填写的数据
+        let currentProfessionList = value.currentProfession.map((item, index) => {
+          if (index < value.currentProfession.length - 1)
+            return `${item["profession"]},${item["time"].format("YYYY/MM/DD")};`;
+          else
+            return `${item["profession"]},${item["time"].format("YYYY/MM/DD")}`;
+        });
+        value.currentProfession = "";
+        for (let currentProfessionItem in currentProfessionList) {
+          value.currentProfession += currentProfessionList[currentProfessionItem];
+        }
+
         const res = await proxyFetch(SAVE_STAFF_BASIC, value);
 
         if (res) {
@@ -210,11 +245,9 @@ export default Form.create({ name: "staffBasic" })(({ form }) => {
   };
 
   const addWorks = () => {
-    // can use data-binding to get
     const workKeys = getFieldValue("workKeys");
     const nextKeys = workKeys.concat(worksId++);
-    // can use data-binding to set
-    // important! notify form to detect changes
+
     setFieldsValue({
       workKeys: nextKeys,
     });
@@ -222,7 +255,6 @@ export default Form.create({ name: "staffBasic" })(({ form }) => {
 
   const strToDescription = (str) => {
     let arr = str.split(";");
-    console.log("arr=", arr);
     return (
       <div className="description-str-box">
         {arr.map((item) => (
@@ -239,6 +271,87 @@ export default Form.create({ name: "staffBasic" })(({ form }) => {
     // }
   };
 
+  // 职称晋升
+
+  getFieldDecorator("professionalPromotionKeys", { initialValue: [] });
+  const professionalPromotionKeys = getFieldValue("professionalPromotionKeys");
+
+  const removeProfessionalPromotions = (k) => {
+    // can use data-binding to get
+    const professionalPromotionKeys = getFieldValue("professionalPromotionKeys");
+    // We need at least one passenger
+    if (professionalPromotionKeys.length === 1) {
+      return;
+    }
+    // can use data-binding to set
+    setFieldsValue({
+      professionalPromotionKeys: professionalPromotionKeys.filter((key) => key !== k),
+    });
+  };
+
+  const addProfessionalPromotionKeys = () => {
+    const professionalPromotionKeys = getFieldValue("professionalPromotionKeys");
+    const nextKeys = professionalPromotionKeys.concat(professionalPromotionId++);
+
+    setFieldsValue({
+      professionalPromotionKeys: nextKeys,
+    });
+  };
+
+  // 专业技能
+
+  getFieldDecorator("skillKeys", { initialValue: [] });
+  const skillKeys = getFieldValue("skillKeys");
+
+  const removeSkills = (k) => {
+    // can use data-binding to get
+    const skillKeys = getFieldValue("skillKeys");
+    // We need at least one passenger
+    if (skillKeys.length === 1) {
+      return;
+    }
+    // can use data-binding to set
+    setFieldsValue({
+      skillKeys: skillKeys.filter((key) => key !== k),
+    });
+  };
+
+  const addSkills = () => {
+    const skillKeys = getFieldValue("skillKeys");
+    const nextKeys = skillKeys.concat(skillsId++);
+
+    setFieldsValue({
+      skillKeys: nextKeys,
+    });
+  };
+
+  // 现聘职称
+
+  getFieldDecorator("currentProfessionKeys", { initialValue: [] });
+  const currentProfessionKeys = getFieldValue("currentProfessionKeys");
+
+  const removeCurrentProfessionKeys = (k) => {
+    // can use data-binding to get
+    const currentProfessionKeys = getFieldValue("currentProfessionKeys");
+    // We need at least one passenger
+    if (currentProfessionKeys.length === 1) {
+      return;
+    }
+    // can use data-binding to set
+    setFieldsValue({
+      currentProfessionKeys: currentProfessionKeys.filter((key) => key !== k),
+    });
+  };
+
+  const addCurrentProfessionKeys = () => {
+    const currentProfessionKeys = getFieldValue("currentProfessionKeys");
+    const nextKeys = currentProfessionKeys.concat(currentProfessionId++);
+
+    setFieldsValue({
+      currentProfessionKeys: nextKeys,
+    });
+  };
+
   const formItemLayoutWithOutLabel = {
     wrapperCol: {
       xs: { span: 24, offset: 0 },
@@ -247,7 +360,7 @@ export default Form.create({ name: "staffBasic" })(({ form }) => {
   };
   const formItems = keys.map((k, index) => (
     <Row>
-      <Col span={6} key={`${k}01`}>
+      <Col span={7} key={`${k}01`}>
         <Form.Item labelCol={{ span: 2 }} wrapperCol={{ span: 22 }}>
           {getFieldDecorator(`names[${k}]education`, {
             validateTrigger: ["onChange", "onBlur"],
@@ -309,7 +422,7 @@ export default Form.create({ name: "staffBasic" })(({ form }) => {
 
   const formWorkItems = workKeys.map((k, index) => (
     <Row>
-      <Col span={6} key={`${k}11`}>
+      <Col span={7} key={`${k}11`}>
         <Form.Item labelCol={{ span: 2 }} wrapperCol={{ span: 22 }}>
           {getFieldDecorator(`works[${k}]cooperation`, {
             validateTrigger: ["onChange", "onBlur"],
@@ -335,7 +448,7 @@ export default Form.create({ name: "staffBasic" })(({ form }) => {
           })(<Input placeholder="请输入职位" />)}
         </Form.Item>
       </Col>
-      <Col span={8} key={`${k}03`}>
+      <Col span={8} key={`${k}13`}>
         <Form.Item labelCol={{ span: 2 }} wrapperCol={{ span: 22 }}>
           {getFieldDecorator(`works[${k}]time`, {
             validateTrigger: ["onChange"],
@@ -348,12 +461,145 @@ export default Form.create({ name: "staffBasic" })(({ form }) => {
           })(<DatePicker.RangePicker />)}
         </Form.Item>
       </Col>
-      <Col span={1} key={`${k}04`}>
+      <Col span={1} key={`${k}14`}>
         {workKeys.length > 1 ? (
           <Icon
             className="dynamic-delete-button"
             type="minus-circle-o"
             onClick={() => removeWorks(k)}
+          />
+        ) : null}
+      </Col>
+    </Row>
+  ));
+
+  const formProfessionalPromotionItems = professionalPromotionKeys.map((k, index) => (
+    <Row>
+      <Col span={7} key={`${k}31`}>
+        <Form.Item labelCol={{ span: 2 }} wrapperCol={{ span: 22 }}>
+          {getFieldDecorator(`professionalPromotion[${k}]profession`, {
+            validateTrigger: ["onChange", "onBlur"],
+            rules: [
+              {
+                required: true,
+                message: "请输入职称！",
+              },
+            ],
+          })(<Input placeholder="请输入职称" />)}
+        </Form.Item>
+      </Col>
+      <Col span={7} key={`${k}32`}>
+        <Form.Item labelCol={{ span: 2 }} wrapperCol={{ span: 22 }}>
+          {getFieldDecorator(`professionalPromotion[${k}]cooperation`, {
+            validateTrigger: ["onChange", "onBlur"],
+            rules: [
+              {
+                required: true,
+                message: "请输入发证单位！",
+              },
+            ],
+          })(<Input placeholder="请输入发证单位" />)}
+        </Form.Item>
+      </Col>
+      <Col span={4} key={`${k}33`}>
+        <Form.Item labelCol={{ span: 2 }} wrapperCol={{ span: 22 }}>
+          {getFieldDecorator(`professionalPromotion[${k}]time`, {
+            validateTrigger: ["onChange"],
+            rules: [
+              {
+                required: true,
+                message: "请输入发证时间！",
+              },
+            ],
+          })(<DatePicker placeholder="发证时间" />)}
+        </Form.Item>
+      </Col>
+      <Col span={4} key={`${k}34`}>
+        <Form.Item labelCol={{ span: 2 }} wrapperCol={{ span: 22 }}>
+          {getFieldDecorator(`professionalPromotion[${k}]promotionTime`, {
+            validateTrigger: ["onChange"],
+            rules: [
+              {
+                required: true,
+                message: "请选择晋升时间！",
+              },
+            ],
+          })(<DatePicker placeholder="晋升时间" />)}
+        </Form.Item>
+      </Col>
+      <Col span={1} key={`${k}35`}>
+        {professionalPromotionKeys.length > 1 ? (
+          <Icon
+            className="dynamic-delete-button"
+            type="minus-circle-o"
+            onClick={() => removeProfessionalPromotions(k)}
+          />
+        ) : null}
+      </Col>
+    </Row>
+  ));
+
+  const currentProfessionPromotionItems = currentProfessionKeys.map((k, index) => (
+    <Row>
+      <Col span={18} key={`${k}41`}>
+        <Form.Item labelCol={{ span: 1 }} wrapperCol={{ span: 23 }}>
+          {getFieldDecorator(`currentProfession[${k}]profession`, {
+            validateTrigger: ["onChange", "onBlur"],
+            rules: [
+              {
+                required: true,
+                message: "请输入现聘职称！",
+              },
+            ],
+          })(<Input placeholder="请输入现聘职称" />)}
+        </Form.Item>
+      </Col>
+      <Col span={4} key={`${k}42`}>
+        <Form.Item labelCol={{ span: 2 }} wrapperCol={{ span: 22 }}>
+          {getFieldDecorator(`currentProfession[${k}]time`, {
+            validateTrigger: ["onChange"],
+            rules: [
+              {
+                required: true,
+                message: "请选择聘任时间！",
+              },
+            ],
+          })(<DatePicker placeholder="聘任时间" />)}
+        </Form.Item>
+      </Col>
+      <Col span={1} key={`${k}43`}>
+        {currentProfessionKeys.length > 1 ? (
+          <Icon
+            className="dynamic-delete-button"
+            type="minus-circle-o"
+            onClick={() => removeCurrentProfessionKeys(k)}
+          />
+        ) : null}
+      </Col>
+    </Row>
+  ));
+
+  const formSkillItems = skillKeys.map((k, index) => (
+    <Row>
+      <Col span={22} key={`${k}21`}>
+        <Form.Item labelCol={{ span: 1 }} wrapperCol={{ span: 23 }}>
+          {getFieldDecorator(`skills[${k}]`, {
+            validateTrigger: ["onChange", "onBlur"],
+            rules: [
+              {
+                required: true,
+                message: "请输入专业技能！",
+              },
+            ],
+          })(<Input placeholder="请输入专业技能" />)}
+        </Form.Item>
+      </Col>
+      <Col span={1} key={`${k}22`}>
+        {skillKeys.length > 1 ? (
+          <Icon
+            className="dynamic-delete-button"
+            type="minus-circle-o"
+            onClick={() => removeSkills(k)}
           />
         ) : null}
       </Col>
@@ -400,7 +646,7 @@ export default Form.create({ name: "staffBasic" })(({ form }) => {
               onOk() {
                 hideModifyBasic();
               },
-              onCancel() {},
+              onCancel() { },
             });
           }}
           okText="确定"
@@ -485,467 +731,482 @@ export default Form.create({ name: "staffBasic" })(({ form }) => {
                 ? strToDescription(staffBasic.workExperience)
                 : null}
             </Descriptions.Item>
+            <Descriptions.Item label="专业技能" span={3}>
+              {staffBasic.skills
+                ? strToDescription(staffBasic.skills)
+                : null}
+            </Descriptions.Item>
+            <Descriptions.Item label="职称晋升" span={3}>
+              {staffBasic.professionalPromotion
+                ? strToDescription(staffBasic.professionalPromotion)
+                : null}
+            </Descriptions.Item>
+            <Descriptions.Item label="现聘职称" span={3}>
+              {staffBasic.currentProfession
+                ? strToDescription(staffBasic.currentProfession)
+                : null}
+            </Descriptions.Item>
           </Descriptions>
         ) : (
-          <Form>
-            <Row>
-              <Col span={8} key="1">
-                <Form.Item
-                  label="姓名"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
-                >
-                  {getFieldDecorator("name", {
-                    rules: [
-                      {
-                        required: true,
-                        message: "请输入姓名！",
-                      },
-                      {
-                        message: "姓名过长！",
-                        max: 32,
-                      },
-                    ],
-                  })(<Input placeholder="请输入姓名" />)}
-                </Form.Item>
-              </Col>
-              <Col span={8} key="2">
-                <Form.Item
-                  label="身份证号"
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
-                >
-                  {getFieldDecorator("idNumber", {
-                    rules: [
-                      {
-                        required: true,
-                        message: "请输入身份证号！",
-                      },
-                      {
-                        message: "身份证号过长！",
-                        max: 32,
-                      },
-                    ],
-                  })(<Input placeholder="请输入身份证号" />)}
-                </Form.Item>
-              </Col>
-            </Row>
+            <Form>
+              <Row>
+                <Col span={8} key="1">
+                  <Form.Item
+                    label="姓名"
+                    labelCol={{ span: 6 }}
+                    wrapperCol={{ span: 18 }}
+                  >
+                    {getFieldDecorator("name", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "请输入姓名！",
+                        },
+                        {
+                          message: "姓名过长！",
+                          max: 32,
+                        },
+                      ],
+                    })(<Input placeholder="请输入姓名" />)}
+                  </Form.Item>
+                </Col>
+                <Col span={8} key="2">
+                  <Form.Item
+                    label="身份证号"
+                    labelCol={{ span: 8 }}
+                    wrapperCol={{ span: 16 }}
+                  >
+                    {getFieldDecorator("idNumber", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "请输入身份证号！",
+                        },
+                        {
+                          message: "身份证号过长！",
+                          max: 32,
+                        },
+                      ],
+                    })(<Input placeholder="请输入身份证号" />)}
+                  </Form.Item>
+                </Col>
+              </Row>
 
-            <Row>
-              <Col span={8} key="3">
-                <Form.Item
-                  label="性别"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
-                >
-                  {getFieldDecorator("sex", {
-                    rules: [
-                      {
-                        required: true,
-                        message: "请选择性别！",
-                      },
-                    ],
-                  })(
-                    <Select placeholder="性别">
-                      <Option value="男">男</Option>
-                      <Option value="女">女</Option>
-                    </Select>
-                  )}
-                </Form.Item>
-              </Col>
-              <Col span={8} key="4">
-                <Form.Item
-                  label="民族"
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
-                >
-                  {getFieldDecorator("nation", {
-                    rules: [
-                      {
-                        required: true,
-                        message: "请选择民族！",
-                      },
-                    ],
-                  })(
-                    <Select placeholder="民族">
-                      <Option value="汉族">汉族</Option>
-                      <Option value="蒙古族">蒙古族</Option>
-                      <Option value="回族">回族</Option>
-                      <Option value="藏族">藏族</Option>
-                      <Option value="维吾尔族">维吾尔族</Option>
-                      <Option value="苗族">苗族</Option>
-                      <Option value="彝族">彝族</Option>
-                      <Option value="壮族">壮族</Option>
-                      <Option value="布依族">布依族</Option>
-                      <Option value="朝鲜族">朝鲜族</Option>
-                      <Option value="满族">满族</Option>
-                      <Option value="侗族">侗族</Option>
-                      <Option value="瑶族">瑶族</Option>
-                      <Option value="白族">白族</Option>
-                      <Option value="土家族">土家族</Option>
-                      <Option value="哈尼族">哈尼族</Option>
-                      <Option value="哈萨克族">哈萨克族</Option>
-                      <Option value="傣族">傣族</Option>
-                      <Option value="黎族">黎族</Option>
-                      <Option value="傈僳族">傈僳族</Option>
-                      <Option value="佤族">佤族</Option>
-                      <Option value="畲族">畲族</Option>
-                      <Option value="高山族">高山族</Option>
-                      <Option value="拉祜族">拉祜族</Option>
-                      <Option value="水族">水族</Option>
-                      <Option value="东乡族">东乡族</Option>
-                      <Option value="纳西族">纳西族</Option>
-                      <Option value="景颇族">景颇族</Option>
-                      <Option value="柯尔克孜族">柯尔克孜族</Option>
-                      <Option value="土族">土族</Option>
-                      <Option value="达斡尔族">达斡尔族</Option>
-                      <Option value="仫佬族">仫佬族</Option>
-                      <Option value="羌族">羌族</Option>
-                      <Option value="布朗族">布朗族</Option>
-                      <Option value="撒拉族">撒拉族</Option>
-                      <Option value="毛南族">毛南族</Option>
-                      <Option value="仡佬族">仡佬族</Option>
-                      <Option value="锡伯族">锡伯族</Option>
-                      <Option value="阿昌族">阿昌族</Option>
-                      <Option value="普米族">普米族</Option>
-                      <Option value="塔吉克族">塔吉克族</Option>
-                      <Option value="怒族">怒族</Option>
-                      <Option value="乌孜别克族">乌孜别克族</Option>
-                      <Option value="俄罗斯族">俄罗斯族</Option>
-                      <Option value="鄂温克族">鄂温克族</Option>
-                      <Option value="德昂族">德昂族</Option>
-                      <Option value="保安族">保安族</Option>
-                      <Option value="裕固族">裕固族</Option>
-                      <Option value="京族">京族</Option>
-                      <Option value="塔塔尔族">塔塔尔族</Option>
-                      <Option value="独龙族">独龙族</Option>
-                      <Option value="鄂伦春族">鄂伦春族</Option>
-                      <Option value="赫哲族">赫哲族</Option>
-                      <Option value="门巴族">门巴族</Option>
-                      <Option value="珞巴族">珞巴族</Option>
-                      <Option value="基诺族">基诺族</Option>
-                      <Option value="其他">其他</Option>
-                    </Select>
-                  )}
-                </Form.Item>
-              </Col>
-              <Col span={8} key="5">
-                <Form.Item
-                  label="籍贯"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
-                >
-                  {getFieldDecorator("nativePlace", {
-                    rules: [
-                      {
-                        required: true,
-                        message: "请输入籍贯！",
-                      },
-                    ],
-                  })(<Cascader options={position} />)}
-                </Form.Item>
-              </Col>
-            </Row>
+              <Row>
+                <Col span={8} key="3">
+                  <Form.Item
+                    label="性别"
+                    labelCol={{ span: 6 }}
+                    wrapperCol={{ span: 18 }}
+                  >
+                    {getFieldDecorator("sex", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "请选择性别！",
+                        },
+                      ],
+                    })(
+                      <Select placeholder="性别">
+                        <Option value="男">男</Option>
+                        <Option value="女">女</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8} key="4">
+                  <Form.Item
+                    label="民族"
+                    labelCol={{ span: 8 }}
+                    wrapperCol={{ span: 16 }}
+                  >
+                    {getFieldDecorator("nation", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "请选择民族！",
+                        },
+                      ],
+                    })(
+                      <Select placeholder="民族">
+                        <Option value="汉族">汉族</Option>
+                        <Option value="蒙古族">蒙古族</Option>
+                        <Option value="回族">回族</Option>
+                        <Option value="藏族">藏族</Option>
+                        <Option value="维吾尔族">维吾尔族</Option>
+                        <Option value="苗族">苗族</Option>
+                        <Option value="彝族">彝族</Option>
+                        <Option value="壮族">壮族</Option>
+                        <Option value="布依族">布依族</Option>
+                        <Option value="朝鲜族">朝鲜族</Option>
+                        <Option value="满族">满族</Option>
+                        <Option value="侗族">侗族</Option>
+                        <Option value="瑶族">瑶族</Option>
+                        <Option value="白族">白族</Option>
+                        <Option value="土家族">土家族</Option>
+                        <Option value="哈尼族">哈尼族</Option>
+                        <Option value="哈萨克族">哈萨克族</Option>
+                        <Option value="傣族">傣族</Option>
+                        <Option value="黎族">黎族</Option>
+                        <Option value="傈僳族">傈僳族</Option>
+                        <Option value="佤族">佤族</Option>
+                        <Option value="畲族">畲族</Option>
+                        <Option value="高山族">高山族</Option>
+                        <Option value="拉祜族">拉祜族</Option>
+                        <Option value="水族">水族</Option>
+                        <Option value="东乡族">东乡族</Option>
+                        <Option value="纳西族">纳西族</Option>
+                        <Option value="景颇族">景颇族</Option>
+                        <Option value="柯尔克孜族">柯尔克孜族</Option>
+                        <Option value="土族">土族</Option>
+                        <Option value="达斡尔族">达斡尔族</Option>
+                        <Option value="仫佬族">仫佬族</Option>
+                        <Option value="羌族">羌族</Option>
+                        <Option value="布朗族">布朗族</Option>
+                        <Option value="撒拉族">撒拉族</Option>
+                        <Option value="毛南族">毛南族</Option>
+                        <Option value="仡佬族">仡佬族</Option>
+                        <Option value="锡伯族">锡伯族</Option>
+                        <Option value="阿昌族">阿昌族</Option>
+                        <Option value="普米族">普米族</Option>
+                        <Option value="塔吉克族">塔吉克族</Option>
+                        <Option value="怒族">怒族</Option>
+                        <Option value="乌孜别克族">乌孜别克族</Option>
+                        <Option value="俄罗斯族">俄罗斯族</Option>
+                        <Option value="鄂温克族">鄂温克族</Option>
+                        <Option value="德昂族">德昂族</Option>
+                        <Option value="保安族">保安族</Option>
+                        <Option value="裕固族">裕固族</Option>
+                        <Option value="京族">京族</Option>
+                        <Option value="塔塔尔族">塔塔尔族</Option>
+                        <Option value="独龙族">独龙族</Option>
+                        <Option value="鄂伦春族">鄂伦春族</Option>
+                        <Option value="赫哲族">赫哲族</Option>
+                        <Option value="门巴族">门巴族</Option>
+                        <Option value="珞巴族">珞巴族</Option>
+                        <Option value="基诺族">基诺族</Option>
+                        <Option value="其他">其他</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8} key="5">
+                  <Form.Item
+                    label="籍贯"
+                    labelCol={{ span: 6 }}
+                    wrapperCol={{ span: 18 }}
+                  >
+                    {getFieldDecorator("nativePlace", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "请输入籍贯！",
+                        },
+                      ],
+                    })(<Cascader options={position} />)}
+                  </Form.Item>
+                </Col>
+              </Row>
 
-            <Row>
-              <Col span={8} key="6">
-                <Form.Item
-                  label="政治面貌"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
-                >
-                  {getFieldDecorator("politicalAffiliation", {
-                    rules: [
-                      {
-                        required: true,
-                        message: "请选择政治面貌！",
-                      },
-                    ],
-                  })(
-                    <Select placeholder="政治面貌">
-                      <Option value="中共党员">中共党员</Option>
-                      <Option value="中共预备党员">中共预备党员</Option>
-                      <Option value="共青团员">共青团员</Option>
-                      <Option value="民革党员">民革党员</Option>
-                      <Option value="民盟盟员">民盟盟员</Option>
-                      <Option value="民建会员">民建会员</Option>
-                      <Option value="民进会员">民进会员</Option>
-                      <Option value="农工党党员">农工党党员</Option>
-                      <Option value="致公党党员">致公党党员</Option>
-                      <Option value="九三学社社员">九三学社社员</Option>
-                      <Option value="台盟盟员">台盟盟员</Option>
-                      <Option value="无党派人士">无党派人士</Option>
-                      <Option value="群众">群众</Option>
-                    </Select>
-                  )}
-                </Form.Item>
-              </Col>
-              <Col span={8} key="7">
-                <Form.Item
-                  label="科室"
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
-                >
-                  {getFieldDecorator("department", {
-                    rules: [
-                      {
-                        required: true,
-                        message: "请选择科室！",
-                      },
-                    ],
-                  })(
-                    <Select placeholder="科室">
-                      {depatmentList.map((value) => (
-                        <Option value={value.name} key={value.name}>
-                          {value.name}
-                        </Option>
-                      ))}
-                    </Select>
-                  )}
-                </Form.Item>
-              </Col>
-            </Row>
+              <Row>
+                <Col span={8} key="6">
+                  <Form.Item
+                    label="政治面貌"
+                    labelCol={{ span: 6 }}
+                    wrapperCol={{ span: 18 }}
+                  >
+                    {getFieldDecorator("politicalAffiliation", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "请选择政治面貌！",
+                        },
+                      ],
+                    })(
+                      <Select placeholder="政治面貌">
+                        <Option value="中共党员">中共党员</Option>
+                        <Option value="中共预备党员">中共预备党员</Option>
+                        <Option value="共青团员">共青团员</Option>
+                        <Option value="民革党员">民革党员</Option>
+                        <Option value="民盟盟员">民盟盟员</Option>
+                        <Option value="民建会员">民建会员</Option>
+                        <Option value="民进会员">民进会员</Option>
+                        <Option value="农工党党员">农工党党员</Option>
+                        <Option value="致公党党员">致公党党员</Option>
+                        <Option value="九三学社社员">九三学社社员</Option>
+                        <Option value="台盟盟员">台盟盟员</Option>
+                        <Option value="无党派人士">无党派人士</Option>
+                        <Option value="群众">群众</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8} key="7">
+                  <Form.Item
+                    label="科室"
+                    labelCol={{ span: 8 }}
+                    wrapperCol={{ span: 16 }}
+                  >
+                    {getFieldDecorator("department", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "请选择科室！",
+                        },
+                      ],
+                    })(
+                      <Select placeholder="科室">
+                        {depatmentList.map((value) => (
+                          <Option value={value.name} key={value.name}>
+                            {value.name}
+                          </Option>
+                        ))}
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
 
-            <Row>
-              <Col span={8} key="8">
-                <Form.Item
-                  label="办公电话"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
-                >
-                  {getFieldDecorator("officePhone", {
-                    rules: [
-                      {
-                        required: true,
-                        message: "请输入办公电话！",
-                      },
-                      {
-                        message: "办公电话过长！",
-                        max: 32,
-                      },
-                    ],
-                  })(<Input placeholder="请输入办公电话" />)}
-                </Form.Item>
-              </Col>
-              <Col span={8} key="9">
-                <Form.Item
-                  label="手机号码"
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
-                >
-                  {getFieldDecorator("phone", {
-                    rules: [
-                      {
-                        required: true,
-                        message: "请输入手机号码！",
-                      },
-                      {
-                        message: "手机号码过长！",
-                        max: 32,
-                      },
-                    ],
-                  })(<Input placeholder="请输入手机号码" />)}
-                </Form.Item>
-              </Col>
-              <Col span={8} key="10">
-                <Form.Item
-                  label="学历"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
-                >
-                  {getFieldDecorator("education", {
-                    rules: [
-                      {
-                        required: true,
-                        message: "请选择学历！",
-                      },
-                    ],
-                  })(
-                    <Select placeholder="学历">
-                      <Option value="高中及以下">高中及以下</Option>
-                      <Option value="中专">中专</Option>
-                      <Option value="大专">大专</Option>
-                      <Option value="大学">大学</Option>
-                      <Option value="研究生">研究生</Option>
-                    </Select>
-                  )}
-                </Form.Item>
-              </Col>
-            </Row>
+              <Row>
+                <Col span={8} key="8">
+                  <Form.Item
+                    label="办公电话"
+                    labelCol={{ span: 6 }}
+                    wrapperCol={{ span: 18 }}
+                  >
+                    {getFieldDecorator("officePhone", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "请输入办公电话！",
+                        },
+                        {
+                          message: "办公电话过长！",
+                          max: 32,
+                        },
+                      ],
+                    })(<Input placeholder="请输入办公电话" />)}
+                  </Form.Item>
+                </Col>
+                <Col span={8} key="9">
+                  <Form.Item
+                    label="手机号码"
+                    labelCol={{ span: 8 }}
+                    wrapperCol={{ span: 16 }}
+                  >
+                    {getFieldDecorator("phone", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "请输入手机号码！",
+                        },
+                        {
+                          message: "手机号码过长！",
+                          max: 32,
+                        },
+                      ],
+                    })(<Input placeholder="请输入手机号码" />)}
+                  </Form.Item>
+                </Col>
+                <Col span={8} key="10">
+                  <Form.Item
+                    label="学历"
+                    labelCol={{ span: 6 }}
+                    wrapperCol={{ span: 18 }}
+                  >
+                    {getFieldDecorator("education", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "请选择学历！",
+                        },
+                      ],
+                    })(
+                      <Select placeholder="学历">
+                        <Option value="高中及以下">高中及以下</Option>
+                        <Option value="中专">中专</Option>
+                        <Option value="大专">大专</Option>
+                        <Option value="大学">大学</Option>
+                        <Option value="研究生">研究生</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
 
-            <Row>
-              <Col span={8} key="10">
-                <Form.Item
-                  label="学位"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
-                >
-                  {getFieldDecorator("degree", {
-                    rules: [
-                      {
-                        required: true,
-                        message: "请选择学位！",
-                      },
-                    ],
-                  })(
-                    <Select placeholder="学位">
-                      <Option value="无">无</Option>
-                      <Option value="学士">学士</Option>
-                      <Option value="硕士">硕士</Option>
-                      <Option value="博士">博士</Option>
-                    </Select>
-                  )}
-                </Form.Item>
-              </Col>
-              <Col span={8} key="11">
-                <Form.Item
-                  label="毕业学校"
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
-                >
-                  {getFieldDecorator("graduateSchool", {
-                    rules: [
-                      {
-                        required: true,
-                        message: "请输入毕业学校！",
-                      },
-                      {
-                        message: "毕业学校过长！",
-                        max: 32,
-                      },
-                    ],
-                  })(<Input placeholder="请输入毕业学校" />)}
-                </Form.Item>
-              </Col>
-              <Col span={8} key="12">
-                <Form.Item
-                  label="所学专业"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
-                >
-                  {getFieldDecorator("major", {
-                    rules: [
-                      {
-                        required: true,
-                        message: "请输入所学专业！",
-                      },
-                      {
-                        message: "所学专业过长！",
-                        max: 32,
-                      },
-                    ],
-                  })(<Input placeholder="请输入所学专业" />)}
-                </Form.Item>
-              </Col>
-            </Row>
+              <Row>
+                <Col span={8} key="10">
+                  <Form.Item
+                    label="学位"
+                    labelCol={{ span: 6 }}
+                    wrapperCol={{ span: 18 }}
+                  >
+                    {getFieldDecorator("degree", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "请选择学位！",
+                        },
+                      ],
+                    })(
+                      <Select placeholder="学位">
+                        <Option value="无">无</Option>
+                        <Option value="学士">学士</Option>
+                        <Option value="硕士">硕士</Option>
+                        <Option value="博士">博士</Option>
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8} key="11">
+                  <Form.Item
+                    label="毕业学校"
+                    labelCol={{ span: 8 }}
+                    wrapperCol={{ span: 16 }}
+                  >
+                    {getFieldDecorator("graduateSchool", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "请输入毕业学校！",
+                        },
+                        {
+                          message: "毕业学校过长！",
+                          max: 32,
+                        },
+                      ],
+                    })(<Input placeholder="请输入毕业学校" />)}
+                  </Form.Item>
+                </Col>
+                <Col span={8} key="12">
+                  <Form.Item
+                    label="所学专业"
+                    labelCol={{ span: 6 }}
+                    wrapperCol={{ span: 18 }}
+                  >
+                    {getFieldDecorator("major", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "请输入所学专业！",
+                        },
+                        {
+                          message: "所学专业过长！",
+                          max: 32,
+                        },
+                      ],
+                    })(<Input placeholder="请输入所学专业" />)}
+                  </Form.Item>
+                </Col>
+              </Row>
 
-            <Row>
-              <Col span={8} key="13">
-                <Form.Item
-                  label="职务"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
-                >
-                  {getFieldDecorator("duty", {
-                    rules: [
-                      {
-                        required: true,
-                        message: "请输入职务！",
-                      },
-                      {
-                        message: "职务过长！",
-                        max: 32,
-                      },
-                    ],
-                  })(<Input placeholder="请输入职务" />)}
-                </Form.Item>
-              </Col>
-              <Col span={8} key="14">
-                <Form.Item
-                  label="参加工作时间"
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
-                >
-                  {getFieldDecorator("workTime", {
-                    rules: [{ required: true, message: "请选择工作时间！" }],
-                  })(<DatePicker placeholder="20XX-XX-XX" />)}
-                </Form.Item>
-              </Col>
-            </Row>
+              <Row>
+                <Col span={8} key="13">
+                  <Form.Item
+                    label="职务"
+                    labelCol={{ span: 6 }}
+                    wrapperCol={{ span: 18 }}
+                  >
+                    {getFieldDecorator("duty", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "请输入职务！",
+                        },
+                        {
+                          message: "职务过长！",
+                          max: 32,
+                        },
+                      ],
+                    })(<Input placeholder="请输入职务" />)}
+                  </Form.Item>
+                </Col>
+                <Col span={8} key="14">
+                  <Form.Item
+                    label="参加工作时间"
+                    labelCol={{ span: 8 }}
+                    wrapperCol={{ span: 16 }}
+                  >
+                    {getFieldDecorator("workTime", {
+                      rules: [{ required: true, message: "请选择工作时间！" }],
+                    })(<DatePicker placeholder="20XX-XX-XX" />)}
+                  </Form.Item>
+                </Col>
+              </Row>
 
-            <Row>
-              <Col span={8} key="15">
-                <Form.Item
-                  label="职称"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
-                >
-                  {getFieldDecorator("professionTitle", {
-                    rules: [
-                      {
-                        required: true,
-                        message: "请输入职称！",
-                      },
-                      {
-                        message: "职称过长！",
-                        max: 32,
-                      },
-                    ],
-                  })(<Input placeholder="请输入职称" />)}
-                </Form.Item>
-              </Col>
-              <Col span={8} key="16">
-                <Form.Item
-                  label="获得时间"
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
-                >
-                  {getFieldDecorator("getTime", {
-                    rules: [{ required: true, message: "请选择获得时间！" }],
-                  })(<DatePicker placeholder="20XX-XX-XX" />)}
-                </Form.Item>
-              </Col>
-              <Col span={8} key="17">
-                <Form.Item
-                  label="研究方向"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
-                >
-                  {getFieldDecorator("researchDirection", {
-                    rules: [
-                      {
-                        required: true,
-                        message: "请输入研究方向！",
-                      },
-                      {
-                        message: "研究方向过长！",
-                        max: 32,
-                      },
-                    ],
-                  })(<Input placeholder="请输入研究方向" />)}
-                </Form.Item>
-              </Col>
-            </Row>
+              <Row>
+                <Col span={8} key="15">
+                  <Form.Item
+                    label="职称"
+                    labelCol={{ span: 6 }}
+                    wrapperCol={{ span: 18 }}
+                  >
+                    {getFieldDecorator("professionTitle", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "请输入职称！",
+                        },
+                        {
+                          message: "职称过长！",
+                          max: 32,
+                        },
+                      ],
+                    })(<Input placeholder="请输入职称" />)}
+                  </Form.Item>
+                </Col>
+                <Col span={8} key="16">
+                  <Form.Item
+                    label="获得时间"
+                    labelCol={{ span: 8 }}
+                    wrapperCol={{ span: 16 }}
+                  >
+                    {getFieldDecorator("getTime", {
+                      rules: [{ required: true, message: "请选择获得时间！" }],
+                    })(<DatePicker placeholder="20XX-XX-XX" />)}
+                  </Form.Item>
+                </Col>
+                <Col span={8} key="17">
+                  <Form.Item
+                    label="研究方向"
+                    labelCol={{ span: 6 }}
+                    wrapperCol={{ span: 18 }}
+                  >
+                    {getFieldDecorator("researchDirection", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "请输入研究方向！",
+                        },
+                        {
+                          message: "研究方向过长！",
+                          max: 32,
+                        },
+                      ],
+                    })(<Input placeholder="请输入研究方向" />)}
+                  </Form.Item>
+                </Col>
+              </Row>
 
-            <Row>
-              <Col span={24} key="18">
-                <Form.Item
-                  label="学习经历"
-                  labelCol={{ span: 2 }}
-                  wrapperCol={{ span: 21 }}
-                >
-                  {formItems}
-                  <Form.Item {...formItemLayoutWithOutLabel}>
-                    <Button
-                      type="dashed"
-                      onClick={add}
-                      style={{ width: "100%" }}
-                    >
-                      <Icon type="plus" />
+              <Row>
+                <Col span={24} key="18">
+                  <Form.Item
+                    label="学习经历"
+                    labelCol={{ span: 2 }}
+                    wrapperCol={{ span: 21 }}
+                  >
+                    {formItems}
+                    <Form.Item {...formItemLayoutWithOutLabel}>
+                      <Button
+                        type="dashed"
+                        onClick={add}
+                        style={{ width: "100%" }}
+                      >
+                        <Icon type="plus" />
                       添加学习经历
                     </Button>
-                  </Form.Item>
-                  {/* {getFieldDecorator('studyExperience', {
+                    </Form.Item>
+                    {/* {getFieldDecorator('studyExperience', {
                       rules: [
                         {
                           required: true,
@@ -953,29 +1214,29 @@ export default Form.create({ name: "staffBasic" })(({ form }) => {
                         },
                       ],
                     })(<TextArea rows={4} placeholder='学习经历' />)} */}
-                </Form.Item>
-              </Col>
-            </Row>
+                  </Form.Item>
+                </Col>
+              </Row>
 
-            <Row>
-              <Col span={24} key="19">
-                <Form.Item
-                  label="工作经历"
-                  labelCol={{ span: 2 }}
-                  wrapperCol={{ span: 21 }}
-                >
-                  {formWorkItems}
-                  <Form.Item {...formItemLayoutWithOutLabel}>
-                    <Button
-                      type="dashed"
-                      onClick={addWorks}
-                      style={{ width: "100%" }}
-                    >
-                      <Icon type="plus" />
+              <Row>
+                <Col span={24} key="19">
+                  <Form.Item
+                    label="工作经历"
+                    labelCol={{ span: 2 }}
+                    wrapperCol={{ span: 21 }}
+                  >
+                    {formWorkItems}
+                    <Form.Item {...formItemLayoutWithOutLabel}>
+                      <Button
+                        type="dashed"
+                        onClick={addWorks}
+                        style={{ width: "100%" }}
+                      >
+                        <Icon type="plus" />
                       添加工作经历
                     </Button>
-                  </Form.Item>
-                  {/* {getFieldDecorator('workExperience', {
+                    </Form.Item>
+                    {/* {getFieldDecorator('workExperience', {
                       rules: [
                         {
                           required: true,
@@ -983,11 +1244,77 @@ export default Form.create({ name: "staffBasic" })(({ form }) => {
                         },
                       ],
                     })(<TextArea rows={4} placeholder='工作经历' />)} */}
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
-        )}
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col span={24} key="20">
+                  <Form.Item
+                    label="专业技能"
+                    labelCol={{ span: 2 }}
+                    wrapperCol={{ span: 21 }}
+                  >
+                    {formSkillItems}
+                    <Form.Item {...formItemLayoutWithOutLabel}>
+                      <Button
+                        type="dashed"
+                        onClick={addSkills}
+                        style={{ width: "100%" }}
+                      >
+                        <Icon type="plus" />
+                      添加专业技能
+                    </Button>
+                    </Form.Item>
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col span={24} key="20">
+                  <Form.Item
+                    label="职称晋升"
+                    labelCol={{ span: 2 }}
+                    wrapperCol={{ span: 21 }}
+                  >
+                    {formProfessionalPromotionItems}
+                    <Form.Item {...formItemLayoutWithOutLabel}>
+                      <Button
+                        type="dashed"
+                        onClick={addProfessionalPromotionKeys}
+                        style={{ width: "100%" }}
+                      >
+                        <Icon type="plus" />
+                      添加职称信息
+                    </Button>
+                    </Form.Item>
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col span={24} key="21">
+                  <Form.Item
+                    label="现聘职称"
+                    labelCol={{ span: 2 }}
+                    wrapperCol={{ span: 21 }}
+                  >
+                    {currentProfessionPromotionItems}
+                    <Form.Item {...formItemLayoutWithOutLabel}>
+                      <Button
+                        type="dashed"
+                        onClick={addCurrentProfessionKeys}
+                        style={{ width: "100%" }}
+                      >
+                        <Icon type="plus" />
+                      添加现聘职称
+                    </Button>
+                    </Form.Item>
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>
+          )}
       </Skeleton>
       <div className="basic-bottom-box">
         {!isWritten ? (

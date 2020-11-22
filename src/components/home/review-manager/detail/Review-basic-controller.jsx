@@ -125,6 +125,21 @@ export default (props) => {
               ? strToDescription(staffBasic.workExperience)
               : null}
           </Descriptions.Item>
+          <Descriptions.Item label="专业技能" span={3}>
+            {staffBasic.skills
+              ? strToDescription(staffBasic.skills)
+              : null}
+          </Descriptions.Item>
+          <Descriptions.Item label="职称晋升" span={3}>
+            {staffBasic.professionalPromotion
+              ? strToDescription(staffBasic.professionalPromotion)
+              : null}
+          </Descriptions.Item>
+          <Descriptions.Item label="现聘职称" span={3}>
+            {staffBasic.currentProfession
+              ? strToDescription(staffBasic.currentProfession)
+              : null}
+          </Descriptions.Item>
         </Descriptions>
       </Skeleton>
     </div>

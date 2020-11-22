@@ -659,7 +659,7 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
           </Col>
         </Row>
 
-        {/* 第九行 */}
+        {/* 第十行 */}
         <Row>
           <Col span={24} key='20'>
             <Form.Item
@@ -678,6 +678,67 @@ export default Form.create({ name: 'staffBasic' })(({ form }) => {
             </Form.Item>
           </Col>
         </Row>
+
+        {/* 第十一行 */}
+        <Row>
+          <Col span={24} key='20'>
+            <Form.Item
+              label='专业技能'
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 19 }}
+            >
+              {getFieldDecorator('skills', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入专业技能！',
+                  },
+                ],
+              })(<TextArea rows={4} placeholder='专业技能' />)}
+            </Form.Item>
+          </Col>
+        </Row>
+
+          {/* 第十二行 */}
+          <Row>
+          <Col span={24} key='21'>
+            <Form.Item
+              label='职称晋升'
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 19 }}
+            >
+              {getFieldDecorator('professionalPromotion', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入职称晋升！',
+                  },
+                ],
+              })(<TextArea rows={4} placeholder='职称晋升' />)}
+            </Form.Item>
+          </Col>
+        </Row>
+
+          {/* 第十一行 */}
+          <Row>
+          <Col span={24} key='22'>
+            <Form.Item
+              label='现聘职称'
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 19 }}
+            >
+              {getFieldDecorator('currentProfession', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入现聘职称！',
+                  },
+                ],
+              })(<TextArea rows={4} placeholder='现聘职称' />)}
+            </Form.Item>
+          </Col>
+        </Row>
+        
         <Row>
           <div className='save-button-box'>
             <Form.Item>
