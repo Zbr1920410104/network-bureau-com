@@ -7,8 +7,8 @@ export const NAV = {
     {
       key: 'manager',
       path: ROUTE.HOME_INDEX.path,
-      icon: 'audit',
-      name: '首页',
+      icon: 'message',
+      name: '消息通知',
     },
     // {
     //   key: 'password',
@@ -40,8 +40,8 @@ export const NAV = {
     {
       key: 'manager',
       path: ROUTE.HOME_INDEX.path,
-      name: '首页',
-      icon: 'bank',
+      icon: 'message',
+      name: '消息通知',
     },
     {
       key: 'password',
@@ -61,8 +61,8 @@ export const NAV = {
     {
       key: 'manager',
       path: ROUTE.HOME_INDEX.path,
-      name: '首页',
-      icon: 'bank',
+      icon: 'message',
+      name: '消息通知',
     },
     {
       key: 'password',
@@ -82,8 +82,8 @@ export const NAV = {
     {
       key: 'manager',
       path: ROUTE.HOME_INDEX.path,
-      name: '首页',
-      icon: 'bank',
+      icon: 'message',
+      name: '消息通知',
     },
     {
       key: 'password',

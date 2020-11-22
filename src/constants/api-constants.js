@@ -10,6 +10,9 @@ export const GET_USER_NAME = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_USER
 export const GET_MY_INFO = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_USER}/getMyInfo`;
 export const SAVE_PASSWORD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_USER}/savePassword`;
 export const GET_DEFAULT_PASSWORD = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_USER}/getDefaultPassword`;
+export const GET_MESSAGE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_USER}/getMessage`;
+export const CREATE_MESSAGE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_USER}/createMessage`;
+export const DELETE_MESSAGE = `${DominConfigs.DOMAIN}${DominConfigs.PART.OPT_USER}/deleteMessage`;
 
 /**
  * 管理员

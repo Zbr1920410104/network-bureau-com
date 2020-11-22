@@ -15,6 +15,7 @@ export default {
   setVerifyItem: createAction('setVerifyItem'),
   setDefaultPasswordRefresh: createAction('setDefaultPasswordRefresh'),
   setChangeDefaultPassword: createAction('setChangeDefaultPassword'),
+  setMessageRefresh: createAction('setMessageRefresh'),
   // 普通员工填写
   setChangeProject: createAction('setChangeProject'),
   setStaffProjectUuid: createAction('setStaffProjectUuid'),

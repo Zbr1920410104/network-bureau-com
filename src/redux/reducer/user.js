@@ -198,6 +198,12 @@ export default handleActions(
         bookRefresh: result,
       };
     },
+    setMessageRefresh(state, { payload: result }) {
+      return {
+        ...state,
+        messageRefresh: result,
+      };
+    },
     // 评审员打分
     setReviewProject(state, { payload: result }) {
       return {
@@ -281,6 +287,7 @@ export default handleActions(
     accountRefresh: false,
     defaultPasswordRefresh: false,
     changeDefaultPassword: false,
+    messageRefresh: false,
     // 普通员工
     modifyBasic: false,
     changeProject: false,
