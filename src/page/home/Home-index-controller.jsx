@@ -14,7 +14,7 @@ import userAction from "@/redux/action/user";
 import MessageContent from '../../components/index/Message-content.jsx';
 import uuid from 'uuid';
 
-import { Skeleton, Alert, Button, Modal } from 'antd';
+import { Skeleton, Alert, Button, Modal, Empty } from 'antd';
 import '@/style/home/home-index.styl';
 const { confirm } = Modal;
 
@@ -115,7 +115,7 @@ export default props => {
                 style={{ 'marginBottom': '20px' }}
               />
             </div>
-          }) : null}
+          }) : <Empty description='暂无消息通知' />}
         </div>
       </Skeleton>
     </div>
