@@ -18,7 +18,7 @@ module.exports = {
       host: '39.97.175.30',
       ref: 'origin/modify',
       repo: 'git@github.com:Zbr1920410104/network-bureau-review-com.git',
-      path: '/network-bureau-new/network-bureau-com-review',
+      path: '/network-bureau-new/network-bureau-com-review2',
       'post-deploy':
         'npm install && npm run build',
       'post-setup': 'npm install && npm run build'

@@ -70,74 +70,84 @@ export default Form.create({ name: "staffBasic" })(({ form }) => {
           (value.nativePlace[2] ? `;${value.nativePlace[2]}` : "");
 
         // 处理学习经历填写的数据
-        let studyExperienceList = value.names.map((item, index) => {
-          if (index < value.names.length - 1)
-            return `${item["education"]},${item["school"]},${item[
-              "time"
-            ][0].format("YYYY/MM/DD")}-${item["time"][1].format(
-              "YYYY/MM/DD"
-            )};`;
-          else
-            return `${item["education"]},${item["school"]},${item[
-              "time"
-            ][0].format("YYYY/MM/DD")}-${item["time"][1].format("YYYY/MM/DD")}`;
-        });
-        value.studyExperience = "";
-        for (let studyExperienceItem in studyExperienceList) {
-          value.studyExperience += studyExperienceList[studyExperienceItem];
+        if (value.names) {
+          let studyExperienceList = value.names.map((item, index) => {
+            if (index < value.names.length - 1)
+              return `${item["education"]},${item["school"]},${item[
+                "time"
+              ][0].format("YYYY/MM/DD")}-${item["time"][1].format(
+                "YYYY/MM/DD"
+              )};`;
+            else
+              return `${item["education"]},${item["school"]},${item[
+                "time"
+              ][0].format("YYYY/MM/DD")}-${item["time"][1].format("YYYY/MM/DD")}`;
+          });
+          value.studyExperience = "";
+          for (let studyExperienceItem in studyExperienceList) {
+            value.studyExperience += studyExperienceList[studyExperienceItem];
+          }
         }
 
         // 处理工作经历填写的数据
-        let workExperienceList = value.works.map((item, index) => {
-          if (index < value.works.length - 1)
-            return `${item["cooperation"]},${item["post"]},${item[
-              "time"
-            ][0].format("YYYY/MM/DD")}-${item["time"][1].format(
-              "YYYY/MM/DD"
-            )};`;
-          else
-            return `${item["cooperation"]},${item["post"]},${item[
-              "time"
-            ][0].format("YYYY/MM/DD")}-${item["time"][1].format("YYYY/MM/DD")}`;
-        });
-        value.workExperience = "";
-        for (let workExperienceItem in workExperienceList) {
-          value.workExperience += workExperienceList[workExperienceItem];
+        if (value.works) {
+          let workExperienceList = value.works.map((item, index) => {
+            if (index < value.works.length - 1)
+              return `${item["cooperation"]},${item["post"]},${item[
+                "time"
+              ][0].format("YYYY/MM/DD")}-${item["time"][1].format(
+                "YYYY/MM/DD"
+              )};`;
+            else
+              return `${item["cooperation"]},${item["post"]},${item[
+                "time"
+              ][0].format("YYYY/MM/DD")}-${item["time"][1].format("YYYY/MM/DD")}`;
+          });
+          value.workExperience = "";
+          for (let workExperienceItem in workExperienceList) {
+            value.workExperience += workExperienceList[workExperienceItem];
+          }
         }
 
-        let skillsList = value.skills.map((item, index) => {
-          if (index < value.skills.length - 1)
-            return `${item};`;
-          else
-            return `${item}`;
-        });
+        if (value.skills) {
+          let skillsList = value.skills.map((item, index) => {
+            if (index < value.skills.length - 1)
+              return `${item};`;
+            else
+              return `${item}`;
+          });
 
-        for (let skillsItem in skillsList) {
-          value.skills += skillsList[skillsItem];
+          for (let skillsItem in skillsList) {
+            value.skills += skillsList[skillsItem];
+          }
         }
 
         // 处理晋升信息填写的数据
-        let professionalPromotionList = value.professionalPromotion.map((item, index) => {
-          if (index < value.professionalPromotion.length - 1)
-            return `${item["profession"]},${item["cooperation"]},${item["time"].format("YYYY/MM/DD")},${item["promotionTime"].format("YYYY/MM/DD")};`;
-          else
-            return `${item["profession"]},${item["cooperation"]},${item["time"].format("YYYY/MM/DD")},${item["promotionTime"].format("YYYY/MM/DD")}`;
-        });
-        value.professionalPromotion = "";
-        for (let professionalPromotionItem in professionalPromotionList) {
-          value.professionalPromotion += professionalPromotionList[professionalPromotionItem];
+        if (value.professionalPromotion) {
+          let professionalPromotionList = value.professionalPromotion.map((item, index) => {
+            if (index < value.professionalPromotion.length - 1)
+              return `${item["profession"]},${item["cooperation"]},${item["time"].format("YYYY/MM/DD")},${item["promotionTime"].format("YYYY/MM/DD")};`;
+            else
+              return `${item["profession"]},${item["cooperation"]},${item["time"].format("YYYY/MM/DD")},${item["promotionTime"].format("YYYY/MM/DD")}`;
+          });
+          value.professionalPromotion = "";
+          for (let professionalPromotionItem in professionalPromotionList) {
+            value.professionalPromotion += professionalPromotionList[professionalPromotionItem];
+          }
         }
 
         // 处理现聘职称填写的数据
-        let currentProfessionList = value.currentProfession.map((item, index) => {
-          if (index < value.currentProfession.length - 1)
-            return `${item["profession"]},${item["time"].format("YYYY/MM/DD")};`;
-          else
-            return `${item["profession"]},${item["time"].format("YYYY/MM/DD")}`;
-        });
-        value.currentProfession = "";
-        for (let currentProfessionItem in currentProfessionList) {
-          value.currentProfession += currentProfessionList[currentProfessionItem];
+        if (value.currentProfession) {
+          let currentProfessionList = value.currentProfession.map((item, index) => {
+            if (index < value.currentProfession.length - 1)
+              return `${item["profession"]},${item["time"].format("YYYY/MM/DD")};`;
+            else
+              return `${item["profession"]},${item["time"].format("YYYY/MM/DD")}`;
+          });
+          value.currentProfession = "";
+          for (let currentProfessionItem in currentProfessionList) {
+            value.currentProfession += currentProfessionList[currentProfessionItem];
+          }
         }
 
         const res = await proxyFetch(SAVE_STAFF_BASIC, value);
